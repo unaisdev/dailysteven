@@ -88,6 +88,14 @@ u8 DailyMax_GetPartnerCharacter(void)
     return (seed & 1) == 0 ? HOL_CHAR_MAY : HOL_CHAR_WALLY;
 }
 
+const u8 *DailyMax_GetStevenIconicSlots(void)
+{
+    static const u8 sAuraSlots[3] = {0, 1, 2};
+    static const u8 sBlascoSlots[3] = {3, 4, 5};
+
+    return DailyMax_GetPartnerCharacter() == HOL_CHAR_WALLY ? sBlascoSlots : sAuraSlots;
+}
+
 // Solo player vs Máximo + partner. TAG keeps opponent slot 1 + 3+3 iconic teams;
 // players[1] stays NONE so HoL_PlayerHasPartner is false (you control all 6).
 static void SetupVersusTagRun(void)

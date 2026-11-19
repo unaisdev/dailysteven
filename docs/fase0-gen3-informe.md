@@ -2,7 +2,7 @@
 
 **Fecha:** 19/11/2026  
 **Árbol:** `pokeemerald-expansion/` local, después de `scripts/patch-dailymaximo-hooks.py`  
-**Compilación:** correcta el 19/11/2026 (clean + incremental). ROM en `web/game/dailymaximo.gba.gz`. Arranque en navegador OK (ver [`veredicto-pruebas.md`](veredicto-pruebas.md)). **Daño Surf/EQ/críticos no medidos en partida**; la config Gen3 sí está activa en el árbol.
+**Compilación:** correcta el 19/11/2026 (clean + incremental). ROM en `web/game/dailymaximo.gba.gz`. Arranque en navegador OK (ver [`veredicto-pruebas.md`](veredicto-pruebas.md)). Surf y Terremoto **verificados en emulador** (sondas `?seed=900001` / `900002`): Surf no baja PS del aliado; Terremoto sí. Freeze español de «usó TERREMOTO» corregido (`B_BUFF3`). Críticos/Protect/split siguen en config Gen3 sin medición numérica de daño.
 
 ## Qué se cambió
 
@@ -42,4 +42,9 @@ Los movimientos que no existían en 3.ª gen (Cabeza de Hierro, Respiro, etc.) s
 
 ## Puerta
 
-No dar la Fase 0 por cerrada hasta que una ROM compilada con este árbol cumpla la tabla de arriba. Si la compilación falla, parar y no seguir con contenido.
+**Cerrada 19/11/2026 (continuación):** ROM Gen3 en navegador; Surf/EQ observados según DEC-0.4; freeze EQ ES arreglado. Se puede avanzar a Fase 1. Si una recompilación futura rompe Gen3, parar antes de contenido.
+
+### RI-14 (GAP-F0-05)
+
+- Windows: `bash scripts/_docker_build.sh` (README).
+- `?seed=0` no es práctica válida: `parseSeed` exige entero `1…0xFFFFFFFF` (`web/rom-config.js`).

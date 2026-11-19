@@ -81,14 +81,14 @@ Leyenda: **DONE** · **PARTIAL** · **DIVERGES** · **MISSING** · **N/A (pendin
 
 | Requisito | Estado | Evidencia / notas |
 |-----------|--------|-------------------|
-| Compilar HoL / expansion en Windows | PARTIAL | Docker/`_docker_build.sh` documentado; no hay informe Fase 0 formal |
-| `GEN_LATEST = GEN_3` | PARTIAL | El parche Daily lo fuerza en el árbol local. **Sin recompilar ni probar en ROM** |
-| Limitar especies 4ª+ en `species_enabled.h` | PARTIAL | `P_GEN_4_POKEMON FALSE`. `P_GEN_4_CROSS_EVOS` sigue TRUE porque el equipo provisional de Blasco lleva Gallade |
-| Auditar `B_*` / `I_*` / `P_*` | MISSING | RI-03 |
-| Checklist mecánicas Gen3 (crítico×2, split por tipo, Protect 50%, etc.) | MISSING | Sin informe ejecutado |
-| Surf/Terremoto según RI-01 | MISSING | Spec original incorrecta; corrección pendiente DEC-0.4 |
-| Icono físico/especial en resumen (RI-04) | PARTIAL | `B_SHOW_CATEGORY_ICON FALSE` en el árbol local. Falta verlo en la ROM |
-| Informe de salida Fase 0 | MISSING | |
+| Compilar HoL / expansion en Windows | DONE | Docker/`_docker_build.sh` + README; informe [`fase0-gen3-informe.md`](fase0-gen3-informe.md) |
+| `GEN_LATEST = GEN_3` | DONE | Parche Daily; ROM jugada en navegador |
+| Limitar especies 4ª+ en `species_enabled.h` | PARTIAL | `P_GEN_4_POKEMON FALSE`. `P_GEN_4_CROSS_EVOS` TRUE (Gallade provisional) |
+| Auditar `B_*` / `I_*` / `P_*` | DONE | Lista en informe Fase 0 |
+| Checklist mecánicas Gen3 (crítico×2, split por tipo, Protect 50%, etc.) | PARTIAL | Config OK; Surf/EQ observados; resto sin medir daño |
+| Surf/Terremoto según RI-01 | DONE | DEC-0.4 + sondas 900001/900002; freeze ES `B_BUFF3` |
+| Icono físico/especial en resumen (RI-04) | DONE | `B_SHOW_CATEGORY_ICON FALSE` en árbol compilado |
+| Informe de salida Fase 0 | DONE | [`fase0-gen3-informe.md`](fase0-gen3-informe.md) — puerta cerrada |
 
 ### Fase 1 — Capa Daily
 
@@ -96,16 +96,16 @@ Leyenda: **DONE** · **PARTIAL** · **DIVERGES** · **MISSING** · **N/A (pendin
 |-----------|--------|-------------------|
 | Arranque directo sin selector HoL / rondas | DONE | Boot daily + warp campeón |
 | Especiales OnBattleStart/Result/Finish + status RAM | DONE | `overlay/src/dailymaximo.c` |
-| Config en ROM buscable por magic | DIVERGES | Magic propio `DAILYMAX-*` (OPEN-P3) |
+| Config en ROM buscable por magic | DONE (DEC-0.2) | Magic `DAILYMAX-*`; adaptador launcher = GAP-F4-06 |
 | Layout seed/wins/battles/daily + phase/result | DONE (layout) | Mismo shape; nombres distintos |
-| `protocolId` sin cambiar | DIVERGES | `dailymax-conf-v1+status-v1` |
-| Día jugado al combate / abandon=loss / práctica `?seed=` | DONE | Web + fases; RI-02 puede cambiar semántica |
+| `protocolId` sin cambiar | DONE (DEC-0.2) | `dailymax-conf-v1+status-v1` mantenido a propósito |
+| Día jugado al combate / abandon=loss / práctica `?seed=` | DONE | `PHASE.BATTLE` + `markBattleStarted` (DEC-0.5) |
 | Equipo: 6 distintos gen1–3 L100 | DONE | `dailymaximo_team.c` |
-| BST mínimo 2850 (recalibrar) | DIVERGES | `MIN_TEAM_BASE_STAT_TOTAL 2700` |
+| BST mínimo 2850 (recalibrar) | DIVERGES | `2700` provisional documentado; RI-16 → GAP-F3-02 |
 | 1/8 legendario | DONE | `LEGENDARY_TEAM_ODDS 8` |
-| Moves: todos los aprendibles + ≥1 daño | DIVERGES | Solo `GiveMonInitialMoveset` (level-up) |
+| Moves: todos los aprendibles + ≥1 daño | DONE | Level/TM/tutor/egg + ≥1 daño en `AssignRandomMoveset` |
 | IV 25–31, AssignFocusedEVs | DONE | |
-| Item battle list **o** type booster | PARTIAL | Solo `sBattleItems` |
+| Item battle list **o** type booster | DONE | `sBattleItems` + `sTypeBoostItems` si hay move de ese tipo |
 | RNG propio solo semilla | DONE | `ISO_RANDOMIZE1` |
 | Menú start reducido | PARTIAL | HoL versus + QUIT oculto; no auditado 1:1 vs Gold |
 | Party SUMMARY/SWITCH/CANCEL | PARTIAL | No forzado en daily |
@@ -115,11 +115,11 @@ Leyenda: **DONE** · **PARTIAL** · **DIVERGES** · **MISSING** · **N/A (pendin
 
 | Requisito | Estado | Evidencia / notas |
 |-----------|--------|-------------------|
-| 3 bits semilla → 8 combinaciones | MISSING | Solo `seed & 1` (compañero) |
-| RNG matchup ≠ RNG equipo jugador | PARTIAL | Bit no consume team RNG; no hay stream de variantes |
-| Archivo datos 2 fijos + 2 variantes / entrenador | MISSING | Stock HoL `.party` |
-| Marcado PROVISIONAL | MISSING | |
-| Validador gen3/learnset (RI-10) | MISSING | HoL incluye moves/spp Gen4 (p.ej. Iron Head, Roost, Gallade) |
+| 3 bits semilla → 8 combinaciones | N/A (DEC-0.6) | Aplazado; un trío fijo por compañero |
+| RNG matchup ≠ RNG equipo jugador | PARTIAL | Bit compañero independiente del stream de equipo |
+| Archivo datos 2 fijos + 2 variantes / entrenador | PARTIAL | `dailymaximo_rivals.c` — 1 trío/entrenador (sin variantes) |
+| Marcado PROVISIONAL | DONE | Comentario cabecera del archivo |
+| Validador gen3/learnset (RI-10) | MISSING | Archivo provisional ya evita Gallade/Iron Head/etc.; falta CI |
 | Fusión 3+3, dueño real, dos sprites, frases | DONE | Vía HoL + run activo |
 | Hooks sin romper `HoL_IsActive` (RI-05) | PARTIAL | Mitigado arrancando run HoL; faltan pruebas ROM |
 | Sala Bruno + escena puerta | DIVERGES / MISSING | Campeón + skip; NOVEDADES aún menciona puerta (stale) |
@@ -161,8 +161,8 @@ Leyenda: **DONE** · **PARTIAL** · **DIVERGES** · **MISSING** · **N/A (pendin
 
 | ID | Resumen | Estado en repo | ¿Aprobación humana? | Acción |
 |----|---------|----------------|---------------------|--------|
-| RI-01 | Spec Surf/Terremoto incorrecta | No corregida en docs de producto; checklist aún no existe | **Sí** (DEC-0.4) | Actualizar Fase 0/3 tras OK |
-| RI-02 | Contradicción consumo del día | Hoy: combate → `PHASE.BATTLE` | **Sí** (DEC-0.5) | Si B: documentar semántica de fase sin cambiar protocolId |
+| RI-01 | Spec Surf/Terremoto incorrecta | DEC-0.4 + sondas OK; freeze ES arreglado | **Sí** (DEC-0.4) | Hecho en Fase 0 |
+| RI-02 | Contradicción consumo del día | Combate → `PHASE.BATTLE` (DEC-0.5) | **Sí** (DEC-0.5) | Documentado; sin cambio de protocolId |
 | RI-03 | Gen3 = más que GEN_LATEST | Motor Gen4; sin auditoría | No (mantiene requisito) | GAP-F0-01…03 |
 | RI-04 | Icono split en resumen | No verificado | No | GAP-F0-04 |
 | RI-05 | Hooks HoL_IsActive / merge | Mitigado vía run HoL + patches DailyMax; sin battery ROM | No | GAP-F2-05 |
@@ -198,11 +198,11 @@ Convención: `GAP-F{fase}-{nn}` · prioridad `P0` (bloquea) · `P1` (alto) · `P
 
 | ID | Título | Pri | Deps | Archivos tocados (previstos) | Criterio done |
 |----|--------|-----|------|------------------------------|---------------|
-| GAP-F0-01 | Forzar `GEN_LATEST=GEN_3` en overlay/patch Daily | P0 | DEC-0 (implícito OK Gen3) | overlay/scripts o patch post-HoL, `include/config/general.h` | Compila; `GEN_LATEST` es GEN_3 en árbol build |
-| GAP-F0-02 | Desactivar especies Gen4+ en daily | P0 | GAP-F0-01 | `species_enabled.h` vía script | P_GEN_4+ off o equivalente documentado |
-| GAP-F0-03 | Auditoría `B_*`/`I_*`/`P_*` + informe | P0 | GAP-F0-01 | `docs/fase0-gen3-informe.md` | Lista de flags relevantes + resultado esperado Gen3 |
-| GAP-F0-04 | RI-01/RI-04: checklist mecánicas + UI resumen | P0 | DEC-0.4, GAP-F0-03 | informe + (si hace falta) UI patch | Casos Surf/EQ/Protect/crítico/split/icono anotados; ejecutados o “blocked” explícito |
-| GAP-F0-05 | RI-14: documentar Windows/Docker/seed 0 | P1 | — | README o `docs/build-windows.md` | Pasos reproducibles; comportamiento seed=0 escrito |
+| GAP-F0-01 | Forzar `GEN_LATEST=GEN_3` en overlay/patch Daily | P0 | DEC-0 (implícito OK Gen3) | overlay/scripts o patch post-HoL, `include/config/general.h` | **DONE** |
+| GAP-F0-02 | Desactivar especies Gen4+ en daily | P0 | GAP-F0-01 | `species_enabled.h` vía script | **DONE** (`P_GEN_4_CROSS_EVOS` provisional) |
+| GAP-F0-03 | Auditoría `B_*`/`I_*`/`P_*` + informe | P0 | GAP-F0-01 | `docs/fase0-gen3-informe.md` | **DONE** |
+| GAP-F0-04 | RI-01/RI-04: checklist mecánicas + UI resumen | P0 | DEC-0.4, GAP-F0-03 | informe + (si hace falta) UI patch | **DONE** Surf/EQ+icono; Protect/crit/split = config |
+| GAP-F0-05 | RI-14: documentar Windows/Docker/seed 0 | P1 | — | README o `docs/build-windows.md` | **DONE** |
 
 ### Fase 1 — Núcleo Daily · subagente `daily-core`
 
@@ -210,13 +210,13 @@ Convención: `GAP-F{fase}-{nn}` · prioridad `P0` (bloquea) · `P1` (alto) · `P
 
 | ID | Título | Pri | Deps | Archivos tocados (previstos) | Criterio done |
 |----|--------|-----|------|------------------------------|---------------|
-| GAP-F1-01 | Alinear protocolo según DEC-0.2 | P0 | DEC-0.2 | overlay magic, `web/rom-config.js`, `game-link.js`, manifest | Magics + protocolId acordados; inject/read OK |
-| GAP-F1-02 | Moveset completo + ≥1 daño | P0 | — | `overlay/src/dailymaximo_team.c` | Pool level/TM/tutor/egg; validación daño |
-| GAP-F1-03 | Items: battle list **o** type booster | P1 | GAP-F1-02 | `dailymaximo_team.c` | Spec cumplida |
-| GAP-F1-04 | BST: volver a 2850 **o** dejar 2700 marcado provisional + nota RI-16 | P1 | — | `dailymaximo_team.c`, este doc | Valor documentado; no silenciar divergencia |
-| GAP-F1-05 | Semántica consumo día (DEC-0.5) | P0 | DEC-0.5, escena | overlay status + `web/app.js` | Tests: reload antes/después del punto de consumo |
-| GAP-F1-06 | Party menu SUMMARY/SWITCH/CANCEL en daily | P2 | — | party_menu hooks | Menú reducido en campo daily |
-| GAP-F1-07 | RI-13: separar constantes contenido vs núcleo | P2 | — | overlay layout | Sin hardcode de mapa/jefe en núcleo reutilizable (o documentar deuda) |
+| GAP-F1-01 | Alinear protocolo según DEC-0.2 | P0 | DEC-0.2 | overlay magic, `web/rom-config.js`, `game-link.js`, manifest | **DONE** — se mantienen `DAILYMAX-*` |
+| GAP-F1-02 | Moveset completo + ≥1 daño | P0 | — | `overlay/src/dailymaximo_team.c` | **DONE** — `AssignRandomMoveset` |
+| GAP-F1-03 | Items: battle list **o** type booster | P1 | GAP-F1-02 | `dailymaximo_team.c` | **DONE** — battle + type boost |
+| GAP-F1-04 | BST: volver a 2850 **o** dejar 2700 marcado provisional + nota RI-16 | P1 | — | `dailymaximo_team.c`, este doc | **DONE** — 2700 provisional → F3-02 |
+| GAP-F1-05 | Semántica consumo día (DEC-0.5) | P0 | DEC-0.5, escena | overlay status + `web/app.js` | **DONE** — consumo en `PHASE.BATTLE` |
+| GAP-F1-06 | Party menu SUMMARY/SWITCH/CANCEL en daily | P2 | — | party_menu hooks | Pendiente |
+| GAP-F1-07 | RI-13: separar constantes contenido vs núcleo | P2 | — | overlay layout | Pendiente (deuda documentada) |
 
 ### Fase 2 — Contenido · subagente `steven-content`
 
@@ -224,13 +224,13 @@ Convención: `GAP-F{fase}-{nn}` · prioridad `P0` (bloquea) · `P1` (alto) · `P
 
 | ID | Título | Pri | Deps | Archivos tocados (previstos) | Criterio done |
 |----|--------|-----|------|------------------------------|---------------|
-| GAP-F2-01 | Archivo datos rivales editable + PROVISIONAL | P0 | DEC-0.6 | p.ej. `overlay/src/data/daily_rivals.*` | Un archivo; marcado provisional |
-| GAP-F2-02 | Matchup: solo Aura o Blasco, equipo fijo cada uno | P0 | DEC-0.6 | `dailymaximo.c` | Misma semilla → mismo compañero y el mismo trío. Las 8 combinaciones quedan aplazadas |
-| GAP-F2-03 | Montar parties desde archivo (no solo HoL stock) | P0 | GAP-F2-01/02 | create party hooks | Combate usa datos del archivo |
+| GAP-F2-01 | Archivo datos rivales editable + PROVISIONAL | P0 | DEC-0.6 | `overlay/src/dailymaximo_rivals.c` | **DONE** |
+| GAP-F2-02 | Matchup: solo Aura o Blasco, equipo fijo cada uno | P0 | DEC-0.6 | `dailymaximo.c` + rivals | **DONE** |
+| GAP-F2-03 | Montar parties desde archivo (no solo HoL stock) | P0 | GAP-F2-01/02 | `DailyMax_CreateOpponentParties` | **DONE** |
 | GAP-F2-04 | Validador gen3/learnset (RI-10) | P0 | GAP-F2-01, GAP-F0-01 | script/test | Falla CI/build si move/sp ilegal |
 | GAP-F2-05 | Battery RI-05 fusión/dueño/sprites/IA | P0 | run daily | tests o checklist manual firmada | Evidencia en informe |
 | GAP-F2-06 | Mapa/escena según DEC-0.3 | P0 | DEC-0.3 | maps/scripts patches | Cumple opción elegida; NOVEDADES coherente |
-| GAP-F2-07 | Textos consolidados ES + nombres DEC-0.1 | P1 | DEC-0.1 | un archivo textos | Revisable por el equipo |
+| GAP-F2-07 | Textos consolidados ES + nombres DEC-0.1 | P1 | DEC-0.1 | `locale_guard` + battle table | **PARTIAL** — Protección + efectos TEAM/Your-Opposing; quedan ~49 STRINGID EN |
 | GAP-F2-08 | Reset práctica in-room (si hay escena) | P2 | GAP-F2-06 | scripts | Companion oculto; sala reiniciable |
 
 ### Fase 3 — IA / equilibrio · subagente `ai-balance`
@@ -295,3 +295,5 @@ Al terminar: actualizar la fila Estado de cada ID en el gap doc y dejar informe 
 |-------|-----|
 | 19/11/2026 | Primer gap analysis cruzando DOCX + Anexo A vs repo |
 | 19/11/2026 | DEC-0 cerrado. Fase 0: `GEN_LATEST GEN_3`, `P_GEN_4_POKEMON FALSE`, icono de categoría oculto. Informe: [`fase0-gen3-informe.md`](fase0-gen3-informe.md) |
+| 19/11/2026 | Fase 0 puerta cerrada (Surf/EQ en emulador). Fase 1 P0/P1: moveset completo, type boosters, BST 2700 provisional, protocolo/consumo día documentados. Informe: [`fase1-daily-core-informe.md`](fase1-daily-core-informe.md) |
+| 19/11/2026 | Handoff: [`pending.md`](pending.md). Rivales pokepaste Aura/Blasco en `dailymaximo_rivals.c`. Siguiente típico: GAP-F2-06 o F2-04/05. |

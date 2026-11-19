@@ -156,17 +156,55 @@ def main() -> None:
             continue
         id_to_es[sid] = remap_placeholders(inner_string(es[sym]))
 
-    # Manual extras for expansion-only / renamed ids
+    # Manuales: expansion-only, o FireRed con códigos de equipo distintos (TEAM vs PREFIX).
+    # Deben usar EXACTAMENTE los {...} del original de expansion (p. ej. B_*_TEAM*).
+    # Sobrescriben FireRed cuando este no pasa locale_guard (efectos de campo en inglés).
     manual = {
         "STRINGID_ITSUPEREFFECTIVE": "¡Es muy eficaz!",
         "STRINGID_NOTVERYEFFECTIVE": "No es muy eficaz...",
         "STRINGID_ONEHITKO": "¡K.O. en 1 golpe!",
         "STRINGID_CRITICALHIT": "¡Un golpe crítico!",
         "STRINGID_ANHITXTIMESBINUSE": "¡El Pokémon recibió {B_BUFF1} golpe{B_BUFF2}!",
+        # Pantallas / velo / púas (Gen3) — {B_*_TEAM*} → «tu equipo» / «el equipo enemigo»
+        "STRINGID_PKMNRAISEDDEF": "¡REFLEJO aumentó la DEFENSA de {B_ATK_TEAM2}!",
+        "STRINGID_PKMNRAISEDSPDEF": "¡PANTALLA LUZ aumentó la DEF. ESP. de {B_ATK_TEAM2}!",
+        "STRINGID_PKMNAURORAVEIL": "¡VELO AURORA fortaleció a {B_ATK_TEAM2}!",
+        "STRINGID_PKMNCOVEREDBYVEIL": "¡{B_ATK_TEAM1} se protegió con VELO SAGRADO!",
+        "STRINGID_PKMNSAFEGUARDEXPIRED": "¡{B_ATK_TEAM1} ya no está protegido por VELO SAGRADO!",
+        "STRINGID_SPIKESSCATTERED": "¡Se han esparcido PÚAS alrededor de {B_DEF_TEAM2}!",
+        "STRINGID_PKMNSXWOREOFF": "¡Se agotó el efecto de {B_BUFF1} en {B_ATK_TEAM1}!",
+        "STRINGID_REFLECTWOREOFF": "¡{B_DEF_TEAM1} ya no tiene REFLEJO!",
+        "STRINGID_LIGHTSCREENWOREOFF": "¡{B_DEF_TEAM1} ya no tiene PANTALLA LUZ!",
+        "STRINGID_AURORAVEILWOREOFF": "¡{B_DEF_TEAM1} ya no tiene VELO AURORA!",
+        # Hazards / efectos de campo posteriores (misma familia TEAM)
+        "STRINGID_POISONSPIKESSCATTERED": "¡Se han esparcido PÚAS TÓXICAS alrededor de {B_DEF_TEAM2}!",
+        "STRINGID_POINTEDSTONESFLOAT": "¡Flotan piedras puntiagudas sobre {B_DEF_TEAM2}!",
+        "STRINGID_STICKYWEBUSED": "¡Se ha tendido una RED VISCOSA alrededor de {B_DEF_TEAM2}!",
+        "STRINGID_PROTECTEDTEAM": "¡{B_CURRENT_MOVE} protege ahora a {B_ATK_TEAM2}!",
+        "STRINGID_TAILWINDBLEW": "¡Sopla un VIENTO AFÍN a favor de {B_ATK_TEAM2}!",
+        "STRINGID_TAILWINDENDS": "¡Se ha agotado el VIENTO AFÍN de {B_ATK_TEAM1}!",
+        "STRINGID_SHIELDEDFROMCRITICALHITS": "¡CONJURO ocultó a {B_ATK_TEAM2} de los críticos!",
+        "STRINGID_LUCKYCHANTENDS": "¡Se agotó el CONJURO de {B_ATK_TEAM1}!",
+        "STRINGID_UNNERVEENTERS": "¡{B_EFF_TEAM1} está demasiado nervioso para comer Bayas!",
+        "STRINGID_TOXICSPIKESABSORBED": "¡Desaparecieron las PÚAS TÓXICAS de alrededor de {B_EFF_TEAM2}!",
+        "STRINGID_SPIKESDISAPPEAREDFROMTEAM": "¡Desaparecieron las PÚAS de alrededor de {B_ATK_TEAM2}!",
+        "STRINGID_TOXICSPIKESDISAPPEAREDFROMTEAM": "¡Desaparecieron las PÚAS TÓXICAS de alrededor de {B_ATK_TEAM2}!",
+        "STRINGID_STICKYWEBDISAPPEAREDFROMTEAM": "¡Desapareció la RED VISCOSA de alrededor de {B_ATK_TEAM2}!",
+        "STRINGID_STEALTHROCKDISAPPEAREDFROMTEAM": "¡Desaparecieron las piedras puntiagudas de {B_ATK_TEAM2}!",
+        "STRINGID_SHARPSTEELFLOATS": "¡Flotan trozos de acero afilado alrededor de {B_DEF_TEAM2}!",
+        "STRINGID_SHARPSTEELDISAPPEAREDFROMTEAM": "¡Desaparecieron los trozos de acero de {B_ATK_TEAM2}!",
+        "STRINGID_TEAMTRAPPEDWITHVINES": "¡Los Pokémon de {B_EFF_TEAM1} quedaron atrapados por enredaderas!",
+        "STRINGID_TEAMCAUGHTINVORTEX": "¡Los Pokémon de {B_EFF_TEAM1} quedaron atrapados en un torbellino!",
+        "STRINGID_TEAMSURROUNDEDBYFIRE": "¡Los Pokémon de {B_EFF_TEAM1} quedaron rodeados de fuego!",
+        "STRINGID_TEAMSURROUNDEDBYROCKS": "¡Los Pokémon de {B_EFF_TEAM1} quedaron rodeados de rocas!",
+        "STRINGID_ARAINBOWAPPEAREDONSIDE": "¡Apareció un arcoíris sobre {B_EFF_TEAM2}!",
+        "STRINGID_THERAINBOWDISAPPEARED": "¡Desapareció el arcoíris de {B_ATK_TEAM2}!",
+        "STRINGID_SEAOFFIREENVELOPEDSIDE": "¡Un mar de fuego envolvió a {B_EFF_TEAM2}!",
+        "STRINGID_THESEAOFFIREDISAPPEARED": "¡Desapareció el mar de fuego de {B_ATK_TEAM2}!",
+        "STRINGID_SWAMPENVELOPEDSIDE": "¡Un pantano envolvió a {B_EFF_TEAM2}!",
+        "STRINGID_THESWAMPDISAPPEARED": "¡Desapareció el pantano de {B_ATK_TEAM2}!",
     }
-    # Prefer file-based; manual fills gaps only
-    for k, v in manual.items():
-        id_to_es.setdefault(k, v)
+    id_to_es.update(manual)
 
     text = path.read_text(encoding="utf-8")
     m = re.search(

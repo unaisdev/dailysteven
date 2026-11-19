@@ -15,14 +15,15 @@ Pruebas en el navegador sobre `web/game/dailymaximo.gba.gz` recompilada tras Gen
 | Debilitar y cambiar (menú de equipo, «¡Adelante, Masquerain!») | **OK** | |
 | Portada Daily Steven, práctica sin guardar | **OK** | |
 
-## Gen 3 (código, no medido en combate)
+## Gen 3
 
 Con `GEN_LATEST GEN_3` en el árbol compilado:
 
 | Caso | Esperado | Estado |
 |------|----------|--------|
-| Surf a dos rivales, 50 %, sin aliado | `TARGET_BOTH` + modificador 0.5 | **Config OK**; no medido daño en partida |
-| Terremoto al campo, aliado incluido, sin esa reducción | `TARGET_FOES_AND_ALLY` + modificador 1.0 si ≥3 | **Config OK**; no medido |
+| Surf a dos rivales, 50 %, sin aliado | `TARGET_BOTH` + modificador 0.5 | **OK en partida** (`?seed=900001` Starmie): aliado Wobbuffet sin daño |
+| Terremoto al campo, aliado incluido, sin esa reducción | `TARGET_FOES_AND_ALLY` + modificador 1.0 si ≥3 | **OK en partida** (`?seed=900002` Dugtrio): aliado pierde PS; combate sigue |
+| Freeze «usó TERREMOTO» (ES) | Texto de ataque con nombre del movimiento | **Corregido** (`sText_AttackerUsedX` → `{B_BUFF3}`) |
 | Crítico ×2 | `B_CRIT_MULTIPLIER` vía Gen3 | **Config OK** |
 | Físico/especial por tipo | `B_PHYSICAL_SPECIAL_SPLIT` | **Config OK** |
 | Acero resiste Fantasma/Siniestro | `STL_RS` con matchups Gen3 | **Config OK** |
@@ -35,12 +36,14 @@ Con `GEN_LATEST GEN_3` en el árbol compilado:
 - Sala de Bruno + cinemática (DEC-0.3): sigue la sala del campeón y el combate al instante.
 - Frase exacta «¡BLASCO/AURA envió a …!» en frame: el Pokémon sale; el subtítulo se saltó al avanzar el texto.
 - Moves ilegales Gen4 en partidos HoL (Gallade / Iron Head / Roost): validador Fase 2.
-- Pruebas dirigidas de IA y daño Surf/EQ en combate.
+- Pruebas dirigidas de IA (Fase 3).
 
 ## Cómo reproducir
 
 ```text
 node scripts/serve.mjs
-http://localhost:8080/?seed=1   # Blasco + Gardevoir
-http://localhost:8080/?seed=2   # Aura + Blaziken
+http://localhost:8080/?seed=1        # Blasco + Gardevoir
+http://localhost:8080/?seed=2        # Aura + Blaziken
+http://localhost:8080/?seed=900001   # sonda Surf (Starmie)
+http://localhost:8080/?seed=900002   # sonda Terremoto (Dugtrio)
 ```

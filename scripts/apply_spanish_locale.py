@@ -374,6 +374,20 @@ UI_OVERRIDES = {
     "gText_Cancel4": c_str_lit("SALIR"),
     "gText_Cancel5": c_str_lit("SALIR"),
     "gText_PkmnInfo": c_str_lit("INFO. POKéMON"),
+    "gText_PkmnSkills": c_str_lit("HABIL. POKéMON"),
+    "gText_BattleMoves": c_str_lit("MOV. COMBATE"),
+    "gText_ContestMoves": c_str_lit("MOV. CONCURSO"),
+    "gText_HP4": c_str_lit("PS"),
+    "gText_Attack3": c_str_lit("ATAQUE"),
+    "gText_Defense3": c_str_lit("DEFENSA"),
+    "gText_SpAtk4": c_str_lit("AT. ESP"),
+    "gText_SpDef4": c_str_lit("DEF. ESP"),
+    "gText_Speed2": c_str_lit("VELOC."),
+    "gText_ExpPoints": c_str_lit("PUNTOS EXP."),
+    "gText_NextLv": c_str_lit("SIG. NIVEL"),
+    "gText_Status": c_str_lit("ESTADO"),
+    "gText_None": c_str_lit("NINGUNO"),
+    "gText_RibbonsVar1": c_str_lit("CINTAS: {STR_VAR_1}"),
     "gText_OTSlash": c_str_lit("EO/"),
     "gText_TypeSlash": c_str_lit("TIPO/"),
     "gText_IDNumber2": c_str_lit("{ID}{NO}."),
@@ -619,6 +633,26 @@ def patch_battle_move_stat_labels(path: Path) -> None:
     print(f"  battle_controller_player.c: {n} move-stat labels")
 
 
+def patch_team_side_labels(path: Path) -> None:
+    """B_*_TEAM* inserts «Your»/«the opposing»; sin esto los efectos de campo salen mixtos."""
+    text = path.read_text(encoding="utf-8")
+    repls = [
+        ('static const u8 sText_Your1[] = _("Your");', 'static const u8 sText_Your1[] = _("Tu equipo");'),
+        ('static const u8 sText_Opposing1[] = _("The opposing");', 'static const u8 sText_Opposing1[] = _("El equipo enemigo");'),
+        ('static const u8 sText_Your2[] = _("your");', 'static const u8 sText_Your2[] = _("tu equipo");'),
+        ('static const u8 sText_Opposing2[] = _("the opposing");', 'static const u8 sText_Opposing2[] = _("el equipo enemigo");'),
+    ]
+    n = 0
+    for old, new in repls:
+        if old in text:
+            text = text.replace(old, new, 1)
+            n += 1
+        elif new in text:
+            n += 1
+    path.write_text(text, encoding="utf-8")
+    print(f"  battle_message.c: {n}/4 team-side labels (Your/Opposing -> ES)")
+
+
 # Expansion leftovers (Z-Moves / typos) not covered by PokeAPI slug mapping.
 EXTRA_MOVE_NAMES_ES = {
     "MOVE_VICE_GRIP": "AGARRE",
@@ -694,6 +728,7 @@ def main() -> None:
 
     patch_party_menu_actions(GAME / "src/data/party_menu.h")
     patch_battle_move_stat_labels(GAME / "src/battle_controller_player.c")
+    patch_team_side_labels(GAME / "src/battle_message.c")
 
     battle_map = json.loads((LOCALE / "battle_strings_es.json").read_text(encoding="utf-8"))
     for hdr in (

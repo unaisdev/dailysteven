@@ -375,7 +375,7 @@
 "sText_AllyPkmnPrefix2": "_(\"amigo\")",
 "sText_FoePkmnPrefix4": "_(\"enemigo\")",
 "sText_AllyPkmnPrefix3": "_(\"amigo\")",
-"sText_AttackerUsedX": "_(\"¡{B_ATK_NAME_WITH_PREFIX} usó\\n{B_BUFF2}\")",
+"sText_AttackerUsedX": "_(\"¡{B_ATK_NAME_WITH_PREFIX} usó\\n{B_BUFF3}!\")",
 "sText_ExclamationMark": "_(\"!\")",
 "sText_ExclamationMark2": "_(\"!\")",
 "sText_ExclamationMark3": "_(\"!\")",

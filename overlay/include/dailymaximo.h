@@ -18,6 +18,8 @@ bool32 DailyMax_IsActive(void);
 u32 DailyMax_GetSeed(void);
 bool32 DailyMax_IsDailyMode(void);
 u8 DailyMax_GetPartnerCharacter(void);
+// Slots 0-2 = Aura matchup, 3-5 = Blasco matchup in dailymax_rivals.party (STEVEN).
+const u8 *DailyMax_GetStevenIconicSlots(void);
 
 void CB2_DailyMax_StartFromCopyright(void);
 void CB2_DailyMax_StartFromTitle(void);

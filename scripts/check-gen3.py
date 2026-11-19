@@ -8,8 +8,8 @@ Comprueba:
      generación posterior a la 3.ª (salvo cosas del mapa del mundo, irrelevantes aquí). Las ayudas modernas
      (eficacia, objetivos, MOVE INFO, última Poké Ball, afecto, correr, reaprender movimientos, colores de
      naturaleza) tienen que estar apagadas.
-  2. Equipos de los rivales (overlay/data/dailymax_rivals.party Y lo que quedó en el árbol): 3 Pokémon por
-     entrenador; especie 1-386; movimientos 1-354; habilidad 1-77; objetos de 3.ª gen.
+  2. Equipos de los rivales (overlay/data/dailymax_rivals.party Y lo que quedó en el árbol): STEVEN 6
+     (Aura 0-2 + Blasco 3-5), AURA/BLASCO 3; especie 1-386; movimientos 1-354; habilidad 1-77; objetos Gen3.
   3. Generador del jugador (overlay/src/dailymaximo_team.c): toda especie, movimiento u objeto que nombra es
      de 3.ª gen, y la lista de MT/MO tiene 50 + 8 movimientos distintos.
 """
@@ -116,8 +116,10 @@ def check_party(label: str, text: str) -> None:
         if mons is None:
             fail(f"RIVALES ({label}): falta {trainer}")
             continue
-        if len(mons) != 3:
-            fail(f"RIVALES ({label}) {trainer}: tiene {len(mons)} Pokémon y deben ser exactamente 3")
+        # STEVEN: 6 = trío matchup Aura (0-2) + trío matchup Blasco (3-5). Compañeros: exactamente 3.
+        want = 6 if trainer == "TRAINER_HOL_STEVEN" else 3
+        if len(mons) != want:
+            fail(f"RIVALES ({label}) {trainer}: tiene {len(mons)} Pokémon y deben ser exactamente {want}")
         for mon in mons:
             sc = name_to_const("SPECIES_", mon["species"])
             if sc not in c_spec or not 1 <= c_spec[sc] <= 386:

@@ -1,28 +1,19 @@
 /*
  * ===========================================================================
- *  EQUIPOS DE LOS RIVALES DE DAILY STEVEN  --  *** PROVISIONALES ***
+ *  EQUIPOS DE LOS RIVALES DE DAILY STEVEN
  * ===========================================================================
- *  Este es el ÚNICO archivo que hay que editar para cambiar los equipos de
- *  MÁXIMO (Steven), AURA (May) y BLASCO (Wally). Cuando lleguen los equipos
- *  definitivos, se sustituyen los tres bloques de abajo y se vuelve a compilar
- *  (scripts\build-wsl.ps1).
+ *  Fuentes:
+ *    Aura:   https://pokepast.es/30fcfe031e43cb26
+ *    Blasco: https://pokepast.es/65e82ca89516f510
  *
- *  Reglas (las vigila scripts/check-gen3.py al compilar; si no se cumplen NO compila):
- *   - EXACTAMENTE 3 Pokémon por entrenador (son los 3 que salen al combate;
- *     se fusionan en un equipo de 6 con los del compañero).
- *   - Solo 1.ª-3.ª generación: especies 1-386, movimientos hasta Psicoataque,
- *     habilidades de 3.ª gen y objetos de 3.ª gen. Nada de 4.ª gen.
- *   - Nombres de especie, movimiento, habilidad y objeto en INGLÉS, como en
- *     Hall of Legends (el juego los muestra en castellano).
- *   - No toques las líneas "=== TRAINER_HOL_... ===" ni "Name:" (el nombre en
- *     pantalla se cambia en overlay/include/dailymax_texts.h).
+ *  STEVEN tiene DOS tríos (6 Pokémon): slots 0-2 = matchup Aura, 3-5 = matchup Blasco.
+ *  El parche elige iconic {0,1,2} o {3,4,5} según el compañero del día.
+ *  AURA y BLASCO: exactamente 3 cada uno.
  *
- *  Equipos: los de Hall of Legends, con lo de 4.ª gen sustituido.
- *    MÁXIMO : Aggron: Cabeza de Hierro -> Avalancha
- *    AURA   : Blaziken: Envite Ígneo -> Patada Ígnea; Roca Afilada -> Avalancha
- *             Tropius: Tajo Aéreo -> Golpe Aéreo; Bola Energía -> Gigadrenado
- *             Pelipper: Ida y Vuelta -> Tóxico; Respiro -> Protección
- *    BLASCO : Gallade (especie de 4.ª gen) -> Magneton (3.ª gen)
+ *  Ajustes Gen3 (check-gen3.py): Focus Sash → Focus Band; Telepathy → Trace.
+ *  Blaziken sin EVs/naturaleza en el paste → Adamant 4 HP / 252 Atk / 252 Spe.
+ *
+ *  Nombres en INGLÉS. Pantalla: overlay/include/dailymax_texts.h.
  * ===========================================================================
  */
 
@@ -36,38 +27,71 @@ Double Battle: No
 AI: Basic Trainer / Omniscient / Smart Switching / Smart Mon Choices / PP Stall Prevention / Randomize Switchin / Prediction
 Mugshot: Blue
 
-Metagross
+Skarmory @ Sitrus Berry
+Ability: Keen Eye
+Adamant Nature
+Level: 100
+IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 56 Atk / 24 Def / 176 SpD
+- Toxic
+- Spikes
+- Protect
+- Air Cutter
+
+Cradily @ Leftovers
+Ability: Suction Cups
+Relaxed Nature
+Level: 100
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 40 Atk / 80 Def / 36 SpA / 100 SpD
+- Rock Slide
+- Confuse Ray
+- Recover
+- Giga Drain
+
+Metagross @ Metal Coat
 Ability: Clear Body
 Adamant Nature
 Level: 100
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-EVs: 252 HP / 252 Atk / 6 SpA
+EVs: 92 HP / 252 Atk / 60 SpD / 104 Spe
 - Meteor Mash
-- Earthquake
-- Psychic
 - Shadow Ball
+- Earthquake
+- Protect
 
-Skarmory (M)
+Skarmory @ Sitrus Berry
 Ability: Keen Eye
-Impish Nature
-Level: 100
-IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-EVs: 252 HP / 252 Def / 6 SpD
-- Spikes
-- Toxic
-- Steel Wing
-- Aerial Ace
-
-Aggron (M)
-Ability: Rock Head
 Adamant Nature
 Level: 100
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-EVs: 252 HP / 252 Atk / 6 SpD
-- Rock Slide
+EVs: 252 HP / 56 Atk / 24 Def / 176 SpD
+- Toxic
+- Spikes
+- Protect
+- Air Cutter
+
+Metagross @ Metal Coat
+Ability: Clear Body
+Adamant Nature
+Level: 100
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 92 HP / 252 Atk / 60 SpD / 104 Spe
+- Meteor Mash
+- Shadow Ball
 - Earthquake
-- Dragon Claw
-- Thunder
+- Protect
+
+Aggron @ Salac Berry
+Ability: Sturdy
+Jolly Nature
+Level: 100
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 Atk / 252 Spe
+- Rock Slide
+- Endeavor
+- Iron Tail
+- Protect
 
 === TRAINER_HOL_MAY ===
 Name: MAY
@@ -79,38 +103,38 @@ Double Battle: No
 AI: Basic Trainer / Omniscient / Smart Switching / Smart Mon Choices / PP Stall Prevention / Randomize Switchin / Prediction
 Mugshot: Pink
 
-Blaziken
+Blaziken @ Focus Band
 Ability: Blaze
 Adamant Nature
 Level: 100
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 EVs: 4 HP / 252 Atk / 252 Spe
-- Swords Dance
-- Blaze Kick
-- Superpower
-- Rock Slide
-
-Tropius
-Ability: Chlorophyll
-Calm Nature
-Level: 100
-IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-EVs: 252 HP / 6 SpA / 252 SpD
-- Leech Seed
-- Aerial Ace
-- Giga Drain
-- Synthesis
-
-Pelipper
-Ability: Keen Eye
-Modest Nature
-Level: 100
-IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-EVs: 252 HP / 252 SpA / 6 SpD
-- Surf
-- Ice Beam
-- Toxic
 - Protect
+- Overheat
+- Sky Uppercut
+- Swords Dance
+
+Swellow @ Silk Scarf
+Ability: Guts
+Adamant Nature
+Level: 100
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 Atk / 252 Spe
+- Facade
+- Aerial Ace
+- Quick Attack
+- Protect
+
+Salamence @ Liechi Berry
+Ability: Intimidate
+Jolly Nature
+Level: 100
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 124 HP / 88 Atk / 4 Def / 40 SpD / 252 Spe
+- Protect
+- Dragon Dance
+- Crunch
+- Rock Slide
 
 === TRAINER_HOL_WALLY ===
 Name: WALLY
@@ -122,35 +146,35 @@ Double Battle: No
 AI: Basic Trainer / Omniscient / Smart Switching / Smart Mon Choices / PP Stall Prevention / Randomize Switchin / Prediction
 Mugshot: Green
 
-Gardevoir (M)
-Ability: Trace
-Modest Nature
-Level: 100
-IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-EVs: 4 HP / 252 SpA / 252 Spe
-- Psychic
-- Calm Mind
-- Future Sight
-- Double Team
-
-Altaria (M)
+Altaria @ Lum Berry
 Ability: Natural Cure
-Adamant Nature
+Bold Nature
 Level: 100
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-EVs: 4 HP / 252 Atk / 252 Spe
-- Dragon Dance
-- Aerial Ace
-- Dragon Breath
-- Safeguard
+EVs: 252 HP / 24 Def / 176 SpA / 4 SpD / 52 Spe
+- Sing
+- Dragon Claw
+- Flamethrower
+- Protect
 
-Magneton
-Ability: Magnet Pull
-Modest Nature
+Gardevoir @ Twisted Spoon
+Ability: Trace
+Mild Nature
+Level: 100
+IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 SpA / 252 Spe
+- Calm Mind
+- Psychic
+- Protect
+- Thunderbolt
+
+Milotic @ Leftovers
+Ability: Marvel Scale
+Calm Nature
 Level: 100
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-EVs: 252 HP / 252 SpA / 6 SpD
-- Thunderbolt
-- Tri Attack
-- Supersonic
-- Screech
+EVs: 252 HP / 128 Def / 72 SpA / 44 SpD / 12 Spe
+- Waterfall
+- Hypnosis
+- Ice Beam
+- Recover

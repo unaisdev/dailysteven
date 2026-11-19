@@ -517,17 +517,33 @@ def main() -> None:
         "horte pics",
     )
 
-    # ROM de pruebas: con la semilla de victoria los rivales empiezan con 1 PS (no hace nada en la ROM normal).
+    # STEVEN: 6 mons en dailymax_rivals.party → slots según compañero (Aura 0-2 / Blasco 3-5).
+    # También engancha DailyMax_DebugOnOpponents (ROM -Debug).
+    _steven_create = """        CreateCharacterMons(&gParties[B_TRAINER_OPPONENT_A][0], a,
+            (DailyMax_IsActive() && a == HOL_CHAR_STEVEN) ? DailyMax_GetStevenIconicSlots() : gHoLCharacters[a].iconic,
+            3, FALSE);
+        CreateCharacterMons(&gParties[B_TRAINER_OPPONENT_B][0], b, gHoLCharacters[b].iconic, 3, FALSE);
+    }
+    DailyMax_DebugOnOpponents();
+    return TRUE;"""
     replace_once(
         hol,
-        """        CreateCharacterMons(&gParties[B_TRAINER_OPPONENT_B][0], b, gHoLCharacters[b].iconic, 3, FALSE);
+        """        CreateCharacterMons(&gParties[B_TRAINER_OPPONENT_A][0], a, gHoLCharacters[a].iconic, 3, FALSE);
+        CreateCharacterMons(&gParties[B_TRAINER_OPPONENT_B][0], b, gHoLCharacters[b].iconic, 3, FALSE);
     }
     return TRUE;""",
-        """        CreateCharacterMons(&gParties[B_TRAINER_OPPONENT_B][0], b, gHoLCharacters[b].iconic, 3, FALSE);
+        _steven_create,
+        "steven matchup slots + debug opponents",
+    )
+    replace_once(
+        hol,
+        """        CreateCharacterMons(&gParties[B_TRAINER_OPPONENT_A][0], a, gHoLCharacters[a].iconic, 3, FALSE);
+        CreateCharacterMons(&gParties[B_TRAINER_OPPONENT_B][0], b, gHoLCharacters[b].iconic, 3, FALSE);
     }
     DailyMax_DebugOnOpponents();
     return TRUE;""",
-        "debug opponents hook",
+        _steven_create,
+        "steven matchup slots (after debug hook)",
     )
 
     # ---- Mecánicas y ayudas: 3.ª generación estricta ----------------------------------------------------
