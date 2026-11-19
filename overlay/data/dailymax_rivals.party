@@ -1,0 +1,156 @@
+/*
+ * ===========================================================================
+ *  EQUIPOS DE LOS RIVALES DE DAILY STEVEN  --  *** PROVISIONALES ***
+ * ===========================================================================
+ *  Este es el ÚNICO archivo que hay que editar para cambiar los equipos de
+ *  MÁXIMO (Steven), AURA (May) y BLASCO (Wally). Cuando lleguen los equipos
+ *  definitivos, se sustituyen los tres bloques de abajo y se vuelve a compilar
+ *  (scripts\build-wsl.ps1).
+ *
+ *  Reglas (las vigila scripts/check-gen3.py al compilar; si no se cumplen NO compila):
+ *   - EXACTAMENTE 3 Pokémon por entrenador (son los 3 que salen al combate;
+ *     se fusionan en un equipo de 6 con los del compañero).
+ *   - Solo 1.ª-3.ª generación: especies 1-386, movimientos hasta Psicoataque,
+ *     habilidades de 3.ª gen y objetos de 3.ª gen. Nada de 4.ª gen.
+ *   - Nombres de especie, movimiento, habilidad y objeto en INGLÉS, como en
+ *     Hall of Legends (el juego los muestra en castellano).
+ *   - No toques las líneas "=== TRAINER_HOL_... ===" ni "Name:" (el nombre en
+ *     pantalla se cambia en overlay/include/dailymax_texts.h).
+ *
+ *  Equipos: los de Hall of Legends, con lo de 4.ª gen sustituido.
+ *    MÁXIMO : Aggron: Cabeza de Hierro -> Avalancha
+ *    AURA   : Blaziken: Envite Ígneo -> Patada Ígnea; Roca Afilada -> Avalancha
+ *             Tropius: Tajo Aéreo -> Golpe Aéreo; Bola Energía -> Gigadrenado
+ *             Pelipper: Ida y Vuelta -> Tóxico; Respiro -> Protección
+ *    BLASCO : Gallade (especie de 4.ª gen) -> Magneton (3.ª gen)
+ * ===========================================================================
+ */
+
+=== TRAINER_HOL_STEVEN ===
+Name: STEVEN
+Class: Champion Frlg
+Pic: Steven
+Gender: Male
+Music: Male
+Double Battle: No
+AI: Basic Trainer / Omniscient / Smart Switching / Smart Mon Choices / PP Stall Prevention / Randomize Switchin / Prediction
+Mugshot: Blue
+
+Metagross
+Ability: Clear Body
+Adamant Nature
+Level: 100
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 6 SpA
+- Meteor Mash
+- Earthquake
+- Psychic
+- Shadow Ball
+
+Skarmory (M)
+Ability: Keen Eye
+Impish Nature
+Level: 100
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Def / 6 SpD
+- Spikes
+- Toxic
+- Steel Wing
+- Aerial Ace
+
+Aggron (M)
+Ability: Rock Head
+Adamant Nature
+Level: 100
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 Atk / 6 SpD
+- Rock Slide
+- Earthquake
+- Dragon Claw
+- Thunder
+
+=== TRAINER_HOL_MAY ===
+Name: MAY
+Class: Champion Frlg
+Pic: May
+Gender: Female
+Music: Female
+Double Battle: No
+AI: Basic Trainer / Omniscient / Smart Switching / Smart Mon Choices / PP Stall Prevention / Randomize Switchin / Prediction
+Mugshot: Pink
+
+Blaziken
+Ability: Blaze
+Adamant Nature
+Level: 100
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 Atk / 252 Spe
+- Swords Dance
+- Blaze Kick
+- Superpower
+- Rock Slide
+
+Tropius
+Ability: Chlorophyll
+Calm Nature
+Level: 100
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 6 SpA / 252 SpD
+- Leech Seed
+- Aerial Ace
+- Giga Drain
+- Synthesis
+
+Pelipper
+Ability: Keen Eye
+Modest Nature
+Level: 100
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 SpA / 6 SpD
+- Surf
+- Ice Beam
+- Toxic
+- Protect
+
+=== TRAINER_HOL_WALLY ===
+Name: WALLY
+Class: Champion Frlg
+Pic: Wally
+Gender: Male
+Music: Male
+Double Battle: No
+AI: Basic Trainer / Omniscient / Smart Switching / Smart Mon Choices / PP Stall Prevention / Randomize Switchin / Prediction
+Mugshot: Green
+
+Gardevoir (M)
+Ability: Trace
+Modest Nature
+Level: 100
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 SpA / 252 Spe
+- Psychic
+- Calm Mind
+- Future Sight
+- Double Team
+
+Altaria (M)
+Ability: Natural Cure
+Adamant Nature
+Level: 100
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 4 HP / 252 Atk / 252 Spe
+- Dragon Dance
+- Aerial Ace
+- Dragon Breath
+- Safeguard
+
+Magneton
+Ability: Magnet Pull
+Modest Nature
+Level: 100
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 252 SpA / 6 SpD
+- Thunderbolt
+- Tri Attack
+- Supersonic
+- Screech

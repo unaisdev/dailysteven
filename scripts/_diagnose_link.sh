@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
+ROOT_WIN="$(cd "$(dirname "$0")/.." && (pwd -W 2>/dev/null || pwd))"
 export MSYS_NO_PATHCONV=1
 docker run --rm \
-  -v "C:/Users/Unai/Desktop/Proyectos/dailymaximo:/src" \
+  -v "$ROOT_WIN:/src" \
   -w /src/pokeemerald-expansion \
   dailymaximo-build \
   bash -lc '

@@ -18,6 +18,12 @@
 #include "event_data.h"
 #include "party_menu.h"
 #include "battle.h"
+#include "dailymax_texts.h"
+#include "field_name_box.h"
+#include "line_break.h"
+#include "text.h"
+#include "constants/flags.h"
+#include "constants/species.h"
 
 struct DailyMaxRomConfig const gDailyMaxRomConfig __attribute__((used, aligned(4))) =
 {
@@ -38,7 +44,8 @@ static EWRAM_DATA struct DailyMaxStatus sStatus = {0};
 static EWRAM_DATA u32 sTeamSeed = 0;
 static EWRAM_DATA bool32 sDailyMaxActive = FALSE;
 
-static const u8 sText_PlayerName[] = _("LEAF");
+// El jugador se llama HORTE en todo (guardado, combate, textos del motor). El nombre está en dailymax_texts.h.
+static const u8 sText_PlayerName[] = _(DAILYMAX_NAME_PLAYER);
 
 static u32 GetInjectedSeed(void)
 {
@@ -114,7 +121,7 @@ static void PreparePartyAndStart(void)
     StringCopy(gSaveBlock1Ptr->rivalName, gHoLCharacters[HOL_CHAR_BLUE].name);
 #endif
     StringCopy(gSaveBlock2Ptr->playerName, sText_PlayerName);
-    gSaveBlock2Ptr->playerGender = FEMALE;
+    gSaveBlock2Ptr->playerGender = MALE;
     gSaveBlock2Ptr->optionsTextSpeed = OPTIONS_TEXT_SPEED_FAST;
     gSaveBlock2Ptr->optionsBattleStyle = OPTIONS_BATTLE_STYLE_SET;
     SetMainCallback2(CB2_NewGame);
@@ -168,3 +175,133 @@ u16 DailyMax_IsDailyActive(void)
 {
     return DailyMax_IsActive();
 }
+
+// ---------------------------------------------------------------------------
+// Escena de entrada en la sala de Bruno (ver data/scripts/dailymax_bruno.inc).
+// Los textos viven TODOS en include/dailymax_texts.h.
+
+// Flag solo de esta ROM: oculta los Pokémon del "escaparate" de la sala para
+// que no se vea el equipo del compañero (es una sorpresa).
+#define FLAG_DAILYMAX_HIDE_TEAM  FLAG_0x0B3
+
+// Casilla de la puerta del fondo de la sala de Bruno por donde entra el compañero.
+#define DAILYMAX_PARTNER_DOOR_X  6
+#define DAILYMAX_PARTNER_DOOR_Y  2
+
+#define DAILYMAX_TEXT_WIDTH      208  // caja de mensajes normal
+#define DAILYMAX_TEXT_LINES      2
+
+// Mantener sincronizado con data/scripts/dailymax_bruno.inc
+enum
+{
+    DAILYMAX_SPEECH_BOSS_1,
+    DAILYMAX_SPEECH_BOSS_2,
+    DAILYMAX_SPEECH_PARTNER_ENTER,
+    DAILYMAX_SPEECH_PARTNER_BESIDE,
+};
+
+static bool32 PartnerIsBlasco(void)
+{
+    return DailyMax_GetPartnerCharacter() == HOL_CHAR_WALLY;
+}
+
+// Llamado desde HoL_SetupRoom (ON_TRANSITION de la sala), tras colocar a los entrenadores.
+void DailyMax_SetupRoom(void)
+{
+    u32 i;
+
+    if (!DailyMax_IsActive())
+        return;
+    // Solo el jefe está en la sala. El compañero aparece luego por la puerta del fondo.
+    FlagSet(FLAG_HOL_HIDE_TRAINER_B);
+    SetObjEventTemplateCoords(LOCALID_HOL_TRAINER_B, DAILYMAX_PARTNER_DOOR_X, DAILYMAX_PARTNER_DOOR_Y);
+    FlagSet(FLAG_DAILYMAX_HIDE_TEAM);
+    for (i = 0; i < HOL_TEAM_DISPLAY_COUNT; i++)
+        SetObjEventTemplateFlagId(LOCALID_HOL_MON_1 + i, FLAG_DAILYMAX_HIDE_TEAM);
+}
+
+// VAR_0x8004 = DAILYMAX_SPEECH_*. Deja el texto en gStringVar4 y el nombre del que habla en la caja.
+void DailyMax_BufferSpeech(void)
+{
+    static const u8 *const sBossTalk[] =
+    {
+        COMPOUND_STRING(DAILYMAX_TEXT_BOSS_TALK_1),
+        COMPOUND_STRING(DAILYMAX_TEXT_BOSS_TALK_2),
+    };
+    static const u8 *const sPartnerEnter[] =
+    {
+        COMPOUND_STRING(DAILYMAX_TEXT_AURA_ENTER),
+        COMPOUND_STRING(DAILYMAX_TEXT_BLASCO_ENTER),
+    };
+    static const u8 *const sPartnerBeside[] =
+    {
+        COMPOUND_STRING(DAILYMAX_TEXT_AURA_BESIDE),
+        COMPOUND_STRING(DAILYMAX_TEXT_BLASCO_BESIDE),
+    };
+    u32 id = gSpecialVar_0x8004;
+    u32 partner = PartnerIsBlasco();
+    const u8 *text;
+    const u8 *speaker;
+
+    switch (id)
+    {
+    case DAILYMAX_SPEECH_BOSS_1:
+    case DAILYMAX_SPEECH_BOSS_2:
+        text = sBossTalk[id - DAILYMAX_SPEECH_BOSS_1];
+        speaker = gHoLCharacters[HOL_CHAR_STEVEN].name;
+        break;
+    case DAILYMAX_SPEECH_PARTNER_ENTER:
+        text = sPartnerEnter[partner];
+        speaker = gHoLCharacters[DailyMax_GetPartnerCharacter()].name;
+        break;
+    default:
+        text = sPartnerBeside[partner];
+        speaker = gHoLCharacters[DailyMax_GetPartnerCharacter()].name;
+        break;
+    }
+    StringExpandPlaceholders(gStringVar4, text);
+    BreakStringAutomatic(gStringVar4, DAILYMAX_TEXT_WIDTH, DAILYMAX_TEXT_LINES, FONT_NORMAL, SHOW_SCROLL_PROMPT);
+    gSpeakerName = speaker;
+}
+
+// Mensaje final: titular + récord + despedida, según el resultado ya guardado por DailyMax_OnBattleEnd.
+void DailyMax_BufferResult(void)
+{
+    static const u8 *const sResult[] =
+    {
+        COMPOUND_STRING(DAILYMAX_TEXT_RESULT_LOST "\p" DAILYMAX_TEXT_RECORD "\p" DAILYMAX_TEXT_OUTRO_LOST),
+        COMPOUND_STRING(DAILYMAX_TEXT_RESULT_WON "\p" DAILYMAX_TEXT_RECORD "\p" DAILYMAX_TEXT_OUTRO_WON),
+    };
+    bool32 won = sStatus.result == DAILYMAX_RESULT_WON;
+    u32 wins = *(const vu16 *)&gDailyMaxRomConfig.wins;
+    u32 battles = *(const vu16 *)&gDailyMaxRomConfig.battles;
+
+    // La web guarda el récord anterior en la ROM; aquí se suma este combate.
+    wins += won ? 1 : 0;
+    battles += 1;
+    ConvertIntToDecimalStringN(gStringVar1, wins, STR_CONV_MODE_LEFT_ALIGN, 5);
+    ConvertIntToDecimalStringN(gStringVar2, battles, STR_CONV_MODE_LEFT_ALIGN, 5);
+    StringExpandPlaceholders(gStringVar4, sResult[won]);
+    BreakStringAutomatic(gStringVar4, DAILYMAX_TEXT_WIDTH, DAILYMAX_TEXT_LINES, FONT_NORMAL, SHOW_SCROLL_PROMPT);
+    gSpeakerName = NULL;
+}
+
+#if DAILYMAX_DEBUG
+// ROM de pruebas: con la semilla DAILYMAX_DEBUG_SEED_WIN los rivales empiezan con 1 PS (victoria segura).
+// Se llama al final de HoL_CreateOpponentParties, antes de que empiece el combate.
+void DailyMax_DebugOnOpponents(void)
+{
+    u32 i;
+    u16 hp = 1;
+
+    if (GetInjectedSeed() != DAILYMAX_DEBUG_SEED_WIN)
+        return;
+    for (i = 0; i < PARTY_SIZE; i++)
+    {
+        if (GetMonData(&gParties[B_TRAINER_OPPONENT_A][i], MON_DATA_SPECIES) != SPECIES_NONE)
+            SetMonData(&gParties[B_TRAINER_OPPONENT_A][i], MON_DATA_HP, &hp);
+        if (GetMonData(&gParties[B_TRAINER_OPPONENT_B][i], MON_DATA_SPECIES) != SPECIES_NONE)
+            SetMonData(&gParties[B_TRAINER_OPPONENT_B][i], MON_DATA_HP, &hp);
+    }
+}
+#endif

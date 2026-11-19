@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+ROOT_WIN="$(cd "$ROOT" && (pwd -W 2>/dev/null || pwd))"
 cd "$ROOT"
 
 # Strip CRLF from shell scripts (Windows checkouts)
@@ -15,7 +16,7 @@ docker build -t dailymaximo-build -f scripts/Dockerfile.build .
 
 export MSYS_NO_PATHCONV=1
 docker run --rm \
-  -v "C:/Users/Unai/Desktop/Proyectos/dailymaximo:/src" \
+  -v "$ROOT_WIN:/src" \
   -w /src \
   dailymaximo-build \
   bash scripts/build.sh

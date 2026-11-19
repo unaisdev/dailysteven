@@ -2,6 +2,7 @@
 #define GUARD_DAILYMAXIMO_H
 
 #include "global.h"
+#include "constants/dailymaximo.h"
 
 struct DailyMaxRomConfig
 {
@@ -29,5 +30,14 @@ void DailyMax_OnBattleStart(void);
 void DailyMax_OnBattleEnd(void);
 void DailyMax_FinishDaily(void);
 u16 DailyMax_IsDailyActive(void);
+void DailyMax_SetupRoom(void);
+void DailyMax_BufferSpeech(void);
+void DailyMax_BufferResult(void);
+
+#if DAILYMAX_DEBUG
+void DailyMax_DebugOnOpponents(void);
+#else
+#define DailyMax_DebugOnOpponents() ((void)0)
+#endif
 
 #endif // GUARD_DAILYMAXIMO_H

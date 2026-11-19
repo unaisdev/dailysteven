@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 export MSYS_NO_PATHCONV=1
-ROOT="C:/Users/Unai/Desktop/Proyectos/dailymaximo"
+ROOT="$(cd "$(dirname "$0")/.." && (pwd -W 2>/dev/null || pwd))"
 # Keep overlay copies in sync for headers/sources we own
 cp -f "$ROOT/overlay/include/dailymaximo.h" "$ROOT/pokeemerald-expansion/include/dailymaximo.h"
 cp -f "$ROOT/overlay/src/dailymaximo.c" "$ROOT/pokeemerald-expansion/src/dailymaximo.c"
