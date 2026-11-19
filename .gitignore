@@ -1,0 +1,16 @@
+# Recreated by the scripts in scripts/ (see README).
+
+# scripts/setup-macos.sh / local make
+/.toolchain/
+# scripts/get-expansion.sh
+/pokeemerald-expansion/
+# scripts/fetch-vendor.sh
+/web/vendor/
+# local extracts / caches
+/.cache/
+scripts/__pycache__/
+
+*.gba
+*.gba.gz
+*.sav
+.DS_Store

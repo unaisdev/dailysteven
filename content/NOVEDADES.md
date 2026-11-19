@@ -1,0 +1,12 @@
+- El rival se anuncia como STEVEN, con Aura o Blasco según el día.
+- El inicio del combate dice «STEVEN y AURA quieren combatir» (o BLASCO), y cada envío nombra a su entrenador.
+- Aura trae siempre el mismo equipo y Blasco otro, fijo, hasta que lleguen los equipos definitivos.
+- El combate usa reglas de 3.ª generación: crítico ×2, físico/especial según el tipo, Protección al 50 % y el cambio al caer un Pokémon en el acto.
+- Tu equipo de seis Pokémon nivel 100 se genera con la semilla del día.
+- Arreglado: pelean ellos dos contra ti solo (tú controlas tus 6) y ya no sale el combate sin Pokémon.
+- Los Pokémon del rival llegan corriendo desde la puerta (sin popeo ni señuelos raros).
+- Arranca directo al desafío: sin intro de Game Freak ni el splash de pokeemerald-expansion.
+- La barra de vida baja a ritmo de FireRed (ya no se vacía de golpe).
+- Todo el texto jugable en castellano: menús, equipo, resumen, tipos, nombres y descripciones de movimientos/habilidades, y mensajes de combate.
+- En combate: movimientos como DESCANSO, BILIS, PICADURA, TRUCO FUERZA; etiquetas POT./PRE. en la ficha del ataque.
+- Quitada la opción QUIT del menú (ya no vuelve a la selección de entrenadores de Hall of Legends).
