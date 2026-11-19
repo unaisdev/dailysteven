@@ -16,4 +16,4 @@ scripts/__pycache__/
 .DS_Store
 
 # scripts/build-wsl.ps1 (huella de la última ROM compilada)
-/web/game/BUILD-INFO.txt
+/web/game/BUILD-INFO*.txt

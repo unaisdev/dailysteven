@@ -17,8 +17,16 @@ enum {
 // Reserved seed bit for optional challenge status (off in v1; see docs/status-al-entrar.md).
 #define DAILYMAX_SEED_STATUS_BIT 0x100
 
-// Practice-only probe seeds (?seed=): fixed teams to verify Gen3 Surf / Earthquake.
-#define DAILYMAX_SEED_TEST_SURF      900001u
-#define DAILYMAX_SEED_TEST_EARTHQUAKE 900002u
+// ROM DE PRUEBAS (scripts\build-wsl.ps1 -Debug). En la ROM normal vale 0 y todo lo de debajo NO se compila.
+// El script de compilación lo pone a 1 solo en la copia de WSL, nunca en el repo.
+#ifndef DAILYMAX_DEBUG
+#define DAILYMAX_DEBUG 0
+#endif
+
+// Semillas de prueba (solo ROM de pruebas, con ?seed=NNN):
+//   900001 = tu equipo son 6 Magikarp: pierdes enseguida (forzar DERROTA).
+//   900002 = los rivales empiezan con 1 PS: ganas con cualquier golpe (forzar VICTORIA).
+#define DAILYMAX_DEBUG_SEED_LOSE 900001u
+#define DAILYMAX_DEBUG_SEED_WIN  900002u
 
 #endif // GUARD_CONSTANTS_DAILYMAXIMO_H

@@ -23,6 +23,10 @@ if [ ! -d "$GAME_DIR" ]; then
   echo "pokeemerald-expansion/ missing. Run scripts/get-expansion.sh first."; exit 1
 fi
 
+# Antes de compilar: nombres y textos en castellano coherentes (falla la compilación si no lo son).
+"${PYTHON:-python3}" "$ROOT/scripts/check-names.py" "$GAME_DIR" || { echo "ERROR: check-names.py encontró problemas; no se compila."; exit 1; }
+"${PYTHON:-python3}" "$ROOT/scripts/check-gen3.py" "$GAME_DIR" || { echo "ERROR: check-gen3.py encontró contenido que no es de 3.ª gen; no se compila."; exit 1; }
+
 MAKE_ARGS=()
 if [ -x "$TC/arm-none-eabi/bin/arm-none-eabi-gcc" ] && [ -x "$TC/make/bin/make" ]; then
   MAKE="$TC/make/bin/make"

@@ -11,7 +11,11 @@ import re
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import locale_guard  # noqa: E402
+
 ROOT = Path(__file__).resolve().parents[1]
+GUARD_SKIPPED: list[str] = []  # cadenas que NO se traducen porque cambiarían los códigos del original
 GAME = Path(sys.argv[1] if len(sys.argv) > 1 else ROOT / "pokeemerald-expansion")
 LOCALE = ROOT / "locale" / "es"
 
@@ -88,6 +92,7 @@ def patch_string_literals(
     mapping: dict[str, str],
     label: str,
     valid_placeholders: set[str] | None = None,
+    originals: dict[str, str] | None = None,
 ) -> int:
     text = path.read_text(encoding="utf-8")
     # Clean accidental double-semicolons from earlier runs.
@@ -109,6 +114,15 @@ def patch_string_literals(
             lit = norm
         else:
             lit = lit.rstrip().rstrip(";")
+        if originals and name in originals:
+            inner = literal_inner(lit)
+            fixed = locale_guard.reconcile(originals[name], inner)
+            if fixed is None:
+                GUARD_SKIPPED.append(f"{label}: {name}")
+                skipped += 1
+                return m.group(0)
+            if fixed != inner:
+                lit = '_("' + fixed + '")'
         replaced += 1
         return f"{m.group(1)}{name}{m.group(3)}{lit};"
 
@@ -122,10 +136,19 @@ def patch_string_literals(
     return replaced
 
 
-def patch_indexed_names(path: Path, mapping: dict[str, str], wrap: str, label: str) -> int:
+def patch_indexed_names(path: Path, mapping: dict[str, str], wrap: str, label: str, field: str = r"\.name") -> int:
     """Replace .name = _("English") / COMPOUND_STRING("English") inside [KEY] blocks."""
     text = path.read_text(encoding="utf-8")
     replaced = 0
+    # FireRed y la expansion no siempre llaman igual a la misma cosa (MOVE_HI_JUMP_KICK / MOVE_HIGH_JUMP_KICK):
+    # se casan por NÚMERO, no por nombre del identificador.
+    const_files = {"MOVE_": "moves.h", "ABILITY_": "abilities.h", "SPECIES_": "species.h",
+                   "ITEM_": "items.h", "NATURE_": "pokemon.h"}
+    first = next(iter(mapping), "")
+    pm = re.match(r"[A-Z]+_", first)
+    if pm and pm.group(0) in const_files:
+        mapping = locale_guard.canonical_keys(
+            mapping, GAME / "include/constants" / const_files[pm.group(0)], pm.group(0), text)
     for key, es in mapping.items():
         literal = literal_inner(es.rstrip().rstrip(";"))
         if not literal or "$" in literal:
@@ -133,8 +156,8 @@ def patch_indexed_names(path: Path, mapping: dict[str, str], wrap: str, label: s
         lit_esc = literal.replace("\\", "\\\\").replace('"', '\\"')
         replacement = wrap.format(lit_esc)
         pat = re.compile(
-            rf"(\[{re.escape(key)}\]\s*=\s*\{{(?:(?!\n\s*\[).)*?\.name\s*=\s*)"
-            rf"(?:_\(\"[^\"]*\"\)|COMPOUND_STRING\(\"(?:\\.|[^\"\\])*\"\))"
+            rf"(\[{re.escape(key)}\]\s*=\s*\{{(?:(?!\n\s*\[).)*?{field}\s*=\s*)"
+            rf"(?:_\(\"[^\"]*\"\)|COMPOUND_STRING\(\"(?:\\.|[^\"\\])*\"\)|ITEM_NAME\(\"(?:\\.|[^\"\\])*\"\))"
             rf"(\s*,)",
             re.S,
         )
@@ -659,7 +682,10 @@ def main() -> None:
             LOCALE / "src/data/text/teachy_tv_es.h",
         ]
     )
-    patch_string_literals(GAME / "src/strings.c", ui_map, "strings.c")
+    patch_string_literals(
+        GAME / "src/strings.c", ui_map, "strings.c",
+        originals=locale_guard.original_strings(GAME, "src/strings.c"),
+    )
     patch_ui_overrides(GAME / "src/strings.c")
     # Expansion charmap rejects some punctuation that appears in leftover JP strings.
     strings_path = GAME / "src/strings.c"
@@ -680,11 +706,19 @@ def main() -> None:
         battle_map,
         "battle_message.c",
         valid_placeholders=valid,
+        originals=locale_guard.original_strings(GAME, "src/battle_message.c"),
     )
     patch_eu_nick_order(GAME / "src/battle_message.c")
 
     moves, move_descs = load_full_move_es()
     moves.pop("MOVE_NONE", None)
+    # Los nombres oficiales de España (FireRed) mandan sobre los de PokeAPI, casados por NÚMERO de movimiento
+    # (FireRed MOVE_HI_JUMP_KICK == expansion MOVE_HIGH_JUMP_KICK).
+    fr_official = load_table_map(LOCALE / "src/data/text/move_names.h", "MOVE_")
+    fr_official.pop("MOVE_NONE", None)
+    fr_official = locale_guard.canonical_keys(
+        fr_official, GAME / "include/constants/moves.h", "MOVE_", (GAME / "src/data/moves_info.h").read_text(encoding="utf-8"))
+    moves.update(fr_official)
     patch_indexed_names(
         GAME / "src/data/moves_info.h",
         moves,
@@ -725,6 +759,23 @@ def main() -> None:
 
     patch_types(GAME / "src/data/types_info.h")
 
+    # Especies (1-386) y objetos de 1.ª-3.ª gen: nombres oficiales de España.
+    species = load_table_map(LOCALE / "src/data/text/species_names.h", "SPECIES_")
+    species.pop("SPECIES_NONE", None)
+    for fam in sorted((GAME / "src/data/pokemon/species_info").glob("gen_[123]_families.h")):
+        patch_indexed_names(fam, species, wrap='_("{}")', label=fam.name, field=r"\.speciesName")
+    unown = GAME / "src/data/pokemon/species_info/gen_2_families.h"
+    utxt = unown.read_text(encoding="utf-8")
+    utxt = utxt.replace('.speciesName = _("Unown")', '.speciesName = _("UNOWN")')
+    unown.write_text(utxt, encoding="utf-8")
+    items_json = json.loads((LOCALE / "src/data/items.json").read_text(encoding="utf-8"))["items"]
+    items = {}
+    for it in items_json:
+        nm = it["english"].replace("�", "é")  # el json trae 'POK? BALL' con la é rota
+        if it["itemId"] != "ITEM_NONE" and nm and "?" not in nm:
+            items[it["itemId"]] = c_str_lit(nm)
+    patch_indexed_names(GAME / "src/data/items.h", items, wrap='ITEM_NAME("{}")', label="items.h names")
+
     # Expansion battle dialogue lives in gBattleStringsTable (COMPOUND_STRING), not sText_*.
     import subprocess
 
@@ -732,6 +783,10 @@ def main() -> None:
         [sys.executable, str(ROOT / "scripts" / "translate_battle_strings_table.py"), str(GAME)]
     )
 
+    cache = ROOT / ".cache"
+    cache.mkdir(exist_ok=True)
+    (cache / "locale-skipped.txt").write_text(chr(10).join(GUARD_SKIPPED) + chr(10), encoding="utf-8")
+    print(f"  guard: {len(GUARD_SKIPPED)} cadenas se dejan en el idioma original (códigos distintos); lista en .cache/locale-skipped.txt")
     print("Done. Locale es-ES applied.")
 
 

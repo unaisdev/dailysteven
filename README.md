@@ -16,7 +16,15 @@ node scripts/serve.mjs                                                    # http
 
 Sincroniza la carpeta con una copia en WSL, regenera la expansion si hace falta, compila y deja la ROM en
 `web/game/dailymaximo.gba.gz` más `web/game/BUILD-INFO.txt` (hora y huella de lo que hay compilado).
-Todos los textos de la escena y del final están en `overlay/include/dailymax_texts.h`.
+Todos los textos de la escena y del final (y los nombres MÁXIMO/AURA/BLASCO/HORTE) están en
+`overlay/include/dailymax_texts.h`; los equipos provisionales de los rivales, en `overlay/data/dailymax_rivals.party`.
+
+ROM de pruebas (`-Debug`, no se publica): `build-wsl.ps1 -Debug` crea `web/game/dailymaximo-debug.gba.gz`. Se juega con
+`http://localhost:8080/?debug=1&seed=900001` (tu equipo son 6 Magikarp: derrota segura) o `...&seed=900002` (los rivales
+empiezan con 1 PS: victoria segura). `tests/teams/` vuelca y verifica los equipos del generador frente a las reglas de Daily Red.
+
+Al compilar se ejecutan `scripts/check-names.py` (nombres y textos en castellano) y `scripts/check-gen3.py`
+(nada de 4.ª gen): si algo falla, no se compila.
 
 ## Play locally
 

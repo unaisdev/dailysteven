@@ -23,6 +23,7 @@
 #include "line_break.h"
 #include "text.h"
 #include "constants/flags.h"
+#include "constants/species.h"
 
 struct DailyMaxRomConfig const gDailyMaxRomConfig __attribute__((used, aligned(4))) =
 {
@@ -43,7 +44,8 @@ static EWRAM_DATA struct DailyMaxStatus sStatus = {0};
 static EWRAM_DATA u32 sTeamSeed = 0;
 static EWRAM_DATA bool32 sDailyMaxActive = FALSE;
 
-static const u8 sText_PlayerName[] = _("LEAF");
+// El jugador se llama HORTE en todo (guardado, combate, textos del motor). El nombre está en dailymax_texts.h.
+static const u8 sText_PlayerName[] = _(DAILYMAX_NAME_PLAYER);
 
 static u32 GetInjectedSeed(void)
 {
@@ -119,7 +121,7 @@ static void PreparePartyAndStart(void)
     StringCopy(gSaveBlock1Ptr->rivalName, gHoLCharacters[HOL_CHAR_BLUE].name);
 #endif
     StringCopy(gSaveBlock2Ptr->playerName, sText_PlayerName);
-    gSaveBlock2Ptr->playerGender = FEMALE;
+    gSaveBlock2Ptr->playerGender = MALE;
     gSaveBlock2Ptr->optionsTextSpeed = OPTIONS_TEXT_SPEED_FAST;
     gSaveBlock2Ptr->optionsBattleStyle = OPTIONS_BATTLE_STYLE_SET;
     SetMainCallback2(CB2_NewGame);
@@ -283,3 +285,23 @@ void DailyMax_BufferResult(void)
     BreakStringAutomatic(gStringVar4, DAILYMAX_TEXT_WIDTH, DAILYMAX_TEXT_LINES, FONT_NORMAL, SHOW_SCROLL_PROMPT);
     gSpeakerName = NULL;
 }
+
+#if DAILYMAX_DEBUG
+// ROM de pruebas: con la semilla DAILYMAX_DEBUG_SEED_WIN los rivales empiezan con 1 PS (victoria segura).
+// Se llama al final de HoL_CreateOpponentParties, antes de que empiece el combate.
+void DailyMax_DebugOnOpponents(void)
+{
+    u32 i;
+    u16 hp = 1;
+
+    if (GetInjectedSeed() != DAILYMAX_DEBUG_SEED_WIN)
+        return;
+    for (i = 0; i < PARTY_SIZE; i++)
+    {
+        if (GetMonData(&gParties[B_TRAINER_OPPONENT_A][i], MON_DATA_SPECIES) != SPECIES_NONE)
+            SetMonData(&gParties[B_TRAINER_OPPONENT_A][i], MON_DATA_HP, &hp);
+        if (GetMonData(&gParties[B_TRAINER_OPPONENT_B][i], MON_DATA_SPECIES) != SPECIES_NONE)
+            SetMonData(&gParties[B_TRAINER_OPPONENT_B][i], MON_DATA_HP, &hp);
+    }
+}
+#endif

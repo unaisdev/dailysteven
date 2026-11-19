@@ -12,15 +12,19 @@
 # Uso (normalmente lo llama el .ps1):  bash scripts/wsl-build.sh /mnt/c/ruta/al/worktree [--clean]
 set -euo pipefail
 
-SRC="${1:?uso: wsl-build.sh RUTA_WORKTREE_EN_WSL [--clean]}"
-CLEAN="${2:-}"
+SRC="${1:?uso: wsl-build.sh RUTA_WORKTREE_EN_WSL [--clean] [--debug]}"
+CLEAN=""
+DEBUG=""
+for a in "${@:2}"; do
+  case "$a" in --clean) CLEAN="--clean";; --debug) DEBUG="--debug";; esac
+done
 DST="${DAILYSTEVEN_WSL_DIR:-$HOME/dailysteven-build}"
 
 echo "== [1/5] Sincronizando $SRC -> $DST"
 mkdir -p "$DST"
 rsync -a --delete \
   --exclude .git --exclude pokeemerald-expansion --exclude web/vendor \
-  --exclude 'web/game/dailymaximo.gba.gz' --exclude web/game/BUILD-INFO.txt \
+  --exclude 'web/game/*.gba.gz' --exclude 'web/game/BUILD-INFO*.txt' \
   --exclude .cache --exclude .toolchain \
   "$SRC"/ "$DST"/
 cd "$DST"
@@ -33,7 +37,8 @@ tree_hash() {
   {
     for f in scripts/get-expansion.sh scripts/apply-dailymaximo.sh scripts/patch-dailymaximo-hooks.py \
              scripts/apply-locale.sh scripts/apply_spanish_locale.py scripts/translate_battle_strings_table.py \
-             scripts/normalize-binary-patch.py patches/hall-of-legends.patch; do
+             scripts/normalize-binary-patch.py scripts/locale_guard.py overlay/data/dailymax_rivals.party \
+             patches/hall-of-legends.patch; do
       tr -d '\r' < "$f"
     done
     find locale/es -type f | LC_ALL=C sort | while read -r f; do tr -d '\r' < "$f"; done
@@ -60,12 +65,25 @@ else
   bash scripts/apply-dailymaximo.sh --overlay-only
 fi
 
+if [ -n "$DEBUG" ]; then
+  echo "   *** ROM DE PRUEBAS (-Debug): semillas 900001 = derrota, 900002 = victoria ***"
+  sed -i 's/^#define DAILYMAX_DEBUG 0/#define DAILYMAX_DEBUG 1/' pokeemerald-expansion/include/constants/dailymaximo.h
+  grep -q '^#define DAILYMAX_DEBUG 1' pokeemerald-expansion/include/constants/dailymaximo.h || { echo "ERROR: no se pudo activar DAILYMAX_DEBUG"; exit 1; }
+fi
+
 echo "== [3/5] Compilando"
 HOL_PLAY=1 bash scripts/build.sh
 
 echo "== [4/5] Copiando la ROM y el emulador a $SRC/web"
 mkdir -p "$SRC/web/game" "$SRC/web/vendor"
-cp -f web/game/dailymaximo.gba.gz "$SRC/web/game/dailymaximo.gba.gz"
+if [ -n "$DEBUG" ]; then
+  OUTNAME=dailymaximo-debug.gba.gz   # la ROM de pruebas NUNCA pisa a la normal
+  INFONAME=BUILD-INFO-debug.txt
+else
+  OUTNAME=dailymaximo.gba.gz
+  INFONAME=BUILD-INFO.txt
+fi
+cp -f web/game/dailymaximo.gba.gz "$SRC/web/game/$OUTNAME"
 if [ ! -f "$SRC/web/vendor/nostalgist.js" ]; then
   bash scripts/fetch-vendor.sh
   rsync -a web/vendor/ "$SRC/web/vendor/"
@@ -73,7 +91,7 @@ fi
 
 echo "== [5/5] BUILD-INFO"
 ROM_SHA="$(gzip -dc web/game/dailymaximo.gba.gz | sha256sum | cut -c1-16)"
-GZ_SHA="$(sha256sum "$SRC/web/game/dailymaximo.gba.gz" | cut -c1-16)"
+GZ_SHA="$(sha256sum "$SRC/web/game/$OUTNAME" | cut -c1-16)"
 GIT_INFO="$(git -c safe.directory='*' -C "$SRC" rev-parse --short HEAD 2>/dev/null || echo '?')"
 {
   echo "compilada:        $(date '+%Y-%m-%d %H:%M:%S')"
@@ -82,6 +100,7 @@ GIT_INFO="$(git -c safe.directory='*' -C "$SRC" rev-parse --short HEAD 2>/dev/nu
   echo "huella arbol:     $WANT"
   echo "huella ROM:       $ROM_SHA"
   echo "huella .gba.gz:   $GZ_SHA"
-  echo "tamano .gba.gz:   $(stat -c %s "$SRC/web/game/dailymaximo.gba.gz") bytes"
-} | tee "$SRC/web/game/BUILD-INFO.txt"
+  echo "tamano .gba.gz:   $(stat -c %s "$SRC/web/game/$OUTNAME") bytes"
+  if [ -n "$DEBUG" ]; then echo "tipo:             PRUEBAS (-Debug)"; else echo "tipo:             NORMAL"; fi
+} | tee "$SRC/web/game/$INFONAME"
 echo "LISTO."

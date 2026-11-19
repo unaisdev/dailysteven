@@ -38,6 +38,7 @@
 // ----------------------------------------------------------------------------
 //  NOMBRES EN PANTALLA
 // ----------------------------------------------------------------------------
+#define DAILYMAX_NAME_PLAYER  "HORTE"      // el jugador, en todo el juego
 #define DAILYMAX_NAME_BOSS    "MÁXIMO"     // para pasarlo a STEVEN: cambiar solo esta línea
 #define DAILYMAX_NAME_AURA    "AURA"
 #define DAILYMAX_NAME_BLASCO  "BLASCO"

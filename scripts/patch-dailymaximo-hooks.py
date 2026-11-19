@@ -455,6 +455,102 @@ def main() -> None:
         "hide HoL quit for Daily Máximo",
     )
 
+    # ---- Ronda 3: equipos rivales provisionales (un único archivo), HORTE, 3.ª gen estricta -----------------
+    import re
+
+    rivals_src = (ROOT / "overlay" / "data" / "dailymax_rivals.party").read_text(encoding="utf-8")
+    rival_blocks = dict(re.findall(r"(=== TRAINER_HOL_\w+ ===\n.*?)(?=\n=== |\Z)", rivals_src, re.S) and
+                        [(m.group(1), m.group(0)) for m in re.finditer(r"=== (TRAINER_HOL_\w+) ===\n.*?(?=\n=== |\Z)", rivals_src, re.S)])
+    party_file = GAME / "src/data/trainers_frlg.party"
+    ptxt = party_file.read_text(encoding="utf-8")
+    for trainer in ("TRAINER_HOL_STEVEN", "TRAINER_HOL_MAY", "TRAINER_HOL_WALLY"):
+        block = rival_blocks.get(trainer)
+        if block is None:
+            raise SystemExit(f"patch failed: {trainer} falta en overlay/data/dailymax_rivals.party")
+        block = block.rstrip("\n") + "\n"
+        ptxt, n = re.subn(rf"=== {trainer} ===\n.*?(?=\n=== |\Z)", lambda m, b=block: b, ptxt, count=1, flags=re.S)
+        if n != 1:
+            raise SystemExit(f"patch failed: {trainer} no está en {party_file}")
+    party_file.write_text(ptxt, encoding="utf-8")
+    print("  patched rival teams from overlay/data/dailymax_rivals.party")
+
+    # Los 3 Pokémon de cada rival son ahora los slots 0, 1 y 2 de su equipo.
+    hdata = GAME / "src/data/hall_of_legends.h"
+    htxt = hdata.read_text(encoding="utf-8")
+    for label in ("HOL_CHAR_STEVEN", "HOL_CHAR_MAY", "HOL_CHAR_WALLY"):
+        htxt, n = re.subn(r"(\[" + label + r"\] =.*?\.iconic = )\{[^}]*\}", lambda m: m.group(1) + "{0, 1, 2}", htxt, count=1, flags=re.S)
+        if n != 1:
+            raise SystemExit(f"patch failed: iconic de {label}")
+    # HORTE: nombre, sprite del mapa (Spenser) y frontal/espalda de combate (ver TRAINER_PIC_RED más abajo).
+    htxt, n = re.subn(
+        r'(\[HOL_CHAR_RED\] =\s*\{\s*\.name = COMPOUND_STRING\()[^)]*(\))', lambda m: m.group(1) + "DAILYMAX_NAME_PLAYER" + m.group(2), htxt, count=1)
+    if n != 1:
+        raise SystemExit("patch failed: nombre de HOL_CHAR_RED")
+    htxt, n = re.subn(r"(\[HOL_CHAR_RED\] =.*?\.objGfx = )OBJ_EVENT_GFX_\w+", lambda m: m.group(1) + "OBJ_EVENT_GFX_SPENSER", htxt, count=1, flags=re.S)
+    if n != 1:
+        raise SystemExit("patch failed: objGfx de HOL_CHAR_RED")
+    hdata.write_text(htxt, encoding="utf-8")
+    print("  patched iconic slots and HORTE (name, overworld sprite)")
+
+    trainers_gfx = GAME / "src/data/graphics/trainers.h"
+    replace_once(
+        trainers_gfx,
+        "#define TRAINER_FRONT_PIC(picFile, paletteFile, ...)",
+        "// Daily Steven: la espalda de HORTE reutiliza el retrato frontal de Spenser (igual que en Daily Gold).\n"
+        'const u8 gTrainerBackPic_DailyMaxHorte[] = INCGFX_U8("graphics/trainers/front_pics/palace_maven_spenser.png", ".4bpp");\n'
+        'const u16 gTrainerBackPicPalette_DailyMaxHorte[] = INCGFX_U16("graphics/trainers/front_pics/palace_maven_spenser.png", ".gbapal");\n\n'
+        "#define TRAINER_FRONT_PIC(picFile, paletteFile, ...)",
+        "horte back pic data",
+    )
+    replace_once(
+        trainers_gfx,
+        """    [TRAINER_PIC_RED] =
+    {
+        .frontPic = TRAINER_FRONT_PIC(gTrainerFrontPic_Red, gTrainerPalette_Red),
+        .backPic = TRAINER_BACK_PIC(5, gTrainerBackPic_Red, gTrainerBackPicPalette_Red, sBackAnims_Kanto),
+    },""",
+        """    [TRAINER_PIC_RED] = // Daily Steven: este es HORTE (Spenser), no RED
+    {
+        .frontPic = TRAINER_FRONT_PIC(gTrainerFrontPic_PalaceMavenSpenser, gTrainerPalette_PalaceMavenSpenser),
+        .backPic = TRAINER_BACK_PIC(5, gTrainerBackPic_DailyMaxHorte, gTrainerBackPicPalette_DailyMaxHorte, sBackAnims_None),
+    },""",
+        "horte pics",
+    )
+
+    # ROM de pruebas: con la semilla de victoria los rivales empiezan con 1 PS (no hace nada en la ROM normal).
+    replace_once(
+        hol,
+        """        CreateCharacterMons(&gParties[B_TRAINER_OPPONENT_B][0], b, gHoLCharacters[b].iconic, 3, FALSE);
+    }
+    return TRUE;""",
+        """        CreateCharacterMons(&gParties[B_TRAINER_OPPONENT_B][0], b, gHoLCharacters[b].iconic, 3, FALSE);
+    }
+    DailyMax_DebugOnOpponents();
+    return TRUE;""",
+        "debug opponents hook",
+    )
+
+    # ---- Mecánicas y ayudas: 3.ª generación estricta ----------------------------------------------------
+    cfg = GAME / "include/config"
+    for fname, name, value in (
+        ("species_enabled.h", "P_GEN_4_CROSS_EVOS", "FALSE"),       # nada de evoluciones de 4.ª gen (Gallade...)
+        ("battle.h", "B_RUN_TRAINER_BATTLE", "FALSE"),              # no se puede huir de un combate de entrenador
+        ("battle.h", "B_AFFECTION_MECHANICS", "FALSE"),             # sin afecto (6.ª gen)
+        ("battle.h", "B_SHOW_EFFECTIVENESS", "SHOW_EFFECTIVENESS_NEVER"),  # sin indicador de eficacia
+        ("battle.h", "B_SHOW_TARGETS", "FALSE"),                    # sin resaltar objetivos
+        ("battle.h", "B_SHOW_MOVE_DESCRIPTION", "FALSE"),           # sin "MOVE INFO" (L)
+        ("battle.h", "B_LAST_USED_BALL", "FALSE"),                  # sin "última Poké Ball"
+        ("battle.h", "B_TRAINERS_KNOCK_OFF_ITEMS", "FALSE"),        # los entrenadores no roban objetos (3.ª gen)
+        ("summary_screen.h", "P_SUMMARY_SCREEN_MOVE_RELEARNER", "FALSE"),  # no reaprender movimientos
+        ("summary_screen.h", "P_SUMMARY_SCREEN_NATURE_COLORS", "FALSE"),   # sin colores de naturaleza
+        ("summary_screen.h", "P_SUMMARY_SCREEN_RENAME", "FALSE"),          # sin cambiar motes
+        ("item.h", "I_BERRY_PRICE", "GEN_3"),
+        ("item.h", "I_EXP_SHARE_ITEM", "GEN_3"),
+        ("pokemon.h", "P_TM_LITERACY", "GEN_3"),
+        ("pokemon.h", "P_SHOW_TERA_TYPE", "GEN_3"),
+    ):
+        force_define(cfg / fname, name, value, f"gen3/{name}")
+
     # El combate usa el nombre del registro del entrenador (.party), no el del personaje del mapa.
     party = GAME / "src/data/trainers_frlg.party"
     ptext = party.read_text(encoding="utf-8")
@@ -515,18 +611,22 @@ def main() -> None:
         'static const u8 sText_Trainer2WithdrewPkmn[] = _("¡{B_TRAINER2_NAME} retiró a {B_BUFF1}!");',
         "spanish trainer2 withdraw",
     )
-    replace_once(
-        messages,
-        'static const u8 sText_Trainer1SentOutPkmn2[] = _("¡{B_BUFF1} es el POKéMON enviado\\npor {B_TRAINER1_CLASS} {B_TRAINER1_NAME}!");',
-        'static const u8 sText_Trainer1SentOutPkmn2[] = _("¡{B_TRAINER1_NAME} envió a {B_BUFF1}!");',
-        "spanish trainer1 switch",
-    )
-    replace_once(
-        messages,
-        'static const u8 sText_Trainer1WithdrewPkmn[] = _("¡Retirada de {B_BUFF1} por \\n{B_TRAINER1_CLASS} {B_TRAINER1_NAME}!");',
-        'static const u8 sText_Trainer1WithdrewPkmn[] = _("¡{B_TRAINER1_NAME} retiró a {B_BUFF1}!");',
-        "spanish trainer1 withdraw",
-    )
+    # Estas dos se fijan por nombre de símbolo (valen tanto si el texto actual es el inglés original como si es
+    # el de FireRed): así no dependen de lo que haya dejado la traducción.
+    def set_string(symbol: str, inner: str) -> None:
+        text = messages.read_text(encoding="utf-8")
+        pat = re.compile(r"(static const u8 " + symbol + r"\[\] = _\()(?:\s*\"(?:\\.|[^\"\\])*\")+(\);)", re.S)
+        new, n = pat.subn(lambda m: m.group(1) + '"' + inner + '"' + m.group(2), text, count=1)
+        if n != 1:
+            raise SystemExit(f"patch failed: {messages}: no existe {symbol}")
+        if new != text:
+            messages.write_text(new, encoding="utf-8")
+            print(f"  patched {symbol}")
+        else:
+            print(f"  skip {symbol} (already applied)")
+
+    set_string("sText_Trainer1SentOutPkmn2", "¡{B_TRAINER1_NAME} envió a {B_BUFF1}!")
+    set_string("sText_Trainer1WithdrewPkmn", "¡{B_TRAINER1_NAME} retiró a {B_BUFF1}!")
 
     print(">> Hooks done")
 

@@ -1,8 +1,10 @@
 // Downloads the ROM and the emulator core once per visit and keeps them in
 // memory, so starting a new run only has to restart the emulator.
 
+// ?debug=1 carga la ROM de pruebas (scripts\build-wsl.ps1 -Debug) con semillas 900001 (derrota) y 900002 (victoria).
+const DEBUG_ROM = new URLSearchParams(globalThis.location?.search ?? '').has('debug');
 const FILES = {
-  rom: 'game/dailymaximo.gba.gz',
+  rom: DEBUG_ROM ? 'game/dailymaximo-debug.gba.gz' : 'game/dailymaximo.gba.gz',
   coreJs: 'vendor/mgba_libretro.js',
   coreWasm: 'vendor/mgba_libretro.wasm',
 };

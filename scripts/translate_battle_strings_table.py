@@ -8,6 +8,9 @@ import subprocess
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import locale_guard  # noqa: E402
+
 ROOT = Path(__file__).resolve().parents[1]
 GAME = Path(sys.argv[1] if len(sys.argv) > 1 else ROOT / "pokeemerald-expansion")
 LOCALE = ROOT / "locale" / "es"
@@ -176,6 +179,8 @@ def main() -> None:
 
     body = m.group(2)
     replaced = 0
+    guard_skipped: list[str] = []
+    originals = locale_guard.original_strings(GAME, "src/battle_message.c")
 
     def repl_entry(em: re.Match[str]) -> str:
         nonlocal replaced
@@ -185,6 +190,12 @@ def main() -> None:
         es_text = id_to_es[sid]
         if not es_text:
             return em.group(0)
+        if sid in originals:
+            fixed = locale_guard.reconcile(originals[sid], es_text)
+            if fixed is None:
+                guard_skipped.append(sid)
+                return em.group(0)
+            es_text = fixed
         replaced += 1
         return f'[{sid}] = COMPOUND_STRING("{c_escape(es_text)}")'
 
@@ -196,7 +207,11 @@ def main() -> None:
 
     text = text[: m.start(2)] + body2 + text[m.end(2) :]
     path.write_text(text, encoding="utf-8")
-    print(f"  gBattleStringsTable: translated {replaced} entries")
+    print(f"  gBattleStringsTable: translated {replaced} entries, {len(guard_skipped)} left in original language (different codes)")
+    cache = ROOT / ".cache"
+    cache.mkdir(exist_ok=True)
+    with open(cache / "locale-skipped.txt", "a", encoding="utf-8") as f:
+        f.write(chr(10).join("table: " + x for x in guard_skipped) + chr(10))
 
 
 if __name__ == "__main__":
