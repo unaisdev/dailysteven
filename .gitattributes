@@ -1,0 +1,20 @@
+# Finales de línea: los scripts y el código se guardan Y se descargan siempre con LF
+# (WSL/Linux falla con CRLF). Esto manda sobre core.autocrlf de cada PC.
+*.sh        text eol=lf
+*.py        text eol=lf
+*.mjs       text eol=lf
+*.js        text eol=lf
+*.c         text eol=lf
+*.h         text eol=lf
+*.inc       text eol=lf
+*.s         text eol=lf
+*.ps1       text eol=lf
+*.md        text eol=lf
+*.json      text eol=lf
+Dockerfile* text eol=lf
+
+# Se guardan tal cual, sin conversión alguna.
+*.patch     -text
+*.png       binary
+*.gz        binary
+locale/**   -text

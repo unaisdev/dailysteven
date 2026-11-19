@@ -29,5 +29,8 @@ void DailyMax_OnBattleStart(void);
 void DailyMax_OnBattleEnd(void);
 void DailyMax_FinishDaily(void);
 u16 DailyMax_IsDailyActive(void);
+void DailyMax_SetupRoom(void);
+void DailyMax_BufferSpeech(void);
+void DailyMax_BufferResult(void);
 
 #endif // GUARD_DAILYMAXIMO_H

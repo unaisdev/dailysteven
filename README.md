@@ -6,6 +6,18 @@ The repo folder and the ROM magic strings stay `dailymaximo` / `DAILYMAX-*`. The
 
 Built on [Hall of Legends](https://github.com/amoi-builds/halloflegends) / [pokeemerald-expansion](https://github.com/rh-hideout/pokeemerald-expansion), with the same browser + mGBA flow as Daily Red / Daily Gold.
 
+## Windows + WSL: un solo comando
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\build-wsl.ps1          # compila (unos segundos si solo cambias textos o C)
+powershell -ExecutionPolicy Bypass -File scripts\build-wsl.ps1 -Clean   # regenera todo desde cero
+node scripts/serve.mjs                                                    # http://localhost:8080 (recarga con Ctrl+F5)
+```
+
+Sincroniza la carpeta con una copia en WSL, regenera la expansion si hace falta, compila y deja la ROM en
+`web/game/dailymaximo.gba.gz` más `web/game/BUILD-INFO.txt` (hora y huella de lo que hay compilado).
+Todos los textos de la escena y del final están en `overlay/include/dailymax_texts.h`.
+
 ## Play locally
 
 ```sh

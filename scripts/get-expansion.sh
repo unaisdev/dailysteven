@@ -28,8 +28,6 @@ git -C "$GAME_DIR" checkout -q FETCH_HEAD
 PY=python3
 if ! command -v python3 >/dev/null 2>&1 || [[ "$(command -v python3)" == *WindowsApps* ]]; then
   for c in \
-    "/c/Users/Unai/AppData/Local/Programs/Python/Python313/python.exe" \
-    "/c/Users/Unai/AppData/Local/Programs/Python/Python311/python.exe" \
     "python"
   do
     if command -v "$c" >/dev/null 2>&1 || [ -x "$c" ]; then PY="$c"; break; fi
@@ -43,15 +41,14 @@ echo ">> Applying $(basename "$PATCH")"
 git -C "$GAME_DIR" apply --whitespace=nowarn "$TMP_PATCH"
 rm -f "$TMP_PATCH"
 
-echo ">> Applying Daily Máximo overlay"
-PYTHON="$PY" "$ROOT/scripts/apply-dailymaximo.sh"
-
 # Castellano (ES-ES) string tables from Acimut pret_europe overlays (Daily Gold style).
 if [[ ! -f "$ROOT/locale/es/SOURCE.json" ]]; then
   echo ">> Generating locale/es from pret_europe"
   "$PY" "$ROOT/scripts/fetch-spanish-locale.py"
 fi
-echo ">> Applying Spanish locale"
-PYTHON="$PY" "$ROOT/scripts/apply-locale.sh"
+
+# Overlay + traducción + ganchos, en ese orden (lo hace apply-dailymaximo.sh).
+echo ">> Applying Daily Steven overlay (overlay -> Spanish locale -> hooks)"
+PYTHON="$PY" "$ROOT/scripts/apply-dailymaximo.sh"
 
 [ -n "${HOL_PLAY:-}" ] || echo "Done. Build with: scripts/build.sh"

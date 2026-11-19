@@ -19,8 +19,6 @@ fi
 PY="${PYTHON:-python3}"
 if ! command -v "$PY" >/dev/null 2>&1 || [[ "$(command -v "$PY")" == *WindowsApps* ]]; then
   for c in \
-    "/c/Users/Unai/AppData/Local/Programs/Python/Python313/python.exe" \
-    "/c/Users/Unai/AppData/Local/Programs/Python/Python311/python.exe" \
     "python"
   do
     if command -v "$c" >/dev/null 2>&1 || [ -x "$c" ]; then PY="$c"; break; fi

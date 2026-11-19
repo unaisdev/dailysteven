@@ -5,11 +5,8 @@ git config core.autocrlf false
 rm -rf pokeemerald-expansion
 PY="$(command -v python3 || true)"
 if [[ -z "$PY" || "$PY" == *WindowsApps* ]]; then
-  for c in \
-    "/c/Users/Unai/AppData/Local/Programs/Python/Python313/python.exe" \
-    "/c/Users/Unai/AppData/Local/Programs/Python/Python311/python.exe"
-  do
-    [ -x "$c" ] && PY="$c" && break
+  for c in python py; do
+    command -v "$c" >/dev/null 2>&1 && PY="$c" && break
   done
 fi
 "$PY" - <<'PY'

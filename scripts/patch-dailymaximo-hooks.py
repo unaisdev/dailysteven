@@ -6,6 +6,18 @@ import pathlib
 import sys
 
 GAME = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else "pokeemerald-expansion")
+ROOT = pathlib.Path(__file__).resolve().parents[1]
+TEXTS_H = ROOT / "overlay" / "include" / "dailymax_texts.h"
+
+
+def dm_name(key: str) -> str:
+    """Lee DAILYMAX_NAME_<key> de overlay/include/dailymax_texts.h (única fuente de los nombres)."""
+    import re
+
+    m = re.search(rf'#define\s+DAILYMAX_NAME_{key}\s+"([^"]+)"', TEXTS_H.read_text(encoding="utf-8"))
+    if m is None:
+        raise SystemExit(f"patch failed: DAILYMAX_NAME_{key} no está en {TEXTS_H}")
+    return m.group(1)
 
 
 def force_define(path: pathlib.Path, name: str, value: str, label: str) -> None:
@@ -175,158 +187,178 @@ def main() -> None:
 """,
         """#if IS_FRLG
     // Elite Four runs start at the door of Lorelei's room, the rest in the Champion's room.
-    // Daily Máximo: spawn on stage (DailyGold-style) — no door walk-in choreography.
+    // Daily: start at the door of Bruno's room (entrance scene, data/scripts/dailymax_bruno.inc).
     if (gHoLRun.runType == HOL_RUN_ELITE_FOUR)
         SetWarpDestination(MAP_GROUP(MAP_POKEMON_LEAGUE_LORELEIS_ROOM), MAP_NUM(MAP_POKEMON_LEAGUE_LORELEIS_ROOM), 0, -1, -1);
     else if (DailyMax_IsActive())
-        SetWarpDestination(MAP_GROUP(MAP_POKEMON_LEAGUE_CHAMPIONS_ROOM), MAP_NUM(MAP_POKEMON_LEAGUE_CHAMPIONS_ROOM), WARP_ID_NONE, 6, 10);
+        SetWarpDestination(MAP_GROUP(MAP_POKEMON_LEAGUE_BRUNOS_ROOM), MAP_NUM(MAP_POKEMON_LEAGUE_BRUNOS_ROOM), 0, -1, -1);
     else
         SetWarpDestination(MAP_GROUP(MAP_POKEMON_LEAGUE_CHAMPIONS_ROOM), MAP_NUM(MAP_POKEMON_LEAGUE_CHAMPIONS_ROOM), 0, -1, -1);
     WarpIntoMap();
 #endif
 """,
-        "daily stage warp",
+        "daily bruno warp",
     )
 
     data = GAME / "src/data/hall_of_legends.h"
-    # DEC-0.1: the rival is announced as STEVEN (not Máximo). Aura and Blasco stay in Spanish.
-    replace_all_present(data, "MÁXIMO", "STEVEN", "máximo -> steven")
-    replace_once(data, '.name = COMPOUND_STRING("MAY"),', '.name = COMPOUND_STRING("AURA"),', "name aura")
-    replace_once(data, '.name = COMPOUND_STRING("WALLY"),', '.name = COMPOUND_STRING("BLASCO"),', "name blasco")
+    # Nombres y frases salen de overlay/include/dailymax_texts.h (único sitio a editar).
     replace_once(
         data,
-        'HOL_TEXT("What has awoken in you because of your journey? I want you to hit me with it all! Now, bring it!",\n                 "You… I had no idea you\'d become so strong…",\n                 "When it comes down to it, I\'m still the strongest!",\n                 "I thought that you would eventually become the CHAMPION. My predictions usually come true."),',
-        'HOL_TEXT("¿Qué ha despertado en ti con este viaje? ¡Quiero que me lo demuestres todo!\\p¡Pero no lo haré solo esta vez!",\n                 "Tú… no imaginaba que te hubieras hecho tan fuerte…",\n                 "Al final, ¡sigo siendo el más fuerte!",\n                 "Sabía que acabarías siendo CAMPEÓN. Mis predicciones casi nunca fallan."),',
-        "máximo texts",
+        "// Hall of Legends characters.",
+        '#include "dailymax_texts.h"\n\n// Hall of Legends characters.',
+        "texts include",
     )
-    replace_once(
-        data,
-        'HOL_TEXT("How much stronger have you gotten? Let me check for you! Go!",\n                 "Yikes! You\'re better than I expected!",\n                 "Yahoo! I won! My POKéMON and I have been training really hard, too!",\n                 "I was worried that you might be struggling with your training. But I had absolutely nothing to be worried about!"),',
-        'HOL_TEXT("¡He venido a ayudar a STEVEN! ¡Vamos a pelear juntos! ¡Allá voy!",\n                 "¡Uy! ¡Eres más fuerte de lo que pensaba!",\n                 "¡Bien! ¡Hemos ganado! ¡Mis POKéMON también entrenan duro!",\n                 "Me preocupaba que lo estuvieras pasando mal… ¡pero no hacía falta!"),',
-        "aura texts",
-    )
-    replace_once(
-        data,
-        'HOL_TEXT("Losing to you that time made me stronger! But I\'m not going to lose anymore! Okay… Here I come!",\n                 "Wow! You are strong, after all!",\n                 "I… I won? I won! Thank you, everyone, for giving me courage!",\n                 "I couldn\'t beat you today, but one of these days, I\'ll catch up to you!"),',
-        'HOL_TEXT("¡He venido corriendo para pelear junto a STEVEN! ¡Esta vez no pienso perder! ¡Allá voy!",\n                 "¡Guau! ¡Eres muy fuerte!",\n                 "¿Yo… he ganado? ¡He ganado! ¡Gracias a todos por darme valor!",\n                 "Hoy no he podido ganarte, ¡pero algún día te alcanzaré!"),',
-        "blasco texts",
-    )
+    import re
 
-    scripts = GAME / "data/scripts/hall_of_legends.inc"
-    replace_once(
-        scripts,
-        """HallOfLegends_EventScript_Lost::
-	special HoL_GetRoomType
-	call_if_eq VAR_RESULT, HOL_ROOM_TYPE_VERSUS, HallOfLegends_EventScript_LostVersus
-	call_if_ne VAR_RESULT, HOL_ROOM_TYPE_VERSUS, HallOfLegends_EventScript_LostEliteFour
-	goto HallOfLegends_EventScript_BackToSelect
-""",
-        """HallOfLegends_EventScript_Lost::
-	special HoL_GetRoomType
-	call_if_eq VAR_RESULT, HOL_ROOM_TYPE_VERSUS, HallOfLegends_EventScript_LostVersus
-	call_if_ne VAR_RESULT, HOL_ROOM_TYPE_VERSUS, HallOfLegends_EventScript_LostEliteFour
-	setvar VAR_RESULT, FALSE
-	special DailyMax_OnBattleEnd
-	specialvar VAR_RESULT, DailyMax_IsDailyActive
-	goto_if_eq VAR_RESULT, TRUE, HallOfLegends_EventScript_DailyMaxFinish
-	goto HallOfLegends_EventScript_BackToSelect
+    def set_character(label: str, name_macro: str, intro: str, defeat: str, victory: str, post: str) -> None:
+        text = data.read_text(encoding="utf-8")
+        pat = re.compile(
+            r'(\[' + label + r'\] =\s*\{\s*\.name = COMPOUND_STRING\()[^)]*(\),\s*)HOL_TEXT\(.*?\),(\s*\.trainerId)',
+            re.S,
+        )
+        block = (
+            "HOL_TEXT(" + intro + ",\n"
+            "                 " + defeat + ",\n"
+            "                 " + victory + ",\n"
+            "                 " + post + "),"
+        )
+        new, n = pat.subn(lambda m: m.group(1) + name_macro + m.group(2) + block + m.group(3), text, count=1)
+        if n != 1:
+            raise SystemExit(f"patch failed: {data}: personaje {label} no encontrado")
+        if new != text:
+            data.write_text(new, encoding="utf-8")
+            print(f"  patched {label} name+texts")
+        else:
+            print(f"  skip {label} (already applied)")
 
-HallOfLegends_EventScript_DailyMaxFinish::
-	special DailyMax_FinishDaily
-	releaseall
-	end
-""",
-        "lost daily finish",
-    )
-    replace_once(
-        scripts,
-        """HallOfLegends_EventScript_WonVersus::
-	setvar VAR_0x8004, HOL_RESULT_WON
-	call HallOfLegends_EventScript_ShowResult
-	goto HallOfLegends_EventScript_BackToSelect
-""",
-        """HallOfLegends_EventScript_WonVersus::
-	setvar VAR_0x8004, HOL_RESULT_WON
-	call HallOfLegends_EventScript_ShowResult
-	setvar VAR_RESULT, TRUE
-	special DailyMax_OnBattleEnd
-	specialvar VAR_RESULT, DailyMax_IsDailyActive
-	goto_if_eq VAR_RESULT, TRUE, HallOfLegends_EventScript_DailyMaxFinish
-	goto HallOfLegends_EventScript_BackToSelect
-""",
-        "won versus daily",
-    )
-    replace_once(
-        scripts,
-        """	setvar VAR_0x8005, HOL_TEXT_INTRO
-	call HallOfLegends_EventScript_TrainersSpeak
-	special BattleSetup_StartHallOfLegendsBattle
-""",
-        """	setvar VAR_0x8005, HOL_TEXT_INTRO
-	call HallOfLegends_EventScript_TrainersSpeak
-	special DailyMax_OnBattleStart
-	special BattleSetup_StartHallOfLegendsBattle
-""",
-        "battle start special",
-    )
-
-    champ = GAME / "data/maps/PokemonLeague_ChampionsRoom_Frlg/scripts.inc"
-    replace_once(
-        champ,
-        """PokemonLeague_ChampionsRoom_EventScript_EnterRoom::
-	lockall
-	special HoL_SpawnPartnerFollower
-	applymovement LOCALID_PLAYER, PokemonLeague_ChampionsRoom_Movement_PlayerEnter
-	waitmovement 0
-	call HallOfLegends_EventScript_PartnerStepBeside
-	call PokemonLeague_ChampionsRoom_EventScript_BlockExits
-	setvar VAR_TEMP_1, 1
-	releaseall
-	end
-""",
-        """PokemonLeague_ChampionsRoom_EventScript_EnterRoom::
-	lockall
-	specialvar VAR_RESULT, DailyMax_IsDailyActive
-	goto_if_eq VAR_RESULT, TRUE, PokemonLeague_ChampionsRoom_EventScript_DailyMaxStart
-	special HoL_SpawnPartnerFollower
-	applymovement LOCALID_PLAYER, PokemonLeague_ChampionsRoom_Movement_PlayerEnter
-	waitmovement 0
-	call HallOfLegends_EventScript_PartnerStepBeside
-	call PokemonLeague_ChampionsRoom_EventScript_BlockExits
-	setvar VAR_TEMP_1, 1
-	releaseall
-	end
-
-@ Daily Máximo: DailyGold-style — already on stage, jump straight into the fight.
-PokemonLeague_ChampionsRoom_EventScript_DailyMaxStart::
-	call PokemonLeague_ChampionsRoom_EventScript_BlockExits
-	setvar VAR_TEMP_1, 1
-	special DailyMax_OnBattleStart
-	special BattleSetup_StartHallOfLegendsBattle
-	goto_if_eq VAR_RESULT, FALSE, HallOfLegends_EventScript_Lost
-	setflag FLAG_HOL_ROOM_CLEARED
-	setvar VAR_0x8005, HOL_TEXT_POST
-	call HallOfLegends_EventScript_TrainersSpeak
-	goto HallOfLegends_EventScript_WonVersus
-""",
-        "immediate daily battle",
-    )
+    # intro/post de HoL ya no se usan (la escena la lleva dailymax_bruno.inc); se rellenan para que compile.
+    set_character("HOL_CHAR_STEVEN", "DAILYMAX_NAME_BOSS", "DAILYMAX_TEXT_BOSS_TALK_1",
+                  "DAILYMAX_TEXT_BOSS_DEFEAT", "DAILYMAX_TEXT_BOSS_VICTORY", "DAILYMAX_TEXT_BOSS_TALK_2")
+    set_character("HOL_CHAR_MAY", "DAILYMAX_NAME_AURA", "DAILYMAX_TEXT_AURA_ENTER",
+                  "DAILYMAX_TEXT_AURA_DEFEAT", "DAILYMAX_TEXT_AURA_VICTORY", "DAILYMAX_TEXT_AURA_BESIDE")
+    set_character("HOL_CHAR_WALLY", "DAILYMAX_NAME_BLASCO", "DAILYMAX_TEXT_BLASCO_ENTER",
+                  "DAILYMAX_TEXT_BLASCO_DEFEAT", "DAILYMAX_TEXT_BLASCO_VICTORY", "DAILYMAX_TEXT_BLASCO_BESIDE")
 
     specials = GAME / "data/specials.inc"
     specials_text = specials.read_text(encoding="utf-8")
     if "DailyMax_OnBattleStart" not in specials_text:
+        # OJO: se insertan ANTES de HoL_ReturnToSelect. Esa línea termina en ", waitstate=1";
+        # si se ponen detrás, el waitstate pasa a la última especial nueva y el juego se queda
+        # parado para siempre en la primera "specialvar" (bug que bloqueaba el juego en la ronda 1).
         replace_once(
             specials,
             "\tdef_special HoL_ReturnToSelect",
-            "\tdef_special HoL_ReturnToSelect\n"
             "\tdef_special DailyMax_OnBattleStart\n"
             "\tdef_special DailyMax_OnBattleEnd\n"
             "\tdef_special DailyMax_FinishDaily\n"
-            "\tdef_special DailyMax_IsDailyActive",
+            "\tdef_special DailyMax_IsDailyActive\n"
+            "\tdef_special DailyMax_BufferSpeech\n"
+            "\tdef_special DailyMax_BufferResult\n"
+            "\tdef_special HoL_ReturnToSelect",
             "specials",
         )
     else:
         print("  skip specials (already applied)")
+    replace_once(
+        GAME / "data/event_scripts.s",
+        '.include "data/scripts/hall_of_legends.inc"',
+        '.include "data/scripts/hall_of_legends.inc"\n\t.include "data/scripts/dailymax_bruno.inc"',
+        "include bruno scene script",
+    )
+
+    # Sala de Bruno: la entrada y el hablar con el jefe pasan a la escena diaria.
+    bruno = GAME / "data/maps/PokemonLeague_BrunosRoom_Frlg/scripts.inc"
+    replace_once(
+        bruno,
+        "PokemonLeague_BrunosRoom_EventScript_EnterRoom::\n\tlockall\n",
+        "PokemonLeague_BrunosRoom_EventScript_EnterRoom::\n\tlockall\n"
+        "\tspecialvar VAR_RESULT, DailyMax_IsDailyActive\n"
+        "\tgoto_if_eq VAR_RESULT, TRUE, DailyMax_BrunosRoom_EventScript_Enter\n",
+        "bruno enter room",
+    )
+    replace_once(
+        bruno,
+        "PokemonLeague_BrunosRoom_EventScript_Trainer::\n",
+        "PokemonLeague_BrunosRoom_EventScript_Trainer::\n"
+        "\tspecialvar VAR_RESULT, DailyMax_IsDailyActive\n"
+        "\tgoto_if_eq VAR_RESULT, TRUE, DailyMax_BrunosRoom_EventScript_Talk\n",
+        "bruno talk",
+    )
+
+    # HoL_SetupRoom: en el modo diario solo el jefe se ve; el compañero y el "escaparate" se ocultan.
+    replace_once(
+        hol,
+        "        SetObjEventTemplateCoords(LOCALID_HOL_MON_1 + i, layout->monX[i], layout->monY[i]);\n    }\n}\n",
+        "        SetObjEventTemplateCoords(LOCALID_HOL_MON_1 + i, layout->monX[i], layout->monY[i]);\n    }\n"
+        "    DailyMax_SetupRoom();\n}\n",
+        "daily room setup hook",
+    )
+    replace_once(
+        GAME / "src/overworld.c",
+        "void SetObjEventTemplateMovementType(u8 localId, u8 movementType)\n",
+        "void SetObjEventTemplateFlagId(u8 localId, u16 flagId)\n"
+        "{\n"
+        "    struct ObjectEventTemplate *objectEventTemplate = GetObjectEventTemplate(localId);\n"
+        "    if (objectEventTemplate)\n"
+        "        objectEventTemplate->flagId = flagId;\n"
+        "}\n\n"
+        "void SetObjEventTemplateMovementType(u8 localId, u8 movementType)\n",
+        "template flag setter",
+    )
+    replace_once(
+        GAME / "include/overworld.h",
+        "void SetObjEventTemplateCoords(u8 localId, s16 x, s16 y);\n",
+        "void SetObjEventTemplateCoords(u8 localId, s16 x, s16 y);\nvoid SetObjEventTemplateFlagId(u8 localId, u16 flagId);\n",
+        "template flag setter decl",
+    )
+
+    # Con un solo jugador (players[1] == HOL_CHAR_NONE == 0xFF) estas funciones leían fuera de la tabla.
+    replace_once(
+        hol,
+        """    if (IsTagBattle() && gHoLCharacters[gHoLRun.players[1]].backPic == TRAINER_PIC_NONE)
+        return TRAINER_PIC_HOL_BLANK;
+    return gHoLCharacters[gHoLRun.players[player]].backPic;""",
+        """    if (IsTagBattle() && gHoLRun.players[1] != HOL_CHAR_NONE && gHoLCharacters[gHoLRun.players[1]].backPic == TRAINER_PIC_NONE)
+        return TRAINER_PIC_HOL_BLANK;
+    if (gHoLRun.players[player] == HOL_CHAR_NONE)
+        player = 0;
+    return gHoLCharacters[gHoLRun.players[player]].backPic;""",
+        "guard back pic",
+    )
+    replace_once(
+        hol,
+        """u16 HoL_GetPartnerFrontPic(void)
+{
+    return gHoLCharacters[gHoLRun.players[1]].frontPic;""",
+        """u16 HoL_GetPartnerFrontPic(void)
+{
+    if (gHoLRun.players[1] == HOL_CHAR_NONE)
+        return TRAINER_PIC_HOL_BLANK;
+    return gHoLCharacters[gHoLRun.players[1]].frontPic;""",
+        "guard partner front pic",
+    )
+    replace_once(
+        hol,
+        """const u8 *HoL_GetPartnerName(void)
+{
+    return gHoLCharacters[gHoLRun.players[1]].name;""",
+        """const u8 *HoL_GetPartnerName(void)
+{
+    if (gHoLRun.players[1] == HOL_CHAR_NONE)
+        return gText_EmptyString2;
+    return gHoLCharacters[gHoLRun.players[1]].name;""",
+        "guard partner name",
+    )
+    replace_once(
+        hol,
+        """    if (IsTagBattle())
+    {
+        StringAppend(gStringVar1, COMPOUND_STRING(" and "));""",
+        """    if (IsTagBattle() && gHoLRun.players[1] != HOL_CHAR_NONE)
+    {
+        StringAppend(gStringVar1, COMPOUND_STRING(" and "));""",
+        "guard result text",
+    )
 
     replace_once(
         GAME / "include/config/general.h",
@@ -423,42 +455,40 @@ PokemonLeague_ChampionsRoom_EventScript_DailyMaxStart::
         "hide HoL quit for Daily Máximo",
     )
 
-    # Battle intro uses the trainer record, not the overworld character name.
+    # El combate usa el nombre del registro del entrenador (.party), no el del personaje del mapa.
     party = GAME / "src/data/trainers_frlg.party"
-    replace_once(
-        party,
-        "=== TRAINER_HOL_MAY ===\nName: MAY\n",
-        "=== TRAINER_HOL_MAY ===\nName: AURA\n",
-        "party name aura",
-    )
-    replace_once(
-        party,
-        "=== TRAINER_HOL_WALLY ===\nName: WALLY\n",
-        "=== TRAINER_HOL_WALLY ===\nName: BLASCO\n",
-        "party name blasco",
-    )
-    generated = GAME / "src/data/trainers_frlg.h"
-    text = generated.read_text(encoding="utf-8")
-    # Names sit on the following trainerName line; replace only those two records.
-    def rename_trainer(src: str, trainer: str, new_name: str) -> str:
-        needle = f"[DIFFICULTY_NORMAL][{trainer}] ="
-        at = src.find(needle)
-        if at < 0:
-            raise SystemExit(f"patch failed: missing {trainer}")
-        window = src[at:at + 500]
-        old = '.trainerName = _("MAY"),' if trainer.endswith("MAY") else '.trainerName = _("WALLY"),'
-        if new_name in window and old not in window:
-            print(f"  skip trainer name {new_name} (already applied)")
-            return src
-        if old not in window:
-            raise SystemExit(f"patch failed: {trainer} name not in record")
-        return src[:at] + window.replace(old, f'.trainerName = _("{new_name}"),', 1) + src[at + 500:]
+    ptext = party.read_text(encoding="utf-8")
+    for trainer, name in (
+        ("TRAINER_HOL_STEVEN", dm_name("BOSS")),
+        ("TRAINER_HOL_MAY", dm_name("AURA")),
+        ("TRAINER_HOL_WALLY", dm_name("BLASCO")),
+    ):
+        ptext, n = re.subn(rf"(=== {trainer} ===\nName: )[^\n]*", lambda m, nm=name: m.group(1) + nm, ptext, count=1)
+        if n != 1:
+            raise SystemExit(f"patch failed: {trainer} no está en {party}")
+    party.write_text(ptext, encoding="utf-8")
+    print("  patched trainer names in .party")
 
-    renamed = rename_trainer(text, "TRAINER_HOL_MAY", "AURA")
-    renamed = rename_trainer(renamed, "TRAINER_HOL_WALLY", "BLASCO")
-    if renamed != text:
-        generated.write_text(renamed, encoding="utf-8")
-        print("  patched trainer battle names")
+    # trainers_frlg.h se genera desde el .party al compilar; si ya existe de una compilación
+    # anterior, se actualiza también (si no existe no hace falta: make lo crea ya con los nombres).
+    generated = GAME / "src/data/trainers_frlg.h"
+    if generated.exists():
+        gtext = generated.read_text(encoding="utf-8")
+        for trainer, name in (
+            ("TRAINER_HOL_STEVEN", dm_name("BOSS")),
+            ("TRAINER_HOL_MAY", dm_name("AURA")),
+            ("TRAINER_HOL_WALLY", dm_name("BLASCO")),
+        ):
+            at = gtext.find(f"[DIFFICULTY_NORMAL][{trainer}] =")
+            if at < 0:
+                continue
+            window = gtext[at:at + 500]
+            window = re.sub(r'\.trainerName = _\("[^"]*"\)', lambda m, nm=name: f'.trainerName = _("{nm}")', window, count=1)
+            gtext = gtext[:at] + window + gtext[at + 500:]
+        generated.write_text(gtext, encoding="utf-8")
+        print("  patched trainers_frlg.h names")
+    else:
+        print("  skip trainers_frlg.h (se genera al compilar)")
 
     messages = GAME / "src/battle_message.c"
     replace_once(

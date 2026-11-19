@@ -12,7 +12,7 @@ fi
 ls -la "$ROOT/web/game/"
 echo "ROM bytes: $(wc -c < "$ROOT/web/game/dailymaximo.gba.gz")"
 # Confirm config magic is in the ROM
-python3 - <<'PY' || /c/Users/Unai/AppData/Local/Programs/Python/Python313/python.exe - <<'PY'
+python3 - <<'PY'
 import gzip, pathlib
 rom = gzip.open(pathlib.Path('web/game/dailymaximo.gba.gz'), 'rb').read()
 magic = b'DAILYMAX-CONF-V1'

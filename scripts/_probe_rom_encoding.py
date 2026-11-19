@@ -5,12 +5,12 @@ import gzip
 import re
 from pathlib import Path
 
-ROOT = Path(r"C:/Users/Unai/Desktop/Proyectos/dailymaximo")
+ROOT = Path(__file__).resolve().parent.parent
 CHARMAP = ROOT / "pokeemerald-expansion/charmap.txt"
 ROMS = [
     ROOT / "web/game/dailymaximo.gba.gz",
     ROOT / "pokeemerald-expansion/pokefirered.gba",
-    Path(r"C:/Users/Unai/Desktop/Proyectos/hortelanos-daily/games/dailymaximo/rom/dailymaximo.gba.gz"),
+    ROOT.parent / "hortelanos-daily/games/dailysteven/rom/dailymaximo.gba.gz",
 ]
 
 
