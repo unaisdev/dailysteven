@@ -817,6 +817,8 @@ def main() -> None:
     subprocess.check_call(
         [sys.executable, str(ROOT / "scripts" / "translate_battle_strings_table.py"), str(GAME)]
     )
+    # Nuestras traducciones propias (locale/es/overrides_*.tsv) van las últimas y mandan sobre las de FireRed.
+    subprocess.check_call([sys.executable, str(ROOT / "scripts" / "apply_spanish_overrides.py"), str(GAME)])
 
     cache = ROOT / ".cache"
     cache.mkdir(exist_ok=True)

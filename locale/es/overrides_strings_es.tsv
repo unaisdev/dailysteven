@@ -1,0 +1,137 @@
+# Traducciones propias de src/strings.c (menús del equipo, ficha, mochila, menú de inicio y mensajes de sistema).
+# Mismo formato y mismas reglas que overrides_battle_es.tsv: los códigos {...} deben ser idénticos al original.
+#
+# ---- menú de inicio / sistema ----
+gText_MenuPokedex	POKéDEX
+gText_MenuPokemon	POKéMON
+gText_MenuRest	DESCANSAR
+gText_MenuDexNav	DEXNAV
+gText_MenuOptionPokedex	POKéDEX
+gText_MenuOptionPokemon	POKéMON
+gText_MenuOptionBag	MOCHILA
+gText_MenuOptionPokenav	POKéNAV
+gText_MenuOptionSave	GUARDAR
+gText_MenuOptionOption	OPCIÓN
+gText_MenuOptionExit	SALIR
+gText_SavingPlayer	JUGADOR
+gText_SavingBadges	MEDALLAS
+gText_SavingPokedex	POKéDEX
+gText_SavingTime	TIEMPO
+gText_ThisIsAPokemon	Esto es lo que llamamos un “POKéMON.”{PAUSE 96}\p
+gText_Summary	DATOS
+gText_Summary2	DATOS
+gText_Switch	CAMBIAR
+gText_Deselect	QUITAR
+gText_Others2	OTROS
+gText_Yes2	SÍ
+gText_Yes3	SÍ
+# ---- equipo (menú POKéMON) y mensajes de sistema ----
+gText_SpAtk3	AT. ESP.
+gText_SpDef3	DEF. ESP.
+gText_NoMoreThanVar1Pkmn	No pueden entrar más de {STR_VAR_1} POKéMON.{PAUSE_UNTIL_PRESS}
+gText_BagFullCouldNotRemoveItem	La MOCHILA está llena. No se ha podido quitar el objeto del POKéMON.{PAUSE_UNTIL_PRESS}
+gText_PkmnFrostbiteHealed	¡{STR_VAR_1} se ha curado la congelación!{PAUSE_UNTIL_PRESS}
+gText_PkmnGainedExp	¡{STR_VAR_1} ha ganado {STR_VAR_2} puntos de EXP.!{PAUSE_UNTIL_PRESS}
+gText_PkmnGainedExpAndElevatedToLvVar3	¡{STR_VAR_1} ha ganado {STR_VAR_2} puntos de EXP.\ny ha subido al nivel {STR_VAR_3}!
+gText_PkmnFriendlyBaseVar2Fell	¡{STR_VAR_1} se ha vuelto más amistoso!\nLos puntos base de {STR_VAR_2} han bajado.{PAUSE_UNTIL_PRESS}
+gText_PkmnAdoresBaseVar2Fell	¡{STR_VAR_1} te adora!\nLos puntos base de {STR_VAR_2} han bajado.{PAUSE_UNTIL_PRESS}
+gText_PkmnFriendlyBaseVar2CantFall	¡{STR_VAR_1} se ha vuelto más amistoso!\nLos puntos base de {STR_VAR_2} no pueden bajar más.{PAUSE_UNTIL_PRESS}
+gText_PkmnTransformed	¡{STR_VAR_1} se ha transformado!{PAUSE_UNTIL_PRESS}
+gText_ThrowAwayItem	¿Quieres tirar\n{STR_VAR_1}?
+gText_ItemThrownAway	Has tirado\n{STR_VAR_1}.{PAUSE_UNTIL_PRESS}
+gText_XsYAnd	{STR_VAR_2} de {STR_VAR_1} y\n
+gText_XsYWereSwapped	¡{STR_VAR_2} de {STR_VAR_1} se han intercambiado!{PAUSE_UNTIL_PRESS}
+gText_ReturnToWaitingRoom	¿Volver a la SALA DE ESPERA?
+gText_CancelChallenge	¿Cancelar el desafío?
+gText_EscapeFromHere	¿Quieres escapar de aquí y volver\na {STR_VAR_1}?
+gText_PkmnCantBeTraded	Ese POKéMON no se puede intercambiar.
+gText_NoPokemon	No hay\nningún POKéMON.
+gText_HMMovesCantBeForgotten2	Los movimientos MO no se pueden\nolvidar ahora.
+# ---- mochila ----
+gText_CantWriteMail	No puedes escribir\nun CORREO aquí.
+gText_MoveVar1Where	¿Dónde quieres\nmover {STR_VAR_1}?
+gText_Var1CantBeHeld	{STR_VAR_1} no se puede llevar.
+gText_TossHowManyVar1s	¿Cuántas unidades de\n{STR_VAR_1} quieres tirar?
+gText_ThrewAwayVar2Var1s	Has tirado {STR_VAR_2}\n{STR_VAR_1}.
+gText_ConfirmTossItems	¿Seguro que quieres tirar\n{STR_VAR_2} {STR_VAR_1}?
+gText_ReturnToVar1	Volver a\n{STR_VAR_1}.
+gText_LureEffectsLingered	Pero aún quedaban\nefectos del SEÑUELO.{PAUSE_UNTIL_PRESS}
+gText_CantBuyKeyItem	{STR_VAR_2}? Vaya.\nEso no lo puedo comprar.{PAUSE_UNTIL_PRESS}
+gText_HowManyToSell	{STR_VAR_2}?\n¿Cuántos quieres vender?
+gText_ICanPayVar1	Te puedo pagar ¥{STR_VAR_1}.\n¿Te parece bien?
+gText_TurnedOverVar1ForVar2	Has entregado {STR_VAR_2}\ny has recibido ¥{STR_VAR_1}.
+gText_ExpShareOn	REPARTIR EXP. se ha activado.{PAUSE_UNTIL_PRESS}
+gText_ExpShareOff	REPARTIR EXP. se ha desactivado.{PAUSE_UNTIL_PRESS}
+# ---- huevos (ficha) ----
+gText_EggWillTakeALongTime	Parece que este HUEVO\ntardará mucho en eclosionar.
+gText_EggWillTakeSomeTime	¿Qué saldrá de aquí?\nTardará un poco.
+gText_EggWillHatchSoon	Se mueve de vez en cuando.\nEclosionará pronto.
+gText_EggAboutToHatch	¡Hace ruidos!\n¡Está a punto de eclosionar!
+gText_OddEggFoundByCouple	Un HUEVO POKéMON extraño\nencontrado por la pareja de la GUARDERÍA.
+gText_PeculiarEggNicePlace	Un HUEVO POKéMON peculiar\nconseguido en un lugar agradable.
+gText_PeculiarEggTrade	Un HUEVO POKéMON peculiar\nconseguido en un intercambio.
+gText_EggFromHotSprings	Un HUEVO POKéMON conseguido\nen las aguas termales.
+gText_EggFromTraveler	Un HUEVO POKéMON extraño\nconseguido de un viajero.
+gText_EggNickname	HUEVO
+# ---- tutor de movimientos (no se usa en Daily Steven; traducido por coherencia) ----
+gText_TeachWhichMoveToPkmn	¿Qué {STR_VAR_3} quieres enseñar a\n{STR_VAR_1}?
+gText_MoveRelearnerTeachMoveConfirm	¿Enseñar {STR_VAR_2}?
+gText_MoveRelearnerTeachMoveConfirmUseTm	¿Enseñar {STR_VAR_2}?\nSe gastará un {STR_VAR_3}.
+gText_MoveRelearnerGiveUp	¿Renunciar a enseñar un nuevo\nmovimiento a {STR_VAR_1}?
+gText_MoveRelearnerStop	¿Dejar de intentar que {STR_VAR_1}\naprenda nuevos movimientos?
+# ---- intercambios / alquiler / Frontera de Batalla (inalcanzable en Daily Steven; traducido por coherencia) ----
+gText_RentalPkmn	POKéMON DE ALQUILER
+gText_RentalPkmn2	POKéMON DE ALQUILER
+gText_SelectFirstPkmn	Elige el primer POKéMON.
+gText_SelectSecondPkmn	Elige el segundo POKéMON.
+gText_SelectThirdPkmn	Elige el tercer POKéMON.
+gText_Rent	ALQUILAR
+gText_TheseThreePkmnOkay	¿Te valen estos tres POKéMON?
+gText_PkmnSwap	INTERCAMBIO POKéMON
+gText_SelectPkmnToSwap	Elige el POKéMON que quieres cambiar.
+gText_SelectPkmnToAccept	Elige el POKéMON que aceptas.
+gText_Swap	CAMBIAR
+gText_Rechoose	ELEGIR OTRA VEZ
+gText_QuitSwapping	¿Dejar de intercambiar?
+gText_AcceptThisPkmn	¿Aceptas este POKéMON?
+gText_PlayersBattleResults	RESULTADOS DE {PLAYER}
+gText_TotalRecordWLD	RÉCORD TOTAL V:{STR_VAR_1} D:{STR_VAR_2} E:{STR_VAR_3}
+gText_WinLoseDraw	{CLEAR_TO 83}VICT.{CLEAR_TO 128}DERR.{CLEAR_TO 176}EMP.
+gText_Ghost	FANTASMA
+gText_SafariBallStock	SAFARI BALLS\nQuedan: {STR_VAR_1}
+gText_BattlePyramidFloor	Pirámide de Batalla\n{STR_VAR_1}
+gText_Floor1	Piso 1
+gText_Floor2	Piso 2
+gText_Floor3	Piso 3
+gText_Floor4	Piso 4
+gText_Floor5	Piso 5
+gText_Floor6	Piso 6
+gText_Floor7	Piso 7
+gText_Peak	Cima
+gText_BattleFrontier	FRONTERA DE BATALLA
+gText_SomeonesPC	PC DE ALGUIEN
+gText_LanettesPC	PC DE LANETTE
+gText_BillsPc	PC DE BILL
+gText_SouthernIsland	ISLA DEL SUR
+gText_FarawayIsland	ISLA LEJANA
+gText_BattleBasics	NOCIONES DE COMBATE
+gText_PokemonNature	NATURALEZA POKéMON
+gText_PokemonMoves	MOVIMIENTOS POKéMON
+gText_Underpowered	DÉBIL
+gText_WhenInDanger	EN PELIGRO
+gText_BattleTrainers	ENTRENADORES
+gText_ElevatorNowOn	Ahora en:
+gText_RankingHall	SALÓN DE CLASIFICACIÓN
+gText_ExchangeService	SERVICIO DE INTERCAMBIO
+gText_SlateportCity	CIUDAD PORTUARIA
+gText_BattleTower2	TORRE BATALLA
+gText_BattleDome	DOMO BATALLA
+gText_BattlePalace	PALACIO BATALLA
+gText_BattleFactory	FÁBRICA BATALLA
+gText_BattleArena	ARENA BATALLA
+gText_BattlePike	CAÑÓN BATALLA
+gText_BattlePyramid	PIRÁMIDE BATALLA
+gText_DadsAdvice	Consejo de PAPÁ...\n{PLAYER}, todo tiene su momento\ly su lugar.{PAUSE_UNTIL_PRESS}
+# ---- PS (puntos de salud) en lugar de HP: el rótulo gráfico de la barra se redibuja en tools/make_es_graphics.py ----
+gText_HP3	PS
+gText_MaxHP	PS MÁX.

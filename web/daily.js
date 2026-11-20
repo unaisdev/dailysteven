@@ -1,4 +1,7 @@
-const STORAGE_KEY = 'hortelano:dailysteven:stats';
+// ?debug=1 (ROM de pruebas) usa su propio récord para no mezclarlo con el de verdad.
+const STORAGE_KEY = new URLSearchParams(globalThis.location?.search ?? '').has('debug')
+  ? 'hortelano:dailysteven:stats-debug'
+  : 'hortelano:dailysteven:stats';
 
 export function today(now = new Date()) {
   const pad = (n) => String(n).padStart(2, '0');

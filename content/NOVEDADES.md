@@ -17,3 +17,12 @@
 - Arreglado: la ficha de habilidades del Pokémon (PS, Ataque, Puntos Exp., etc.) ya sale en castellano.
 - En combate: movimientos como DESCANSO, BILIS, PICADURA, TRUCO FUERZA; etiquetas POT./PRE. en la ficha del ataque.
 - Quitada la opción QUIT del menú (ya no vuelve a la selección de entrenadores de Hall of Legends).
+- El rival principal se llama ahora STEVEN en todas partes (escena, combate, frases, récord y web); los compañeros siguen siendo AURA y BLASCO.
+- Escena de la sala de Bruno con los diálogos definitivos: STEVEN habla con HORTE, entra el compañero del día y se cruzan sus frases antes de empezar.
+- Frases definitivas al terminar el combate: primero STEVEN y después el compañero, tanto si ganas como si pierdes.
+- Quitados los concursos: la ficha del Pokémon ya no tiene la página «MOV. CONCURSO».
+- Traducción completa al castellano de los mensajes de combate (esquivar, debilitarse, RASTRO, PRESIÓN, cambios de estadísticas, estados, clima y efectos de campo): ya no se mezcla inglés con «enemigo».
+- La web está íntegramente en castellano (portada, resultado del día, récord, avisos y modo práctica).
+- Entrada del compañero animada: se abre la puerta, aparece «!» sobre HORTE y STEVEN, STEVEN se gira, AURA o BLASCO entra caminando en silencio hasta colocarse a su lado, STEVEN vuelve a mirar al frente y entonces empieza el diálogo.
+- Clases de entrenador en combate: «STEVEN de la ELITE FOUR de CAMPEONES» (como GOLD en Daily Gold) y «ASPIRANTE AURA» / «ASPIRANTE BLASCO»; ya no sale «CAMPEÓN» delante de ninguno.
+- Las barras de vida dicen «PS» en lugar de «HP», el nivel se muestra como «Nv.» en lugar de «Lv» y el menú dice «POKéMON seleccionado.» en lugar de «PKMN».

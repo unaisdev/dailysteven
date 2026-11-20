@@ -1,4 +1,4 @@
-# Gap analysis: Daily Steven (spec) vs Daily Máximo (repo)
+# Gap analysis: Daily Steven (spec) vs Daily Steven (repo)
 
 **Fecha del análisis:** 19/11/2026  
 **Estado:** documental + inspección de código. **No** se ha recompilado ni jugado una ROM para este informe.
@@ -124,7 +124,7 @@ Leyenda: **DONE** · **PARTIAL** · **DIVERGES** · **MISSING** · **N/A (pendin
 | Hooks sin romper `HoL_IsActive` (RI-05) | PARTIAL | Mitigado arrancando run HoL; faltan pruebas ROM |
 | Sala Bruno + escena puerta | DIVERGES / MISSING | Campeón + skip; NOVEDADES aún menciona puerta (stale) |
 | Reset práctica in-room | MISSING | Práctica = reload `?seed=` |
-| Textos ES consolidados + STEVEN/AURA/WALLY | DIVERGES | MÁXIMO/BLASCO; textos en patches HoL |
+| Textos ES consolidados + STEVEN/AURA/WALLY | DIVERGES | STEVEN/BLASCO; textos en patches HoL |
 
 ### Fase 3 — IA
 

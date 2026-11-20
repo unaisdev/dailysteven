@@ -2,7 +2,7 @@
 #define GUARD_DAILYMAX_TEXTS_H
 
 // =============================================================================
-//  DAILY STEVEN - TEXTOS Y NOMBRES  (TODO PROVISIONAL, ESTE ES EL ÚNICO ARCHIVO
+//  DAILY STEVEN - TEXTOS Y NOMBRES  (TEXTOS DEFINITIVOS; ESTE ES EL ÚNICO ARCHIVO
 //  QUE HAY QUE EDITAR PARA CAMBIAR LO QUE SE DICE EN LA ESCENA Y EN EL FINAL)
 // =============================================================================
 //
@@ -17,8 +17,7 @@
 //         \p  = caja nueva (pulsar A para seguir)
 //   - Se pueden usar acentos, ñ, ¡ y ¿. Un texto largo se parte solo en varias
 //     cajas (con la flecha de «seguir»).
-//   - Escribe SIEMPRE el nombre del jefe con DAILYMAX_NAME_BOSS (para poder
-//     cambiarlo de MÁXIMO a STEVEN tocando solo una línea).
+//   - Para el nombre del jefe dentro de una frase usa DAILYMAX_NAME_BOSS (hoy: STEVEN).
 //
 //  Límites de longitud:
 //   - Fuera de combate (hablar con el jefe, entrada del compañero, resultado):
@@ -27,7 +26,7 @@
 //   - Dentro de combate (frases de victoria y derrota): la caja también es de
 //     2 líneas y el texto se guarda en un búfer de 255 bytes por frase.
 //     Recomendado: máximo ~120 caracteres (una frase corta o dos).
-//   - Los nombres (MÁXIMO, AURA, BLASCO): máximo 10 letras. Mayúsculas.
+//   - Los nombres (STEVEN, AURA, BLASCO): máximo 10 letras. Mayúsculas.
 //
 //  Cómo se aplica: al compilar con  scripts\build-wsl.ps1  (ver README).
 //  El script de enganche lee los tres NOMBRES de este archivo para ponerlos
@@ -39,58 +38,80 @@
 //  NOMBRES EN PANTALLA
 // ----------------------------------------------------------------------------
 #define DAILYMAX_NAME_PLAYER  "HORTE"      // el jugador, en todo el juego
-#define DAILYMAX_NAME_BOSS    "MÁXIMO"     // para pasarlo a STEVEN: cambiar solo esta línea
+#define DAILYMAX_NAME_BOSS    "STEVEN"
 #define DAILYMAX_NAME_AURA    "AURA"
 #define DAILYMAX_NAME_BLASCO  "BLASCO"
 
 // ----------------------------------------------------------------------------
-//  ESCENA DE ENTRADA (sala de Bruno)  - PROVISIONAL
+//  CLASES DE ENTRENADOR (lo que acompaña al nombre en los mensajes de combate)
+//  STEVEN lleva la misma clase que GOLD en Daily Gold: «GOLD de la ELITE FOUR de CAMPEONES».
+//  Es una cadena propia (no cabe en el campo de clase de 12 caracteres), igual que en Daily Gold.
+//  Los compañeros llevan la clase «ASPIRANTE» delante del nombre.
 // ----------------------------------------------------------------------------
+#define DAILYMAX_TEXT_CLASS_BOSS     "ELITE FOUR de CAMPEONES"
+#define DAILYMAX_TEXT_BOSS_WITH_CLASS DAILYMAX_NAME_BOSS " de la ELITE FOUR de CAMPEONES"
+#define DAILYMAX_TEXT_CLASS_PARTNER  "ASPIRANTE"
 
-// Al hablar con el jefe: primera caja de diálogo
+// ----------------------------------------------------------------------------
+//  ESCENA DE ENTRADA (sala de Bruno)
+//  Orden: STEVEN (1, 2, 3) -> se abre la puerta, "!" sobre HORTE y STEVEN, STEVEN se gira, el compañero
+//         entra SIN hablar y se coloca a su lado, STEVEN vuelve a mirar al frente
+//         -> el compañero habla (ENTER) -> réplicas (AFTER_1, AFTER_2) -> combate.
+//  Cada caja muestra el nombre de quien habla (se decide en dailymaximo.c).
+// ----------------------------------------------------------------------------
 #define DAILYMAX_TEXT_BOSS_TALK_1 \
-    "Así que has llegado hasta aquí. " \
-    "Me alegra ver que los entrenadores como tú siguen buscando a los más fuertes."
-
-// Al hablar con el jefe: segunda caja, justo antes de que entre el compañero
+    "Vaya, vaya… ¿Qué tenemos por aquí?\p" \
+    "No todos los días aparece un entrenador capaz de derrotar a GOLD."
 #define DAILYMAX_TEXT_BOSS_TALK_2 \
-    "Pero hoy no estarás solo ante mí… " \
-    "¡Oigo pasos! Alguien más quiere unirse al combate."
+    "No quiero desanimarte, pero, aunque consiguieras derrotarme,\p" \
+    "al siguiente entrenador que te espera\p" \
+    "solo han conseguido derrotarlo el excampeón y el vigente campeón."
+#define DAILYMAX_TEXT_BOSS_TALK_3 \
+    "Pero bueno, no seré yo quien se pierda un buen combate.\p" \
+    "Así que basta de cháchara…\p" \
+    "¡Enséñame lo que vales!"
 
-// Frase del compañero al entrar por la puerta del fondo
+// Primera frase del compañero (ya colocado al lado de STEVEN; entra caminando sin decir nada)
 #define DAILYMAX_TEXT_AURA_ENTER \
-    "¡Perdona el retraso! ¡He venido corriendo para ayudar a " DAILYMAX_NAME_BOSS "!"
+    "Vaya… Nada, que no hay manera.\pHe vuelto a perder."
 #define DAILYMAX_TEXT_BLASCO_ENTER \
-    "¡Lo siento, llego tarde! ¡He corrido todo el camino para pelear junto a " DAILYMAX_NAME_BOSS "!"
+    "No lo voy a conseguir nunca…"
 
-// Frase del compañero al colocarse al lado del jefe, mirándote
-#define DAILYMAX_TEXT_AURA_BESIDE \
-    "¡Estoy lista! ¡Vamos a pelear juntos!"
-#define DAILYMAX_TEXT_BLASCO_BESIDE \
-    "¡Esta vez no pienso perder! ¡Allá voy!"
+// Después de ENTER.  AFTER_1 y AFTER_2 son dos cajas seguidas; quién habla en cada una:
+//   AURA:   AFTER_1 = AURA     AFTER_2 = STEVEN
+//   BLASCO: AFTER_1 = STEVEN   AFTER_2 = BLASCO
+#define DAILYMAX_TEXT_AURA_AFTER_1 \
+    "¡Vaya! ¿Estabais a punto de combatir?\p¿Puedo unirme?"
+#define DAILYMAX_TEXT_AURA_AFTER_2 \
+    "… No veo por qué no."
+#define DAILYMAX_TEXT_BLASCO_AFTER_1 \
+    "No digas tonterías.\pAlgún día alguno de nosotros la derrotará.\p" \
+    "¿Por qué no te unes al combate, BLASCO?"
+#define DAILYMAX_TEXT_BLASCO_AFTER_2 \
+    "Bueno, si no os importa…"
 
 // ----------------------------------------------------------------------------
-//  FRASES DURANTE EL COMBATE  - PROVISIONAL
-//    DEFEAT  = lo que dice ese rival cuando pierde (te ha derrotado a ese rival)
-//    VICTORY = lo que dice ese rival cuando gana (te ha derrotado a ti)
+//  FRASES DURANTE EL COMBATE (primero STEVEN, después el compañero)
+//    DEFEAT  = lo que dice ese rival cuando HORTE gana
+//    VICTORY = lo que dice ese rival cuando HORTE pierde
 // ----------------------------------------------------------------------------
 #define DAILYMAX_TEXT_BOSS_DEFEAT \
-    "Increíble… Me has superado. Eres un gran entrenador."
+    "¿Es posible… que de verdad haya aparecido alguien capaz de…?"
 #define DAILYMAX_TEXT_BOSS_VICTORY \
-    "Hoy gano yo. Pero tus POKéMON han peleado con todas sus fuerzas."
+    "Es mejor que te rindas…"
 
 #define DAILYMAX_TEXT_AURA_DEFEAT \
-    "¡Vaya! ¡Eres más fuerte de lo que pensaba!"
+    "¡No me lo puedo creer!\pSi ganas también el siguiente combate, ¡me muero!"
 #define DAILYMAX_TEXT_AURA_VICTORY \
-    "¡Hemos ganado! ¡Mis POKéMON también entrenan muy duro!"
+    "¡Vaya! Eres fuerte, pero no tanto como nosotros."
 
 #define DAILYMAX_TEXT_BLASCO_DEFEAT \
-    "¡Guau! ¡Eres muy fuerte!"
+    "¡Guau! Eres más impresionante que AURA y STEVEN.\p¡Y mira que es difícil!"
 #define DAILYMAX_TEXT_BLASCO_VICTORY \
-    "¿Yo… he ganado? ¡Gracias a todos por darme valor!"
+    "Gracias por el combate."
 
 // ----------------------------------------------------------------------------
-//  FINAL DEL COMBATE  - PROVISIONAL
+//  FINAL DEL COMBATE
 //  Se muestra: [titular] + [récord] + [despedida].   {STR_VAR_1} y {STR_VAR_2}
 //  son el número de victorias y de combates (no los borres del récord).
 // ----------------------------------------------------------------------------

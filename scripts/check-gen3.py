@@ -75,6 +75,71 @@ def check_config() -> None:
             fail(f"CONFIG {f.name}: {m.group(1)} está fijado en {m.group(2)} (debe ser GEN_3 o GEN_LATEST)")
 
 
+EFFECTIVE_EXPECTED = {
+    "GEN_LATEST": "GEN_3",
+    "P_GEN_4_POKEMON": "FALSE", "P_GEN_4_CROSS_EVOS": "FALSE",
+    "B_RUN_TRAINER_BATTLE": "FALSE", "B_AFFECTION_MECHANICS": "FALSE",
+    "B_SHOW_EFFECTIVENESS": "SHOW_EFFECTIVENESS_NEVER", "B_SHOW_TARGETS": "FALSE",
+    "B_SHOW_MOVE_DESCRIPTION": "FALSE", "B_LAST_USED_BALL": "FALSE", "B_SHOW_CATEGORY_ICON": "FALSE",
+    "P_SUMMARY_SCREEN_MOVE_RELEARNER": "FALSE", "P_SUMMARY_SCREEN_NATURE_COLORS": "FALSE",
+    "P_SUMMARY_SCREEN_RENAME": "FALSE",
+    "C_HIDE_CONTEST_DATA": "TRUE",   # en Rojo Fuego no hay concursos: sin página «MOV. CONCURSO», ni corazones ni categorías
+}
+
+
+def check_effective_config() -> None:
+    """Valor EFECTIVO de cada opción: lo que ve el compilador tras procesar todos los #include (no el texto de un
+    archivo suelto). Así se detecta una opción que otro archivo vuelva a encender."""
+    import subprocess
+
+    # Solo los archivos de opciones (global.h necesita archivos que se generan al compilar).
+    src = "".join(f'#include "config/{n}.h"\n' for n in
+                  ("general", "battle", "item", "pokemon", "species_enabled", "summary_screen", "contest"))
+    cmd = ["arm-none-eabi-gcc", "-E", "-dM", "-x", "c", "-", "-I", "include", "-I", "gflib", "-I", ".",
+           "-DMODERN=1", "-DFIRERED=1", "-DGAME_VERSION=VERSION_FIRE_RED", "-DGAME_LANGUAGE=LANGUAGE_ENGLISH"]
+    try:
+        out = subprocess.run(cmd, input=src, text=True, capture_output=True, cwd=GAME, timeout=120)
+    except FileNotFoundError:
+        fail("CONFIG EFECTIVA: no hay arm-none-eabi-gcc para evaluarla")
+        return
+    if out.returncode != 0:
+        fail("CONFIG EFECTIVA: el preprocesador falló: " + " | ".join(out.stderr.strip().splitlines()[:3])[:400])
+        return
+    defs = {}
+    for line in out.stdout.splitlines():
+        m = re.match(r"#define (\w+) (.*)", line)
+        if m:
+            defs[m.group(1)] = m.group(2).strip()
+    for name, want in EFFECTIVE_EXPECTED.items():
+        got = defs.get(name)
+        if got != want:
+            fail(f"CONFIG EFECTIVA: {name} vale {got} y debe ser {want}")
+
+
+def check_modern_aids_in_code() -> None:
+    """Ayudas modernas que NO dependen de una opción de configuración (están escritas en el código)."""
+    ss = rd(GAME / "src/pokemon_summary_screen.c")
+    # Hoja de datos (memo del entrenador): el nombre de la naturaleza se resalta en rojo en Esmeralda.
+    m = re.search(r'sMemoNatureTextColor\[\]\s*=\s*_\("([^"]*)"\)', ss)
+    misc = re.search(r'sMemoMiscTextColor\[\]\s*=\s*_\("([^"]*)"\)', ss)
+    if not m or not misc:
+        fail("AYUDAS: no encuentro sMemoNatureTextColor / sMemoMiscTextColor en pokemon_summary_screen.c")
+    elif m.group(1) != misc.group(1) or "RED" in m.group(1):
+        fail(f"AYUDAS: la naturaleza sale resaltada en la hoja de datos (sMemoNatureTextColor = «{m.group(1)}»)")
+
+
+def check_contests_hidden() -> None:
+    """Los concursos no existen en Rojo Fuego: la ficha no debe tener la página «MOV. CONCURSO»."""
+    ss = rd(GAME / "src/pokemon_summary_screen.c")
+    if not re.search(r"maxPageIndex\s*=\s*PSS_PAGE_COUNT\s*-\s*\(C_HIDE_CONTEST_DATA\s*\?\s*2\s*:\s*1\)", ss):
+        fail("CONCURSOS: pokemon_summary_screen.c ya no oculta la página de concursos con C_HIDE_CONTEST_DATA")
+    # Que la configuración efectiva esté en TRUE se comprueba en check_effective_config().
+    cfg = rd(GAME / "include/config/contest.h")
+    m = re.search(r"#define\s+C_HIDE_CONTEST_DATA\s+(\w+)", cfg)
+    if not m or m.group(1) != "TRUE":
+        fail(f"CONCURSOS: C_HIDE_CONTEST_DATA debe ser TRUE (vale {m.group(1) if m else 'no existe'})")
+
+
 def name_to_const(prefix: str, name: str) -> str:
     n = re.sub(r"\s*\([MF]\)\s*$", "", name.strip())
     n = re.sub(r"[^A-Za-z0-9]+", "_", n).strip("_").upper()
@@ -164,6 +229,9 @@ def check_generator() -> None:
 
 def main() -> int:
     check_config()
+    check_effective_config()
+    check_modern_aids_in_code()
+    check_contests_hidden()
     check_party("overlay", rd(ROOT / "overlay/data/dailymax_rivals.party"))
     tree_party = GAME / "src/data/trainers_frlg.party"
     if tree_party.exists():

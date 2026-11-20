@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Patch Hall of Legends sources for Daily Máximo after the HoL patch is applied."""
+"""Patch Hall of Legends sources for Daily Steven after the HoL patch is applied."""
 from __future__ import annotations
 
 import pathlib
+import re
 import sys
 
 GAME = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else "pokeemerald-expansion")
@@ -66,7 +67,7 @@ def replace_once(path: pathlib.Path, old: str, new: str, label: str) -> None:
 
 
 def main() -> None:
-    print(">> Patching Daily Máximo hooks")
+    print(">> Patching Daily Steven hooks")
 
     replace_once(
         GAME / "src/title_screen_frlg.c",
@@ -235,9 +236,9 @@ def main() -> None:
     set_character("HOL_CHAR_STEVEN", "DAILYMAX_NAME_BOSS", "DAILYMAX_TEXT_BOSS_TALK_1",
                   "DAILYMAX_TEXT_BOSS_DEFEAT", "DAILYMAX_TEXT_BOSS_VICTORY", "DAILYMAX_TEXT_BOSS_TALK_2")
     set_character("HOL_CHAR_MAY", "DAILYMAX_NAME_AURA", "DAILYMAX_TEXT_AURA_ENTER",
-                  "DAILYMAX_TEXT_AURA_DEFEAT", "DAILYMAX_TEXT_AURA_VICTORY", "DAILYMAX_TEXT_AURA_BESIDE")
+                  "DAILYMAX_TEXT_AURA_DEFEAT", "DAILYMAX_TEXT_AURA_VICTORY", "DAILYMAX_TEXT_AURA_AFTER_1")
     set_character("HOL_CHAR_WALLY", "DAILYMAX_NAME_BLASCO", "DAILYMAX_TEXT_BLASCO_ENTER",
-                  "DAILYMAX_TEXT_BLASCO_DEFEAT", "DAILYMAX_TEXT_BLASCO_VICTORY", "DAILYMAX_TEXT_BLASCO_BESIDE")
+                  "DAILYMAX_TEXT_BLASCO_DEFEAT", "DAILYMAX_TEXT_BLASCO_VICTORY", "DAILYMAX_TEXT_BLASCO_AFTER_1")
 
     specials = GAME / "data/specials.inc"
     specials_text = specials.read_text(encoding="utf-8")
@@ -363,13 +364,13 @@ def main() -> None:
     replace_once(
         GAME / "include/config/general.h",
         "#define EXPANSION_INTRO              TRUE    // If TRUE, a custom RHH intro will play after the vanilla copyright screen.",
-        "#define EXPANSION_INTRO              FALSE   // Daily Máximo: skip \"Powered by\" splash.",
+        "#define EXPANSION_INTRO              FALSE   // Daily Steven: skip \"Powered by\" splash.",
         "disable expansion intro",
     )
     replace_once(
         GAME / "include/config/battle.h",
         "#define B_FAST_HP_DRAIN                     TRUE       // If set to TRUE, HP bars will move faster.",
-        "#define B_FAST_HP_DRAIN                     FALSE      // Daily Máximo: FireRed-speed HP bars (TRUE drains too fast).",
+        "#define B_FAST_HP_DRAIN                     FALSE      // Daily Steven: FireRed-speed HP bars (TRUE drains too fast).",
         "firered hp bar speed",
     )
 
@@ -409,7 +410,7 @@ def main() -> None:
 {
     if (!UpdatePaletteFade())
     {
-        // Daily Máximo: skip "Powered by pokeemerald-expansion" and the Game Freak intro.
+        // Daily Steven: skip "Powered by pokeemerald-expansion" and the Game Freak intro.
         if (DailyMax_GetSeed() != 0)
             SetMainCallback2(CB2_DailyMax_StartFromCopyright);
         else
@@ -420,7 +421,7 @@ def main() -> None:
             "skip intros after copyright",
         )
 
-    # Daily Máximo: no HoL character-select quit (solo challenge).
+    # Daily Steven: no HoL character-select quit (solo challenge).
     start_menu = GAME / "src/start_menu.c"
     replace_once(
         start_menu,
@@ -446,13 +447,13 @@ def main() -> None:
     if (gHoLRun.runType == HOL_RUN_ELITE_FOUR)
         AddStartMenuAction(MENU_ACTION_BAG);
     AddStartMenuAction(MENU_ACTION_OPTION);
-    // Daily Máximo skips HoL trainer select — no QUIT back to that screen.
+    // Daily Steven skips HoL trainer select — no QUIT back to that screen.
     if (!DailyMax_IsActive())
         AddStartMenuAction(MENU_ACTION_QUIT_HOL);
     AddStartMenuAction(MENU_ACTION_EXIT);
 }
 """,
-        "hide HoL quit for Daily Máximo",
+        "hide HoL quit for Daily Steven",
     )
 
     # ---- Ronda 3: equipos rivales provisionales (un único archivo), HORTE, 3.ª gen estricta -----------------
@@ -546,6 +547,36 @@ def main() -> None:
         "steven matchup slots (after debug hook)",
     )
 
+    # La hoja de datos de Esmeralda resalta la naturaleza (y el nivel) en rojo; P_SUMMARY_SCREEN_NATURE_COLORS
+    # solo afecta a la página de estadísticas. Se iguala al color normal del texto.
+    replace_once(
+        GAME / "src/pokemon_summary_screen.c",
+        'static const u8 sMemoNatureTextColor[] = _("{COLOR LIGHT_RED}{SHADOW GREEN}");',
+        'static const u8 sMemoNatureTextColor[] = _("{COLOR WHITE}{SHADOW DARK_GRAY}"); // Daily Steven: sin resaltar la naturaleza',
+        "memo nature color",
+    )
+
+    # La ventana de habilidad ("SALAMENCE's / INTIMIDACIÓN") añade el posesivo inglés "'s" desde el código C.
+    # En castellano se muestra solo el nombre del Pokémon.
+    replace_once(
+        GAME / "src/battle_interface.c",
+        '    lastChar = gStringVar1[totalChar - 1];\n'
+        '    StringAppend(gStringVar1, COMPOUND_STRING("\'"));\n'
+        '    if (lastChar != CHAR_S && lastChar != CHAR_s)\n'
+        '        StringAppend(gStringVar1, COMPOUND_STRING("s"));\n',
+        '    lastChar = gStringVar1[totalChar - 1];  // Daily Steven: sin el posesivo inglés "\'s"\n'
+        '    (void)lastChar;\n',
+        "ability popup apostrophe",
+    )
+
+    # Aviso del movimiento del compañero (solo en combates con compañero de la IA; no sale en Daily Steven, pero se traduce).
+    replace_once(
+        GAME / "src/battle_controller_player.c",
+        'COMPOUND_STRING("Partner will use:\\n")',
+        'COMPOUND_STRING("El compañero usará:\\n")',
+        "partner will use",
+    )
+
     # ---- Mecánicas y ayudas: 3.ª generación estricta ----------------------------------------------------
     cfg = GAME / "include/config"
     for fname, name, value in (
@@ -560,6 +591,7 @@ def main() -> None:
         ("summary_screen.h", "P_SUMMARY_SCREEN_MOVE_RELEARNER", "FALSE"),  # no reaprender movimientos
         ("summary_screen.h", "P_SUMMARY_SCREEN_NATURE_COLORS", "FALSE"),   # sin colores de naturaleza
         ("summary_screen.h", "P_SUMMARY_SCREEN_RENAME", "FALSE"),          # sin cambiar motes
+        ("contest.h", "C_HIDE_CONTEST_DATA", "TRUE"),             # sin concursos (no existen en Rojo Fuego)
         ("item.h", "I_BERRY_PRICE", "GEN_3"),
         ("item.h", "I_EXP_SHARE_ITEM", "GEN_3"),
         ("pokemon.h", "P_TM_LITERACY", "GEN_3"),
@@ -606,25 +638,25 @@ def main() -> None:
     replace_once(
         messages,
         'static const u8 sText_TwoTrainersWantToBattle[] = _("You are challenged by {B_TRAINER1_NAME_WITH_CLASS} and {B_TRAINER2_NAME_WITH_CLASS}!\\p");',
-        'static const u8 sText_TwoTrainersWantToBattle[] = _("¡{B_TRAINER1_NAME} y {B_TRAINER2_NAME}\\nquieren combatir!\\p");',
+        'static const u8 sText_TwoTrainersWantToBattle[] = _("¡{B_TRAINER1_NAME_WITH_CLASS} y {B_TRAINER2_NAME_WITH_CLASS} quieren combatir!\\p");',
         "spanish two-trainer intro",
     )
     replace_once(
         messages,
         'static const u8 sText_TwoTrainersSentPkmn[] = _("{B_TRAINER1_NAME_WITH_CLASS} sent out {B_OPPONENT_MON1_NAME}!\\p{B_TRAINER2_NAME_WITH_CLASS} sent out {B_OPPONENT_MON2_NAME}!");',
-        'static const u8 sText_TwoTrainersSentPkmn[] = _("¡{B_TRAINER1_NAME} envió a {B_OPPONENT_MON1_NAME}!\\p¡{B_TRAINER2_NAME} envió a {B_OPPONENT_MON2_NAME}!");',
+        'static const u8 sText_TwoTrainersSentPkmn[] = _("¡{B_TRAINER1_NAME_WITH_CLASS} envió a {B_OPPONENT_MON1_NAME}!\\p¡{B_TRAINER2_NAME_WITH_CLASS} envió a {B_OPPONENT_MON2_NAME}!");',
         "spanish two-trainer send",
     )
     replace_once(
         messages,
         'static const u8 sText_Trainer2SentOutPkmn[] = _("{B_TRAINER2_NAME_WITH_CLASS} sent out {B_BUFF1}!");',
-        'static const u8 sText_Trainer2SentOutPkmn[] = _("¡{B_TRAINER2_NAME} envió a {B_BUFF1}!");',
+        'static const u8 sText_Trainer2SentOutPkmn[] = _("¡{B_TRAINER2_NAME_WITH_CLASS} envió a {B_BUFF1}!");',
         "spanish trainer2 send",
     )
     replace_once(
         messages,
         'static const u8 sText_Trainer2WithdrewPkmn[] = _("{B_TRAINER2_NAME_WITH_CLASS} withdrew {B_BUFF1}!");',
-        'static const u8 sText_Trainer2WithdrewPkmn[] = _("¡{B_TRAINER2_NAME} retiró a {B_BUFF1}!");',
+        'static const u8 sText_Trainer2WithdrewPkmn[] = _("¡{B_TRAINER2_NAME_WITH_CLASS} retiró a {B_BUFF1}!");',
         "spanish trainer2 withdraw",
     )
     # Estas dos se fijan por nombre de símbolo (valen tanto si el texto actual es el inglés original como si es
@@ -641,8 +673,120 @@ def main() -> None:
         else:
             print(f"  skip {symbol} (already applied)")
 
-    set_string("sText_Trainer1SentOutPkmn2", "¡{B_TRAINER1_NAME} envió a {B_BUFF1}!")
-    set_string("sText_Trainer1WithdrewPkmn", "¡{B_TRAINER1_NAME} retiró a {B_BUFF1}!")
+    set_string("sText_Trainer1SentOutPkmn2", "¡{B_TRAINER1_NAME_WITH_CLASS} envió a {B_BUFF1}!")
+    set_string("sText_Trainer1WithdrewPkmn", "¡{B_TRAINER1_NAME_WITH_CLASS} retiró a {B_BUFF1}!")
+
+    # --- Clases de entrenador de los rivales (STEVEN: como GOLD en Daily Gold; AURA/BLASCO: ASPIRANTE) ---
+    # La clase + nombre se arma en dailymaximo.c (DailyMax_GetNameWithClass); aquí solo se engancha.
+    text = messages.read_text(encoding="utf-8")
+    if "DailyMax_GetNameWithClass" not in text:
+        text = text.replace(
+            '#include "constants/weather.h"\n',
+            '#include "constants/weather.h"\n#include "dailymaximo.h"\n', 1)
+        text, n = re.subn(
+            r"(static const u8 \*BattleStringGetOpponentClassByTrainerId\(u16 trainerId\)\n\{\n    const u8 \*toCpy;\n)",
+            r"\1\n    if (DailyMax_GetClassName(trainerId) != NULL)\n        return DailyMax_GetClassName(trainerId);\n", text, count=1)
+        if n != 1:
+            raise SystemExit("patch failed: BattleStringGetOpponentClassByTrainerId")
+        for case, expr in (
+            ("B_TXT_TRAINER1_NAME_WITH_CLASS", "TRAINER_BATTLE_PARAM.opponentA"),
+            ("B_TXT_TRAINER2_NAME_WITH_CLASS", "TRAINER_BATTLE_PARAM.opponentB"),
+        ):
+            text, n = re.subn(
+                r"(            case " + case + r":[^\n]*\n)",
+                lambda m, e=expr: m.group(1) + "                toCpy = DailyMax_GetNameWithClass(" + e + ");\n                if (toCpy != NULL)\n                    break;\n",
+                text, count=1)
+            if n != 1:
+                raise SystemExit(f"patch failed: {case}")
+        atk = (
+            "                if (GetBattlerPosition(gBattlerAttacker) == B_POSITION_OPPONENT_LEFT || GetBattlerPosition(gBattlerAttacker) == B_POSITION_OPPONENT_RIGHT)\n"
+            "                {\n"
+            "                    toCpy = DailyMax_GetNameWithClass((GetBattlerPosition(gBattlerAttacker) == B_POSITION_OPPONENT_RIGHT\n"
+            "                        && (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS) && !BATTLE_TWO_VS_ONE_OPPONENT)\n"
+            "                        ? TRAINER_BATTLE_PARAM.opponentB : TRAINER_BATTLE_PARAM.opponentA);\n"
+            "                    if (toCpy != NULL)\n                        break;\n"
+            "                }\n")
+        text, n = re.subn(
+            r"(            case B_TXT_ATK_TRAINER_NAME_WITH_CLASS:[^\n]*\n)",
+            lambda m: m.group(1) + atk, text, count=1)
+        if n != 1:
+            raise SystemExit("patch failed: B_TXT_ATK_TRAINER_NAME_WITH_CLASS")
+        messages.write_text(text, encoding="utf-8")
+        print("  patched clases de entrenador (STEVEN / ASPIRANTE) en battle_message.c")
+    else:
+        print("  skip clases de entrenador (already applied)")
+
+    # --- Glifo «Lv» -> «Nv.»: el dibujo está en overlay/graphics/fonts (tools/make_es_graphics.py); aquí se ensancha ---
+    # Mantener sincronizado con FONT_LV_WIDTHS de tools/make_es_graphics.py.
+    fonts_c = GAME / "src/fonts.c"
+    ftext = fonts_c.read_text(encoding="utf-8")
+    for table, width in (("gFontSmallLatinGlyphWidths", 9), ("gFontNormalLatinGlyphWidths", 14)):
+        m = re.search(r"(" + table + r"\[\] = \{)(.*?)(\n\};)", ftext, re.S)
+        if m is None:
+            raise SystemExit(f"patch failed: {fonts_c}: no existe {table}")
+        nums = re.findall(r"\d+", m.group(2))
+        if len(nums) != 512:
+            raise SystemExit(f"patch failed: {table} tiene {len(nums)} anchos (se esperaban 512)")
+        nums[0x34] = str(width)
+        nums[0x105] = str(width)
+        body = "\n" + "\n".join("    " + ", ".join(f"{int(n):2d}" for n in nums[i:i + 16]) + "," for i in range(0, 512, 16))
+        ftext = ftext[:m.start(2)] + body + ftext[m.end(2):]
+    fonts_c.write_text(ftext, encoding="utf-8")
+    print("  patched anchos del glifo Nv. en fonts.c")
+
+    # --- Orden castellano en los textos con nombre + «enemigo/salvaje»: «SKARMORY enemigo» (no «enemigoSKARMORY») ---
+    text = messages.read_text(encoding="utf-8")
+    old_nick = (
+        "            if (!IsOnPlayerSide(src[srcID + 1]))\n"
+        "            {\n"
+        "                if (src[srcID] == B_BUFF_MON_NICK_WITH_PREFIX_LOWER)\n"
+        "                {\n"
+        "                    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)\n"
+        "                        StringAppend(dst, sText_FoePkmnPrefixLower);\n"
+        "                    else\n"
+        "                        StringAppend(dst, sText_WildPkmnPrefixLower);\n"
+        "                }\n"
+        "                else\n"
+        "                {\n"
+        "                    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)\n"
+        "                        StringAppend(dst, sText_FoePkmnPrefix);\n"
+        "                    else\n"
+        "                        StringAppend(dst, sText_WildPkmnPrefix);\n"
+        "                }\n"
+        "            }\n"
+        "            GetMonData(&GetBattlerParty(src[srcID + 1])[src[srcID + 2]], MON_DATA_NICKNAME, nickname);\n"
+        "            StringGet_Nickname(nickname);\n"
+        "            StringAppend(dst, nickname);\n"
+    )
+    new_nick = (
+        "            GetMonData(&GetBattlerParty(src[srcID + 1])[src[srcID + 2]], MON_DATA_NICKNAME, nickname);\n"
+        "            StringGet_Nickname(nickname);\n"
+        "            StringAppend(dst, nickname);\n"
+        "            if (!IsOnPlayerSide(src[srcID + 1]))\n"
+        "            {\n"
+        "                if (src[srcID] == B_BUFF_MON_NICK_WITH_PREFIX_LOWER)\n"
+        "                {\n"
+        "                    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)\n"
+        "                        StringAppend(dst, sText_FoePkmnPrefixLower);\n"
+        "                    else\n"
+        "                        StringAppend(dst, sText_WildPkmnPrefixLower);\n"
+        "                }\n"
+        "                else\n"
+        "                {\n"
+        "                    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)\n"
+        "                        StringAppend(dst, sText_FoePkmnPrefix);\n"
+        "                    else\n"
+        "                        StringAppend(dst, sText_WildPkmnPrefix);\n"
+        "                }\n"
+        "            }\n"
+    )
+    if old_nick in text:
+        messages.write_text(text.replace(old_nick, new_nick, 1), encoding="utf-8")
+        print("  patched orden nombre + enemigo en buffers")
+    elif new_nick in text:
+        print("  skip orden nombre + enemigo (already applied)")
+    else:
+        raise SystemExit("patch failed: B_BUFF_MON_NICK_WITH_PREFIX no tiene el aspecto esperado")
 
     print(">> Hooks done")
 
