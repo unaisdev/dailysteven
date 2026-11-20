@@ -1,0 +1,47 @@
+Daily Steven — créditos y licencias
+===================================
+
+Daily Steven es un proyecto de fans, gratuito y no oficial. No está afiliado ni
+respaldado por Nintendo, Creatures Inc., GAME FREAK inc. ni The Pokémon Company.
+Pokémon y todo su contenido son © Nintendo, Creatures Inc. y GAME FREAK inc.
+
+Base del juego
+--------------
+- Daily Red y Hall of Legends, de amoi-builds:
+  https://github.com/amoi-builds/dailyred
+  https://github.com/amoi-builds/halloflegends
+  Daily Steven sigue las reglas de Daily Red (un combate al día, equipo generado
+  con la semilla del día) y se construye sobre Hall of Legends.
+- pokeemerald-expansion, de Rom Hacking Hideout (RHH) y sus colaboradores
+  (commit 8fb02c6): https://github.com/rh-hideout/pokeemerald-expansion
+  Lista completa de colaboradores:
+  https://github.com/rh-hideout/pokeemerald-expansion/blob/master/CREDITS.md
+- Las decompilaciones de pret (pokeemerald y pokefirered), sobre las que se
+  construye la expansion: https://github.com/pret
+  Los datos de aprendizaje del equipo del jugador (MT/MO y movimientos por nivel)
+  son los de Pokémon Esmeralda según pret/pokeemerald.
+
+Idioma
+------
+- Tablas de texto en castellano basadas en Acimut/pokefirered (rama pret_europe):
+  https://github.com/Acimut/pokefirered
+  Aplicadas de la misma forma que en Daily Gold (https://github.com/unaisdev/dailygold).
+
+Sprites de entrenadores (de Hall of Legends, vía The Spriters Resource
+https://www.spriters-resource.com/)
+-----------------------------------------------------------------------
+- Ethan: FourLeafSunny
+- Cynthia: lichen
+- Silver: Nx-Kun, mufasakong, Dragoon
+- Dawn: Kaori
+- Barry: Gridiron, Eevee, Zhen Lin, pika, Pipian
+
+Lanzador
+--------
+Hortelano's Daily (https://github.com/unaisdev/hortelanos-daily) ejecuta este pack
+con el núcleo mGBA (Mozilla Public License 2.0, https://github.com/mgba-emu/mgba)
+compilado para el navegador dentro de RetroArch (GNU GPL v3,
+https://github.com/libretro/RetroArch). Las licencias del reproductor están en
+el propio lanzador.
+
+Cada proyecto mencionado conserva su propia licencia; consulta su repositorio.

@@ -10,10 +10,12 @@
 **Producto:** Daily Steven (`dailysteven:`). **Símbolos C / ROM / carpeta:** siguen `dailymaximo` / `DAILYMAX-*`.  
 **No reabrir** OPEN-P* ni DEC-0 sin decisión nueva. Avanzar por fases 0→4 sin saltar puertas.
 
-## Obligatorio: Novedades antes de push a main
+## Novedades y publicación (a mano)
 
-Rellenar `content/NOVEDADES.md` (solo líneas `- …`) con lo que el jugador note.
-Sin bullets, el Release falla a propósito.
+Un push a main NO publica nada. El pack se publica solo lanzando a mano el workflow «Release content pack»
+(o con una etiqueta `content-v*` puesta a propósito); crea un BORRADOR que se publica a mano.
+Antes de lanzarlo, rellenar `content/NOVEDADES.md` (solo líneas `- …`, máx. 8, lo que el jugador note, en castellano).
+Sin bullets, el workflow falla a propósito. Después se vacía con una PR normal (`scripts/clear-novedades.sh`).
 
 ## Compilar
 

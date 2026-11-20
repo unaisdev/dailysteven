@@ -20,3 +20,6 @@ scripts/__pycache__/
 
 # salidas de tests/web/cycle.mjs
 /tests/web/out/
+
+# paquete local de content (scripts/package-content.sh)
+/dist/

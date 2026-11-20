@@ -1,29 +1,7 @@
-- El rival se anuncia como STEVEN, con Aura o Blasco según el día.
-- El inicio del combate dice «STEVEN y AURA quieren combatir» (o BLASCO), y cada envío nombra a su entrenador.
-- En la sala de Bruno: HORTE habla con STEVEN; por la puerta entra AURA o BLASCO y empieza el doble.
-- Contra Aura: STEVEN (Skarmory, Cradily, Metagross) + AURA (Blaziken, Swellow, Salamence).
-- Contra Blasco: STEVEN (Skarmory, Metagross, Aggron) + BLASCO (Altaria, Gardevoir, Milotic).
-- El combate usa reglas de 3.ª generación: crítico ×2, físico/especial según el tipo, Protección al 50 % y el cambio al caer un Pokémon en el acto.
-- Tu equipo de seis Pokémon nivel 100 se genera con la semilla del día.
-- Cada Pokémon elige movimientos al azar entre nivel y las MT/MO de 3.ª gen, con al menos un ataque de daño, y puede llevar un objeto de combate o un potenciador de tipo.
-- Arreglado: pelean ellos dos contra ti solo (tú controlas tus 6) y ya no sale el combate sin Pokémon.
-- Los Pokémon del rival llegan corriendo desde la puerta (sin popeo ni señuelos raros).
-- Arranca directo al desafío: sin intro de Game Freak ni el splash de pokeemerald-expansion.
-- La barra de vida baja a ritmo de FireRed (ya no se vacía de golpe).
-- Todo el texto jugable en castellano: menús, equipo, resumen, tipos, nombres y descripciones de movimientos/habilidades, y mensajes de combate.
-- Los mensajes de «muy eficaz» / «no es muy eficaz» en dobles (contra dos rivales) ya salen en castellano.
-- Arreglado: al usar Protección ya no mezcla inglés («protected itself») con «enemigo»; sale «se ha protegido».
-- Arreglado: efectos de campo en castellano (Púas, Reflejo, Pantalla Luz, Velo Sagrado y similares); ya no salen en inglés.
-- Arreglado: la ficha de habilidades del Pokémon (PS, Ataque, Puntos Exp., etc.) ya sale en castellano.
-- En combate: movimientos como DESCANSO, BILIS, PICADURA, TRUCO FUERZA; etiquetas POT./PRE. en la ficha del ataque.
-- Quitada la opción QUIT del menú (ya no vuelve a la selección de entrenadores de Hall of Legends).
-- El rival principal se llama ahora STEVEN en todas partes (escena, combate, frases, récord y web); los compañeros siguen siendo AURA y BLASCO.
-- Escena de la sala de Bruno con los diálogos definitivos: STEVEN habla con HORTE, entra el compañero del día y se cruzan sus frases antes de empezar.
-- Frases definitivas al terminar el combate: primero STEVEN y después el compañero, tanto si ganas como si pierdes.
-- Quitados los concursos: la ficha del Pokémon ya no tiene la página «MOV. CONCURSO».
-- Traducción completa al castellano de los mensajes de combate (esquivar, debilitarse, RASTRO, PRESIÓN, cambios de estadísticas, estados, clima y efectos de campo): ya no se mezcla inglés con «enemigo».
-- La web está íntegramente en castellano (portada, resultado del día, récord, avisos y modo práctica).
-- Entrada del compañero animada: se abre la puerta, aparece «!» sobre HORTE y STEVEN, STEVEN se gira, AURA o BLASCO entra caminando en silencio hasta colocarse a su lado, STEVEN vuelve a mirar al frente y entonces empieza el diálogo.
-- Clases de entrenador en combate: «STEVEN de la ELITE FOUR de CAMPEONES» (como GOLD en Daily Gold) y «ASPIRANTE AURA» / «ASPIRANTE BLASCO»; ya no sale «CAMPEÓN» delante de ninguno.
-- Las barras de vida dicen «PS» en lugar de «HP», el nivel se muestra como «Nv.» en lugar de «Lv» y el menú dice «POKéMON seleccionado.» en lugar de «PKMN».
-- En dobles, Terremoto, Magnitud, Explosión y Autodestrucción mantienen todo su daño cuando quedan dos objetivos, como en Esmeralda.
+- Estrenamos Daily Steven: cada día te espera un combate doble contra STEVEN.
+- Una escena en la sala da paso al desafío diario.
+- Cada día juegas con el mismo equipo de seis Pokémon de nivel 100 que el resto de jugadores. Sus movimientos salen de los que aprenden por nivel y con MT y MO de Esmeralda.
+- Puedes jugar en castellano, desde los menús y la ficha del equipo hasta los mensajes de combate.
+- Los tipos, los golpes críticos, los estados y el clima siguen las reglas de la tercera generación.
+- En dobles, Terremoto, Magnitud, Explosión y Autodestrucción conservan toda su potencia cuando quedan dos objetivos, como en Esmeralda.
+- Tienes un intento al día. Al terminar podrás consultar tus victorias y tu racha.

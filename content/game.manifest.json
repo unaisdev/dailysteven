@@ -17,11 +17,8 @@
     "titleAsset": "assets/maximo.png",
     "mutedKey": "hortelano:dailysteven:muted"
   },
-  "archive": {
-    "symbols": "archive/symbols.json"
-  },
   "compat": {
-    "minLauncherVersion": "0.1.0",
+    "minLauncherVersion": "2.2.0",
     "runnerAdapters": [
       "dailymax-conf-v1+status-v1"
     ]
