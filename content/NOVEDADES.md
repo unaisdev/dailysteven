@@ -1,7 +1,6 @@
-- Estrenamos Daily Steven: un combate doble al día contra STEVEN y su compañera AURA o su compañero BLASCO, según el día.
-- Entras en la sala con una pequeña escena: se abre la puerta del fondo, STEVEN se sorprende y el compañero del día se coloca a su lado antes de empezar.
-- Tu equipo de seis Pokémon de nivel 100 se genera cada día y es el mismo para todos; cada uno lleva hasta cuatro movimientos al azar entre los que aprende por nivel y con MT y MO de Esmeralda.
-- Todo está en castellano: menús, ficha, tipos, movimientos, habilidades y mensajes de combate.
-- El combate sigue las reglas de la tercera generación: críticos, tipos, estados y clima como en Esmeralda.
-- Solo puedes jugar una vez al día; al terminar verás tu récord de victorias y combates.
-- Contra STEVEN te esperan Skarmory y Metagross; con AURA llegan Blaziken, Swellow y Salamence, y con BLASCO, Altaria, Gardevoir y Milotic.
+- Estrenamos Daily Steven: cada día te espera un combate doble contra STEVEN.
+- Una escena en la sala da paso al desafío diario.
+- Cada día juegas con el mismo equipo de seis Pokémon de nivel 100 que el resto de jugadores. Sus movimientos salen de los que aprenden por nivel y con MT y MO de Esmeralda.
+- Puedes jugar en castellano, desde los menús y la ficha del equipo hasta los mensajes de combate.
+- Los tipos, los golpes críticos, los estados y el clima siguen las reglas de la tercera generación.
+- Tienes un intento al día. Al terminar podrás consultar tus victorias y tu racha.

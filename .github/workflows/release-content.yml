@@ -109,7 +109,7 @@ jobs:
           sha256sum pokeemerald-expansion/pokefirered.gba | tee dist/content/ROM_SHA256.txt
           stat -c '%s bytes' pokeemerald-expansion/pokefirered.gba | tee -a dist/content/ROM_SHA256.txt
 
-      - name: Pruebas de mecánicas de 3.ª generación (46)
+      - name: Pruebas de mecánicas de 3.ª generación
         run: |
           set -euo pipefail
           GAME_DIR="$PWD/pokeemerald-expansion" HOL_PLAY=1 bash scripts/run-gen3-tests.sh Gen3 2>&1 | tee /tmp/gen3.log | sed 's/\x1b\[[0-9;]*m//g' | tail -15

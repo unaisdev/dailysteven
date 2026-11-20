@@ -74,7 +74,7 @@ Daily Steven stands on the work of others (full text in [content/licenses.txt](c
 
 1. Write 8 bullets at most in `content/NOVEDADES.md` (player-facing Spanish, no jargon).
 2. Make sure the launcher (`unaisdev/hortelanos-daily`) already ships the `dailymax-conf-v1+status-v1` adapter.
-3. Run the **Release content pack** workflow by hand (Actions → Run workflow → version `X.Y.Z`), or push a `content-vX.Y.Z` tag on purpose. It builds the ROM from scratch, runs every validator and the 46 mechanics tests, packages the pack and creates a **draft** release. Nothing is public until someone publishes that draft.
+3. Run the **Release content pack** workflow by hand (Actions → Run workflow → version `X.Y.Z`), or push a `content-vX.Y.Z` tag on purpose. It builds the ROM from scratch, runs the build validators and the Gen3 mechanics tests, packages the pack and creates a **draft** release. Nothing is public until someone publishes that draft.
 4. Afterwards, empty `content/NOVEDADES.md` in a normal PR (`scripts/clear-novedades.sh`). There are no automatic commits.
 
 Local pack (no GitHub): build the ROM, then `scripts/package-content.sh` writes `dist/content/dailysteven-content.zip` and `SHA256SUMS`.
