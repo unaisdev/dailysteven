@@ -378,6 +378,21 @@ def main() -> None:
     # by type, Protect 50%, immediate faint switch, and spread damage (Surf 50% on
     # both foes; Earthquake hits the ally with no spread reduction).
     force_define(GAME / "include/config/general.h", "GEN_LATEST", "GEN_3", "gen3 mechanics")
+    target_damage_start = """static inline uq4_12_t GetTargetDamageModifier(struct DamageContext *ctx)
+{
+    if (IsDoubleBattle())
+    {
+"""
+    replace_once(
+        GAME / "src/battle_util.c",
+        target_damage_start,
+        target_damage_start + """        // Gen 3 spread reduction only applies to moves aimed at both foes.
+        if (B_MULTIPLE_TARGETS_DMG < GEN_4 && GetBattlerMoveTargetType(ctx->battlerAtk, ctx->move) == TARGET_FOES_AND_ALLY)
+            return UQ_4_12(1.0);
+
+""",
+        "gen3 full damage for moves that also hit the ally",
+    )
     force_define(GAME / "include/config/species_enabled.h", "P_GEN_4_POKEMON", "FALSE", "disable gen4 species")
     # Gallade (Blasco provisional) is a Gen4 cross-evo of a Gen3 line. Turning this
     # off deletes its species data while the HoL party still references it.

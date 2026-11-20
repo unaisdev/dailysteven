@@ -26,3 +26,4 @@
 - Entrada del compañero animada: se abre la puerta, aparece «!» sobre HORTE y STEVEN, STEVEN se gira, AURA o BLASCO entra caminando en silencio hasta colocarse a su lado, STEVEN vuelve a mirar al frente y entonces empieza el diálogo.
 - Clases de entrenador en combate: «STEVEN de la ELITE FOUR de CAMPEONES» (como GOLD en Daily Gold) y «ASPIRANTE AURA» / «ASPIRANTE BLASCO»; ya no sale «CAMPEÓN» delante de ninguno.
 - Las barras de vida dicen «PS» en lugar de «HP», el nivel se muestra como «Nv.» en lugar de «Lv» y el menú dice «POKéMON seleccionado.» en lugar de «PKMN».
+- En dobles, Terremoto, Magnitud, Explosión y Autodestrucción mantienen todo su daño cuando quedan dos objetivos, como en Esmeralda.
