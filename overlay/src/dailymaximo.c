@@ -51,6 +51,7 @@ struct DailyMaxArchiveMon
     u16 species, ability, item, moves[4], stats[6];
     u8 nature, level, shiny, pp[4], ivs[6], evs[6];
     u8 names[7][ARCHIVE_NAME_BYTES]; // species, ability, item, four moves
+    u8 padding;
 };
 
 struct DailyMaxArchive
