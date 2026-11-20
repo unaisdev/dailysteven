@@ -112,9 +112,12 @@ jobs:
       - name: Pruebas de mecánicas de 3.ª generación
         run: |
           set -euo pipefail
-          GAME_DIR="$PWD/pokeemerald-expansion" HOL_PLAY=1 bash scripts/run-gen3-tests.sh Gen3 2>&1 | tee /tmp/gen3.log | sed 's/\x1b\[[0-9;]*m//g' | tail -15
-          grep -a "Tests PASSED" /tmp/gen3.log | sed 's/\x1b\[[0-9;]*m//g' | tee /tmp/passed.txt
-          grep -aq "FAILED:" /tmp/gen3.log && { echo "Hay pruebas que fallan" >&2; exit 1; } || true
+          GAME_DIR="$PWD/pokeemerald-expansion" HOL_PLAY=1 bash scripts/run-gen3-tests.sh Gen3 2>&1 | sed 's/\x1b\[[0-9;]*m//g' | tee /tmp/gen3.log | tail -15
+          grep -aE 'Tests PASSED:[[:space:]]*[1-9][0-9]*[[:space:]]*$' /tmp/gen3.log
+          if grep -aq "Tests FAILED:" /tmp/gen3.log; then
+            echo "Hay pruebas que fallan" >&2
+            exit 1
+          fi
 
       - name: Empaquetar el pack
         run: |
