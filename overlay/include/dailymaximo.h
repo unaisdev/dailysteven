@@ -34,6 +34,8 @@ void DailyMax_FinishDaily(void);
 u16 DailyMax_IsDailyActive(void);
 void DailyMax_SetupRoom(void);
 void DailyMax_BufferSpeech(void);
+const u8 *DailyMax_GetClassName(u16 trainerId);        // NULL si no es un rival de Daily Steven
+const u8 *DailyMax_GetNameWithClass(u16 trainerId);    // NULL si no es un rival de Daily Steven
 void DailyMax_BufferResult(void);
 
 #if DAILYMAX_DEBUG

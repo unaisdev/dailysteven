@@ -1,0 +1,15 @@
+# Textos que pueden quedarse IGUAL que el original a propósito (clave<TAB>motivo).
+# Debe estar vacío: cualquier texto alcanzable sin traducir hace fallar la compilación (scripts/check-spanish.py).
+sText_Trainer1SentOutPkmn2	Usa {B_TRAINER1_NAME} (sin la clase de entrenador): en Daily Steven los rivales son STEVEN, AURA y BLASCO a secas
+sText_Trainer1WithdrewPkmn	ídem: nombre sin clase
+sText_Trainer2WithdrewPkmn	ídem: nombre sin clase
+sText_TwoTrainersSentPkmn	ídem: nombre sin clase
+sText_Trainer2SentOutPkmn	ídem: nombre sin clase
+sText_TwoTrainersWantToBattle	ídem: nombre sin clase («¡STEVEN y BLASCO quieren combatir!»)
+gText_MenuOptionPokedex	Se escribe igual en castellano
+gText_MenuOptionPokemon	Se escribe igual en castellano
+gText_MenuOptionPokenav	Se escribe igual en castellano
+gText_MenuPokedex	Se escribe igual en castellano
+gText_MenuPokemon	Se escribe igual en castellano
+gText_MenuDexNav	Nombre propio de la función; no existe en Rojo Fuego
+gText_SavingPokedex	Se escribe igual en castellano

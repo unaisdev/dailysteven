@@ -37,11 +37,11 @@ tree_hash() {
   {
     for f in scripts/get-expansion.sh scripts/apply-dailymaximo.sh scripts/patch-dailymaximo-hooks.py \
              scripts/apply-locale.sh scripts/apply_spanish_locale.py scripts/translate_battle_strings_table.py \
-             scripts/normalize-binary-patch.py scripts/locale_guard.py overlay/data/dailymax_rivals.party \
+             scripts/normalize-binary-patch.py scripts/locale_guard.py scripts/apply_spanish_overrides.py overlay/data/dailymax_rivals.party \
              patches/hall-of-legends.patch; do
       tr -d '\r' < "$f"
     done
-    find locale/es -type f | LC_ALL=C sort | while read -r f; do tr -d '\r' < "$f"; done
+    find locale/es overlay/graphics -type f 2>/dev/null | LC_ALL=C sort | while read -r f; do tr -d '\r' < "$f"; done
     grep -h '#define DAILYMAX_NAME_' overlay/include/dailymax_texts.h | tr -d '\r'
   } | sha256sum | cut -c1-16
 }

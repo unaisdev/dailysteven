@@ -83,6 +83,7 @@ EFFECTIVE_EXPECTED = {
     "B_SHOW_MOVE_DESCRIPTION": "FALSE", "B_LAST_USED_BALL": "FALSE", "B_SHOW_CATEGORY_ICON": "FALSE",
     "P_SUMMARY_SCREEN_MOVE_RELEARNER": "FALSE", "P_SUMMARY_SCREEN_NATURE_COLORS": "FALSE",
     "P_SUMMARY_SCREEN_RENAME": "FALSE",
+    "C_HIDE_CONTEST_DATA": "TRUE",   # en Rojo Fuego no hay concursos: sin página «MOV. CONCURSO», ni corazones ni categorías
 }
 
 
@@ -93,7 +94,7 @@ def check_effective_config() -> None:
 
     # Solo los archivos de opciones (global.h necesita archivos que se generan al compilar).
     src = "".join(f'#include "config/{n}.h"\n' for n in
-                  ("general", "battle", "item", "pokemon", "species_enabled", "summary_screen"))
+                  ("general", "battle", "item", "pokemon", "species_enabled", "summary_screen", "contest"))
     cmd = ["arm-none-eabi-gcc", "-E", "-dM", "-x", "c", "-", "-I", "include", "-I", "gflib", "-I", ".",
            "-DMODERN=1", "-DFIRERED=1", "-DGAME_VERSION=VERSION_FIRE_RED", "-DGAME_LANGUAGE=LANGUAGE_ENGLISH"]
     try:
@@ -125,6 +126,18 @@ def check_modern_aids_in_code() -> None:
         fail("AYUDAS: no encuentro sMemoNatureTextColor / sMemoMiscTextColor en pokemon_summary_screen.c")
     elif m.group(1) != misc.group(1) or "RED" in m.group(1):
         fail(f"AYUDAS: la naturaleza sale resaltada en la hoja de datos (sMemoNatureTextColor = «{m.group(1)}»)")
+
+
+def check_contests_hidden() -> None:
+    """Los concursos no existen en Rojo Fuego: la ficha no debe tener la página «MOV. CONCURSO»."""
+    ss = rd(GAME / "src/pokemon_summary_screen.c")
+    if not re.search(r"maxPageIndex\s*=\s*PSS_PAGE_COUNT\s*-\s*\(C_HIDE_CONTEST_DATA\s*\?\s*2\s*:\s*1\)", ss):
+        fail("CONCURSOS: pokemon_summary_screen.c ya no oculta la página de concursos con C_HIDE_CONTEST_DATA")
+    # Que la configuración efectiva esté en TRUE se comprueba en check_effective_config().
+    cfg = rd(GAME / "include/config/contest.h")
+    m = re.search(r"#define\s+C_HIDE_CONTEST_DATA\s+(\w+)", cfg)
+    if not m or m.group(1) != "TRUE":
+        fail(f"CONCURSOS: C_HIDE_CONTEST_DATA debe ser TRUE (vale {m.group(1) if m else 'no existe'})")
 
 
 def name_to_const(prefix: str, name: str) -> str:
@@ -218,6 +231,7 @@ def main() -> int:
     check_config()
     check_effective_config()
     check_modern_aids_in_code()
+    check_contests_hidden()
     check_party("overlay", rd(ROOT / "overlay/data/dailymax_rivals.party"))
     tree_party = GAME / "src/data/trainers_frlg.party"
     if tree_party.exists():

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Recreates pokeemerald-expansion/ from scratch: fetches RHH's
 # pokeemerald-expansion at the pinned commit, applies Hall of Legends, then
-# Daily Máximo overlay sources and patches.
+# Daily Steven overlay sources and patches.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"

@@ -1,0 +1,504 @@
+# Traducciones propias de Daily Steven (castellano de España, estilo de ROJO FUEGO oficial).
+# Formato:  CLAVE <TAB> texto.   Líneas que empiezan por # = comentarios.
+#  - CLAVE = STRINGID_* (tabla de mensajes de combate) o nombre de la constante (sText_*, gText_*).
+#  - Los códigos {...} tienen que ser EXACTAMENTE los del texto original de la expansion (el compilador falla si no).
+#  - \p = caja nueva, \n = salto de línea, \l = línea nueva dentro de la caja (se escriben tal cual, con la barra).
+#  - Las cajas de combate saltan de línea solas: solo se usa \n/\p donde el original ya lo llevaba.
+#  - Nombres de movimientos, habilidades y objetos salen en MAYÚSCULAS desde el juego (no hace falta escribirlos).
+#
+# ---- piezas que se pegan dentro de otras frases (siempre con espacio delante) ----
+STRINGID_STATHARSHLY	 mucho
+gText_StatSharply	 mucho
+gText_drastically	 muchísimo
+gText_severely	 muchísimo
+gText_StatRose	subió
+gText_StatFell	bajó
+gText_SpaceAndSpace	 y
+STRINGID_STATROSE	¡{B_BUFF1} de {B_SCR_NAME_WITH_PREFIX} ha subido{B_BUFF2}!
+STRINGID_STATFELL	¡{B_BUFF1} de {B_SCR_NAME_WITH_PREFIX} ha bajado{B_BUFF2}!
+STRINGID_ATTACKERABILITYSTATRAISE	¡{B_ATK_ABILITY} de {B_ATK_NAME_WITH_PREFIX} hizo subir{B_BUFF2} su {B_BUFF1}!
+STRINGID_SCRIPTINGABILITYSTATRAISE	¡{B_SCR_ABILITY} de {B_SCR_NAME_WITH_PREFIX} hizo subir{B_BUFF2} su {B_BUFF1}!
+STRINGID_TARGETABILITYSTATRAISE	¡{B_DEF_ABILITY} de {B_DEF_NAME_WITH_PREFIX} hizo subir{B_BUFF2} su {B_BUFF1}!
+STRINGID_TARGETABILITYSTATLOWER	¡{B_DEF_ABILITY} de {B_DEF_NAME_WITH_PREFIX} hizo bajar{B_BUFF2} su {B_BUFF1}!
+STRINGID_USINGITEMSTATOFPKMNFELL	¡{B_BUFF1} de {B_SCR_NAME_WITH_PREFIX2} ha bajado{B_BUFF2} por culpa de {B_LAST_ITEM}!
+STRINGID_USINGITEMSTATOFPKMNROSE	¡{B_BUFF1} de {B_SCR_NAME_WITH_PREFIX2} ha subido{B_BUFF2} gracias a {B_LAST_ITEM}!
+STRINGID_STATWASHEIGHTENED	¡{B_BUFF1} de {B_SCR_NAME_WITH_PREFIX} ha aumentado!
+STRINGID_STATWASMAXEDOUT	¡{B_SCR_NAME_WITH_PREFIX} ha llevado su {B_BUFF1} al máximo!
+STRINGID_TARGETSTATWONTGOHIGHER	¡{B_BUFF1} de {B_DEF_NAME_WITH_PREFIX} no puede subir más!
+STRINGID_PKMNSXPREVENTSYLOSS	¡{B_BUFF1} de {B_SCR_NAME_WITH_PREFIX} no bajó!
+STRINGID_PKMNATKNOTLOWERED	¡El ATAQUE de {B_SCR_NAME_WITH_PREFIX} no bajó!
+STRINGID_PKMNPREVENTSSTATLOSSWITH	¡Las estadísticas de {B_SCR_NAME_WITH_PREFIX} no bajaron!
+#
+# ---- tabla de mensajes de combate ----
+STRINGID_ABILITYALLOWSONLYMOVE	¡{B_ATK_ABILITY} solo permite usar {B_CURRENT_MOVE}!\p
+STRINGID_ABILITYSHIELDPROTECTS	¡{B_LAST_ITEM} protege la habilidad de {B_ATK_NAME_WITH_PREFIX}!
+STRINGID_ABILITYWEAKENEDSURROUNDINGMONSSTAT	¡{B_SCR_ABILITY} de {B_SCR_NAME_WITH_PREFIX} redujo la estadística {B_BUFF1} de todos los POKéMON de alrededor!\p
+STRINGID_ABOUTTOUSEPOLTERGEIST	¡{B_EFF_NAME_WITH_PREFIX} está a punto de ser atacado por {B_LAST_ITEM}!
+STRINGID_AIRBALLOONFLOAT	¡{B_SCR_NAME_WITH_PREFIX} flota en el aire con su GLOBO HELIO!
+STRINGID_AIRLOCKACTIVATES	Los efectos del clima han desaparecido.
+STRINGID_ALLYSWITCHPOSITION	¡{B_ATK_NAME_WITH_PREFIX} y {B_SCR_NAME_WITH_PREFIX2} han intercambiado sus posiciones!
+STRINGID_AQUARINGHEAL	¡Un velo de agua ha restaurado los PS de {B_ATK_NAME_WITH_PREFIX2}!
+STRINGID_AROMAVEILPROTECTED	¡{B_DEF_NAME_WITH_PREFIX} está protegido por un velo aromático!
+STRINGID_ASANDSTORMKICKEDUP	¡Se ha levantado una tormenta de arena!
+STRINGID_ASONEENTERS	¡{B_SCR_NAME_WITH_PREFIX} tiene dos habilidades!
+STRINGID_ASSAULTVESTDOESNTALLOW	¡Los efectos de {B_LAST_ITEM} impiden usar movimientos de estado!\p
+STRINGID_ATKGOTOVERINFATUATION	¡{B_SCR_NAME_WITH_PREFIX} se ha librado del enamoramiento gracias a {B_LAST_ITEM}!
+STRINGID_ATTACKERBECAMEASHSPECIES	¡{B_ATK_NAME_WITH_PREFIX} se ha transformado en GRENINJA-ASH!\p
+STRINGID_ATTACKERBECAMEFULLYCHARGED	¡{B_ATK_NAME_WITH_PREFIX} se ha cargado por completo gracias a su vínculo con su entrenador!\p
+STRINGID_ATTACKERBROKETHROUGHPARALYSIS	¡{B_ATK_NAME_WITH_PREFIX} ha reunido toda su energía para vencer la parálisis y que no te preocupes!
+STRINGID_ATTACKERCUREDTARGETSTATUS	¡{B_ATK_NAME_WITH_PREFIX} ha curado el problema de {B_DEF_NAME_WITH_PREFIX2}!
+STRINGID_ATTACKEREXPELLEDTHEPOISON	¡{B_ATK_NAME_WITH_PREFIX} ha logrado expulsar el veneno para que no te preocupes!
+STRINGID_ATTACKERGAINEDSTRENGTHFROMTHEFALLEN	¡{B_SCR_NAME_WITH_PREFIX} ha cobrado fuerzas de los caídos!
+STRINGID_ATTACKERHEALEDITSBURN	¡{B_ATK_NAME_WITH_PREFIX} se ha curado la quemadura a fuerza de determinación para que no te preocupes!
+STRINGID_ATTACKERHEALEDITSFROSTBITE	¡{B_ATK_NAME_WITH_PREFIX} se ha curado la congelación a fuerza de determinación para que no te preocupes!
+STRINGID_ATTACKERLOSTELECTRICTYPE	¡{B_EFF_NAME_WITH_PREFIX} ha agotado toda su electricidad!
+STRINGID_ATTACKERLOSTFIRETYPE	¡{B_EFF_NAME_WITH_PREFIX} se ha consumido por completo!
+STRINGID_ATTACKERLOSTITSTYPE	¡{B_EFF_NAME_WITH_PREFIX} ha perdido su tipo {B_BUFF1}!
+STRINGID_ATTACKERMELTEDTHEICE	¡{B_ATK_NAME_WITH_PREFIX} ha derretido el hielo con su ardiente determinación para que no te preocupes!
+STRINGID_ATTACKERSHOOKITSELFAWAKE	¡{B_ATK_NAME_WITH_PREFIX} se ha sacudido para despertarse y que no te preocupes!
+STRINGID_ATTACKERSWITCHEDSTATWITHTARGET	¡{B_ATK_NAME_WITH_PREFIX} ha intercambiado su {B_BUFF1} con el de su objetivo!
+STRINGID_ATTACKWEAKENEDBSTRONGWINDS	¡Los misteriosos vientos fuertes han debilitado el ataque!
+STRINGID_AURAFLAREDTOLIFE	¡El aura de {B_ATK_NAME_WITH_PREFIX} ha cobrado vida!
+STRINGID_BADDREAMSDMG	¡{B_DEF_NAME_WITH_PREFIX} sufre una pesadilla!
+STRINGID_BATTLERAVOIDEDATTACK	¡{B_SCR_NAME_WITH_PREFIX} evitó el ataque!
+STRINGID_BATTLERFAINTED	¡{B_SCR_NAME_WITH_PREFIX} se debilitó!\p
+STRINGID_BATTLERTYPECHANGEDTO	¡El tipo de {B_SCR_NAME_WITH_PREFIX} cambió a {B_BUFF1}!
+STRINGID_BECAMENIMBLE	¡{B_EFF_NAME_WITH_PREFIX} se ha vuelto ágil!
+STRINGID_BEINGHITCHARGEDPKMNWITHPOWER	¡Recibir {B_CURRENT_MOVE} ha cargado de energía a {B_EFF_NAME_WITH_PREFIX2}!
+STRINGID_BELCHCANTSELECT	¡{B_ATK_NAME_WITH_PREFIX} no ha comido ninguna BAYA, así que no puede eructar!\p
+STRINGID_BELCHCANTUSE	¡{B_ATK_NAME_WITH_PREFIX} no ha comido ninguna BAYA, así que no puede eructar!\p
+STRINGID_BERRYDMGREDUCES	¡{B_LAST_ITEM} de {B_SCR_NAME_WITH_PREFIX} ha reducido el daño recibido!
+STRINGID_BESTOWITEMGIVING	¡{B_DEF_NAME_WITH_PREFIX} ha recibido {B_LAST_ITEM} de {B_ATK_NAME_WITH_PREFIX2}!
+STRINGID_BIZARREAREACREATED	¡Se ha creado una zona extraña en la que se intercambian la DEFENSA y la DEF. ESP.!
+STRINGID_BIZARREARENACREATED	¡Se ha creado una zona extraña en la que los objetos de los POKéMON pierden sus efectos!
+STRINGID_BOOSTERENERGYACTIVATES	¡{B_SCR_NAME_WITH_PREFIX} ha usado {B_LAST_ITEM} para activar {B_SCR_ABILITY}!
+STRINGID_BUGBITE	¡{B_ATK_NAME_WITH_PREFIX} ha robado y se ha comido {B_LAST_ITEM} de su objetivo!
+STRINGID_BURSTINGFLAMESHIT	¡Las llamas ardientes han alcanzado a {B_EFF_NAME_WITH_PREFIX2}!
+STRINGID_BUTHOOPACANTUSEIT	¡Pero {B_ATK_NAME_WITH_PREFIX2} no puede usarlo en su estado actual!
+STRINGID_BUTPOKEMONCANTUSETHEMOVE	¡Pero {B_ATK_NAME_WITH_PREFIX2} no puede usar el movimiento!
+STRINGID_CANACTFASTERTHANKSTO	¡{B_ATK_NAME_WITH_PREFIX} puede actuar más rápido de lo normal gracias a {B_BUFF1}!
+STRINGID_CANTESCAPEDUETOUSEDMOVE	¡{B_ATK_NAME_WITH_PREFIX} ya no puede huir porque ha usado SIN RETORNO!
+STRINGID_CANTGETCLOSER	¡{B_PLAYER_NAME} no puede acercarse más!
+STRINGID_CANTUSEMOVE	¡No se puede usar este movimiento!\p
+STRINGID_CLEARAMULETWONTLOWERSTATS	¡Los efectos de {B_LAST_ITEM}, que lleva {B_SCR_NAME_WITH_PREFIX2}, impiden que le bajen las estadísticas!
+STRINGID_CLOAKEDINAFREEZINGLIGHT	¡{B_ATK_NAME_WITH_PREFIX} se ha envuelto en una luz gélida!
+STRINGID_CLOAKEDINAHARSHLIGHT	¡{B_ATK_NAME_WITH_PREFIX} se ha envuelto en una luz intensa!
+STRINGID_COMATOSEENTERS	¡{B_SCR_NAME_WITH_PREFIX} está adormilado!
+STRINGID_COMMANDERACTIVATES	¡{B_SCR_NAME_WITH_PREFIX} ha sido tragado por {B_BUFF1} y se ha convertido en el comandante de {B_BUFF1}!
+STRINGID_COULDNTFULLYPROTECT	¡{B_DEF_NAME_WITH_PREFIX} no ha podido protegerse del todo y ha salido herido!
+STRINGID_COURTCHANGE	¡{B_ATK_NAME_WITH_PREFIX} ha intercambiado los efectos de cada lado del campo!
+STRINGID_COVEREDINPOWDER	¡{B_DEF_NAME_WITH_PREFIX} está cubierto de polvo!
+STRINGID_CREPTCLOSER	¡{B_PLAYER_NAME} se ha acercado sigilosamente a {B_OPPONENT_MON1_NAME}!
+STRINGID_CRITICALHITONDEF	¡Un golpe crítico a {B_DEF_NAME_WITH_PREFIX2}!
+STRINGID_CURIOUSMEDICINEENTERS	¡Se han eliminado los cambios de estadísticas de {B_EFF_NAME_WITH_PREFIX}!
+STRINGID_CURRENTMOVECANTSELECT	¡No se puede usar {B_BUFF1}!\p
+STRINGID_CURSEDBODYDISABLED	¡{B_BUFF1} de {B_ATK_NAME_WITH_PREFIX} ha sido anulado!
+STRINGID_DARKAURAENTERS	¡{B_SCR_NAME_WITH_PREFIX} irradia un aura oscura!
+STRINGID_DEFEATEDOPPONENTBYREFEREE	¡{B_PLAYER_MON1_NAME} ha derrotado a {B_OPPONENT_MON1_NAME} por decisión del ÁRBITRO!
+STRINGID_DESTINYKNOTACTIVATES	¡{B_DEF_NAME_WITH_PREFIX} se ha enamorado por culpa de {B_LAST_ITEM}!
+STRINGID_DIMENSIONSWERETWISTED	¡Las dimensiones se han distorsionado!
+STRINGID_EJECTBUTTONACTIVATE	¡{B_SCR_NAME_WITH_PREFIX} sale del combate por {B_LAST_ITEM}!
+STRINGID_ELECTRICCURRENTISRUNNING	¡Una corriente eléctrica recorre el campo de batalla!
+STRINGID_ELECTRICTERRAINACTIVATEDABILITY	¡CAMPO ELÉCTRICO ha activado la CARGA CUÁNTICA de {B_SCR_NAME_WITH_PREFIX2}!
+STRINGID_ELECTRICTERRAINENDS	La electricidad ha desaparecido del campo de batalla.
+STRINGID_ELECTRICTERRAINPREVENTS	¡{B_DEF_NAME_WITH_PREFIX} se rodea de un campo electrificado!
+STRINGID_ENDUREDSTURDY	¡{B_DEF_NAME_WITH_PREFIX} ha aguantado el golpe gracias a {B_DEF_ABILITY}!
+STRINGID_ENEMYABOUTTOSWITCHPKMN	{B_TRAINER1_NAME_WITH_CLASS} va a sacar a {B_BUFF2}. ¿Quieres cambiar de POKéMON?
+STRINGID_EXTREMELYEFFECTIVE	¡Es extremadamente eficaz!
+STRINGID_EXTREMELYEFFECTIVEONDEF	¡Es extremadamente eficaz contra {B_DEF_NAME_WITH_PREFIX2}!
+STRINGID_EXTREMELYEFFECTIVETWOFOES	¡Es extremadamente eficaz contra {B_DEF_NAME_WITH_PREFIX2} y {B_DEF_PARTNER_NAME}!
+STRINGID_EXTREMELYHARSHSUNLIGHT	¡El sol se ha vuelto extremadamente abrasador!
+STRINGID_EXTREMELYHARSHSUNLIGHTWASNOTLESSENED	¡El sol extremadamente abrasador no ha disminuido en absoluto!
+STRINGID_EXTREMESUNLIGHTFADED	¡El sol extremadamente abrasador ha remitido!
+STRINGID_FAIRYAURAENTERS	¡{B_SCR_NAME_WITH_PREFIX} irradia un aura feérica!
+STRINGID_FELLFORFEINT	¡{B_EFF_NAME_WITH_PREFIX} ha caído en la finta!
+STRINGID_FELLSTRAIGHTDOWN	¡{B_EFF_NAME_WITH_PREFIX} ha caído en picado!
+STRINGID_FERVENTWISHREACHED	¡El ferviente deseo de {B_ATK_TRAINER_NAME} ha llegado hasta {B_ATK_NAME_WITH_PREFIX2}!
+STRINGID_FETCHEDPOKEBALL	¡{B_SCR_NAME_WITH_PREFIX} ha encontrado {B_LAST_ITEM}!
+STRINGID_FICKLEBEAMDOUBLED	¡{B_ATK_NAME_WITH_PREFIX} se lo juega todo en este ataque!
+STRINGID_FLOWERVEILPROTECTED	¡{B_SCR_NAME_WITH_PREFIX} se ha rodeado de un velo de pétalos!
+STRINGID_FLOWERVEILPROTECTEDTARGET	¡{B_DEF_NAME_WITH_PREFIX} se ha rodeado de un velo de pétalos!
+STRINGID_FOGCREPTUP	¡Ha aparecido una niebla tan espesa como la sopa!
+STRINGID_FOGISDEEP	La niebla es densa…
+STRINGID_FOGLIFTED	La niebla se ha disipado.
+STRINGID_FOREWARNACTIVATES	¡{B_SCR_ABILITY} ha avisado a {B_SCR_NAME_WITH_PREFIX2} de {B_BUFF1} de {B_EFF_NAME_WITH_PREFIX2}!
+STRINGID_FORFEITEDMATCH	El combate se ha abandonado.
+STRINGID_FRISKACTIVATES	¡{B_SCR_NAME_WITH_PREFIX} ha sido cacheado y ha revelado {B_LAST_ITEM}!
+STRINGID_GEMACTIVATES	¡{B_LAST_ITEM} ha potenciado el ataque de {B_ATK_NAME_WITH_PREFIX2}!
+STRINGID_GIVENICKNAMECAPTURED	¿Quieres ponerle un mote a {B_DEF_NAME}?
+STRINGID_GLINTAPPEARSINEYE	¡Un destello brilla en los ojos de {B_SCR_NAME_WITH_PREFIX2}!
+STRINGID_GOTCHAPKMNCAUGHTPLAYER	¡Ya está! ¡{B_DEF_NAME} ha sido capturado!{WAIT_SE}{PLAY_BGM MUS_CAUGHT}\p
+STRINGID_GOTCHAPKMNCAUGHTWALLY	¡Ya está! ¡{B_DEF_NAME} ha sido capturado!{WAIT_SE}{PLAY_BGM MUS_CAUGHT}{PAUSE 127}
+STRINGID_GRASSYTERRAINENDS	La hierba ha desaparecido del campo de batalla.
+STRINGID_GRASSYTERRAINHEALS	¡El CAMPO DE HIERBA cura a {B_ATK_NAME_WITH_PREFIX}!
+STRINGID_GRAVITYENDS	¡La gravedad ha vuelto a la normalidad!
+STRINGID_GRAVITYGROUNDING	¡{B_DEF_NAME_WITH_PREFIX} ha caído del cielo por la gravedad!
+STRINGID_GRAVITYINTENSIFIED	¡La gravedad se ha intensificado!
+STRINGID_GRAVITYPREVENTSUSAGE	¡{B_ATK_NAME_WITH_PREFIX} no puede usar {B_CURRENT_MOVE} por la gravedad!\p
+STRINGID_HADRONENGINEACTIVATES	¡{B_SCR_NAME_WITH_PREFIX} ha convertido el suelo en CAMPO ELÉCTRICO y alimenta su motor futurista!
+STRINGID_HADRONENGINEACTIVATESINTERRAIN	¡{B_SCR_NAME_WITH_PREFIX} ha usado el CAMPO ELÉCTRICO para alimentar su motor futurista!
+STRINGID_HARVESTBERRY	¡{B_ATK_NAME_WITH_PREFIX} ha cosechado {B_LAST_ITEM}!
+STRINGID_HEALBLOCKEDNOMORE	¡{B_SCR_NAME_WITH_PREFIX} ya puede curarse otra vez!
+STRINGID_HEALBLOCKPREVENTSUSAGE	¡{B_ATK_NAME_WITH_PREFIX} no ha podido curarse!\p
+STRINGID_HEALERCURE	¡{B_SCR_NAME_WITH_PREFIX2} ha curado a {B_ATK_NAME_WITH_PREFIX}!
+STRINGID_HEALINGWISHCAMETRUE	¡El DESEO CURATIVO de {B_SCR_NAME_WITH_PREFIX2} se ha hecho realidad!
+STRINGID_HEALINGWISHHEALED	¡{B_SCR_NAME_WITH_PREFIX} ha recuperado la salud!
+STRINGID_HEATUPBEAK	¡{B_SCR_NAME_WITH_PREFIX} ha empezado a calentar su pico!
+STRINGID_HEAVYRAIN	¡Ha empezado a caer una lluvia torrencial!
+STRINGID_HEAVYRAINLIFTED	¡La lluvia torrencial ha cesado!
+STRINGID_HELDITEMSLOSEEFFECTS	¡Ha creado una zona extraña en la que los objetos de los POKéMON pierden sus efectos!
+STRINGID_HITXTIMES	¡El POKéMON ha recibido {B_BUFF1} golpe{B_BUFF2}!
+STRINGID_HOSPITALITYRESTORATION	¡{B_EFF_NAME_WITH_PREFIX} se ha bebido todo el té que le ha preparado {B_SCR_NAME_WITH_PREFIX2}!
+STRINGID_HURLEDINTOTHEAIR	¡{B_DEF_NAME_WITH_PREFIX} ha salido despedido por los aires!
+STRINGID_HURTBYITEM	¡{B_ATK_NAME_WITH_PREFIX} ha sido herido por {B_LAST_ITEM}!
+STRINGID_HURTBYTHESEAOFFIRE	¡{B_ATK_NAME_WITH_PREFIX} ha sido herido por el MAR DE LLAMAS!
+STRINGID_ICEBODYHPGAIN	¡{B_ATK_ABILITY} de {B_ATK_NAME_WITH_PREFIX} le ha curado un poco!
+STRINGID_INCINERATEBURN	¡{B_LAST_ITEM} de {B_EFF_NAME_WITH_PREFIX} se ha quemado!
+STRINGID_INFESTATION	¡{B_SCR_NAME_WITH_PREFIX2} ha infestado a {B_EFF_NAME_WITH_PREFIX}!
+STRINGID_IONDELUGEON	¡Una lluvia de iones cae sobre el campo de batalla!
+STRINGID_ISCOVEREDWITHGRASS	¡El campo de batalla está cubierto de hierba!
+STRINGID_ITDOESNTAFFECT	No afecta a\n{B_DEF_NAME_WITH_PREFIX2}...
+STRINGID_ITDOESNTAFFECTSCR	No afecta a {B_SCR_NAME_WITH_PREFIX2}…
+STRINGID_ITDOESNTAFFECTTWOFOES	No afecta a {B_DEF_NAME_WITH_PREFIX2} ni a {B_DEF_PARTNER_NAME}…
+STRINGID_ITEMCANNOTBEREMOVED	¡No se puede quitar el objeto de {B_ATK_NAME_WITH_PREFIX}!
+STRINGID_ITEMCUREDSPECIESSTATUS	¡{B_BUFF1} se ha curado el problema de estado!
+STRINGID_ITEMRESTOREDSPECIESHEALTH	¡{B_BUFF1} ha recuperado sus PS!
+STRINGID_ITEMRESTOREDSPECIESPP	¡Se han restaurado los PP de {B_BUFF2} de {B_BUFF1}!
+STRINGID_ITEMWASUSEDUP	{B_LAST_ITEM} se ha gastado…
+STRINGID_ITSUCKEDLIQUIDOOZE	¡{B_EFF_NAME_WITH_PREFIX} ha absorbido el LODO LÍQUIDO!
+STRINGID_KINDOFFER	¡{B_DEF_NAME_WITH_PREFIX} ha aceptado la amable oferta!
+STRINGID_LASERFOCUS	¡{B_ATK_NAME_WITH_PREFIX} se ha concentrado intensamente!
+STRINGID_LOSTSOMEOFITSHP	¡{B_ATK_NAME_WITH_PREFIX} ha perdido algunos PS!
+STRINGID_LOSTTOOPPONENTBYREFEREE	¡{B_PLAYER_MON1_NAME} ha perdido contra {B_OPPONENT_MON1_NAME} por decisión del ÁRBITRO!
+STRINGID_LUNARDANCECAMETRUE	¡{B_SCR_NAME_WITH_PREFIX} se ha envuelto en una misteriosa luz de luna!
+STRINGID_MAGICROOMENDS	¡El efecto de SALA MÁGICA ha terminado y los objetos recuperan sus efectos!
+STRINGID_MEGAEVOEVOLVED	¡{B_ATK_NAME_WITH_PREFIX} ha megaevolucionado en MEGA-{B_BUFF1}!
+STRINGID_MEGAEVOREACTING	¡{B_LAST_ITEM} de {B_ATK_NAME_WITH_PREFIX} reacciona al ANILLO MEGA de {B_ATK_TRAINER_NAME}!
+STRINGID_METEORBEAMCHARGING	¡{B_ATK_NAME_WITH_PREFIX} rebosa de energía espacial!
+STRINGID_MICLEBERRYACTIVATES	¡{B_SCR_NAME_WITH_PREFIX} ha aumentado la precisión de su próximo movimiento con {B_LAST_ITEM}!
+STRINGID_MIRRORHERBCOPIED	¡{B_SCR_NAME_WITH_PREFIX} ha usado su HIERBA ESPEJO para copiar los cambios de estadísticas de su rival!
+STRINGID_MISTSWIRLSAROUND	¡La niebla se arremolina por el campo de batalla!
+STRINGID_MISTYTERRAINENDS	La niebla ha desaparecido del campo de batalla.
+STRINGID_MISTYTERRAINPREVENTS	¡{B_DEF_NAME_WITH_PREFIX} se rodea de una niebla protectora!
+STRINGID_MOLDBREAKERENTERS	¡{B_SCR_NAME_WITH_PREFIX} rompe los esquemas!
+STRINGID_MOSTLYINEFFECTIVE	Apenas le afecta…
+STRINGID_MOSTLYINEFFECTIVEONDEF	Apenas afecta a {B_DEF_NAME_WITH_PREFIX2}.
+STRINGID_MOSTLYINEFFECTIVETWOFOES	Apenas afecta a {B_DEF_NAME_WITH_PREFIX2} ni a {B_DEF_PARTNER_NAME}.
+STRINGID_MOVEBLOCKEDBYDYNAMAX	¡El poder del DINAMAX ha bloqueado el movimiento!
+STRINGID_MOVEEVAPORATEDINTHEHARSHSUNLIGHT	¡El ataque de tipo AGUA se ha evaporado bajo el sol abrasador!
+STRINGID_MOVEFIZZLEDOUTINTHEHEAVYRAIN	¡El ataque de tipo FUEGO se ha apagado bajo la lluvia torrencial!
+STRINGID_MUDSPORTENDS	Los efectos de JUEGO DE LODO han desaparecido.
+STRINGID_MYSTERIOUSAIRCURRENT	¡Unos misteriosos vientos fuertes protegen a los POKéMON de tipo VOLADOR!
+STRINGID_MYSTERIOUSAIRCURRENTBLOWSON	¡Los misteriosos vientos fuertes siguen soplando!
+STRINGID_NATUREPOWERTURNEDINTO	¡PODER NATURAL de {B_ATK_NAME_WITH_PREFIX} se ha convertido en {B_CURRENT_MOVE}!
+STRINGID_NEUTRALIZINGGASENTERS	¡Un gas reactivo ha llenado la zona!
+STRINGID_NEUTRALIZINGGASOVER	¡Los efectos del gas reactivo han desaparecido!
+STRINGID_NOEFFECTONTARGET	¡No tendrá ningún efecto en {B_DEF_NAME_WITH_PREFIX2}!
+STRINGID_NOONEWILLBEABLETORUNAWAY	¡Nadie podrá abandonar el campo de batalla durante el próximo turno!
+STRINGID_NORELIEFROMHEAVYRAIN	¡No hay alivio ante esta lluvia torrencial!
+STRINGID_NOTDONEYET	¡El efecto de este movimiento aún no está listo!\p
+STRINGID_NOTVERYEFFECTIVEONDEF	No es muy eficaz contra {B_DEF_NAME_WITH_PREFIX2}.
+STRINGID_NOTVERYEFFECTIVETWOFOES	No es muy eficaz contra {B_DEF_NAME_WITH_PREFIX2} ni contra {B_DEF_PARTNER_NAME}.
+STRINGID_ORICHALCUMPULSEACTIVATES	¡{B_SCR_NAME_WITH_PREFIX} ha vuelto el sol abrasador y su pulso ancestral se desboca!
+STRINGID_ORICHALCUMPULSEACTIVATESINSUN	¡{B_SCR_NAME_WITH_PREFIX} se ha bañado de sol y su pulso ancestral se desboca!
+STRINGID_PARTYCUREDBURN	¡{B_BUFF1} se ha curado la quemadura!
+STRINGID_PARTYCUREDFREEZE	¡{B_BUFF1} se ha descongelado!
+STRINGID_PARTYCUREDFROSTBITE	¡{B_BUFF1} se ha curado la congelación!
+STRINGID_PARTYCUREDPARALYSIS	¡{B_BUFF1} se ha curado de la parálisis!
+STRINGID_PARTYCUREDPOISON	¡{B_BUFF1} se ha curado del envenenamiento!
+STRINGID_PARTYCUREDSLEEP	¡{B_BUFF1} se ha despertado!
+STRINGID_PKMNACQUIREDABILITY	¡{B_DEF_NAME_WITH_PREFIX} ha adquirido {B_DEF_ABILITY}!
+STRINGID_PKMNANCHORSITSELFWITH	¡{B_EFF_NAME_WITH_PREFIX} se ha anclado con sus ventosas!
+STRINGID_PKMNBECAMEWEAKERTOFIRE	¡{B_DEF_NAME_WITH_PREFIX} se ha vuelto más débil al fuego!
+STRINGID_PKMNBEGANGROWLINGDEEPLY	¡{B_SCR_NAME_WITH_PREFIX} ha empezado a gruñir con fuerza!
+STRINGID_PKMNBLEWAWAYSHARPSTEEL	¡{B_ATK_NAME_WITH_PREFIX} ha dispersado los trozos de acero afilado!
+STRINGID_PKMNBLEWAWAYSTEALTHROCK	¡{B_ATK_NAME_WITH_PREFIX} ha dispersado las piedras puntiagudas!
+STRINGID_PKMNBLEWAWAYSTICKYWEB	¡{B_ATK_NAME_WITH_PREFIX} ha dispersado la RED VISCOSA!
+STRINGID_PKMNBLEWAWAYTOXICSPIKES	¡{B_ATK_NAME_WITH_PREFIX} ha dispersado las PÚAS TÓXICAS!
+STRINGID_PKMNBURNEDBY	¡{B_BUFF1} de {B_SCR_NAME_WITH_PREFIX} ha quemado a {B_EFF_NAME_WITH_PREFIX2}!
+STRINGID_PKMNBURNHEALED	¡{B_DEF_NAME_WITH_PREFIX} se ha curado la quemadura!
+STRINGID_PKMNBURNINGUP	¡{B_ATK_NAME_WITH_PREFIX} arde entre las llamas de MAXIFUEGO!
+STRINGID_PKMNCANTUSEITEMSANYMORE	¡{B_DEF_NAME_WITH_PREFIX} ya no puede usar objetos!
+STRINGID_PKMNCANTUSEMOVESEALED	¡{B_ATK_NAME_WITH_PREFIX} no puede usar {B_CURRENT_MOVE}, que está sellado!\p
+STRINGID_PKMNCANTUSEMOVETAUNT	¡{B_ATK_NAME_WITH_PREFIX} no puede usar {B_CURRENT_MOVE} por culpa de MOFA!\p
+STRINGID_PKMNCANTUSEMOVETHROATCHOP	¡Los efectos de GOLPE GARGANTA impiden que {B_ATK_NAME_WITH_PREFIX2} use ciertos movimientos!\p
+STRINGID_PKMNCANTUSEMOVETORMENT	¡{B_ATK_NAME_WITH_PREFIX} no puede usar el mismo movimiento dos veces seguidas por culpa de TORMENTO!\p
+STRINGID_PKMNCHANGEDTYPEWITH	¡El tipo de {B_EFF_NAME_WITH_PREFIX} ha cambiado a {B_BUFF1}!
+STRINGID_PKMNCHOSEXASDESTINY	¡{B_ATK_NAME_WITH_PREFIX} ha elegido DESTINO FUTURO como su destino!
+STRINGID_PKMNCOPIEDFOE	¡{B_ATK_NAME_WITH_PREFIX} ha copiado la habilidad de {B_DEF_NAME_WITH_PREFIX2}!
+STRINGID_PKMNCURIOUSABOUTX	¡{B_OPPONENT_MON1_NAME} siente curiosidad por {B_BUFF1}!
+STRINGID_PKMNDATAADDEDTODEX	¡Los datos de {B_DEF_NAME} se han añadido a la POKéDEX!\p
+STRINGID_PKMNDISGUISEWASBUSTED	¡El disfraz de {B_SCR_NAME_WITH_PREFIX} se ha roto!
+STRINGID_PKMNDYNAMAXED	¡{B_ATK_NAME_WITH_PREFIX} ha crecido hasta alcanzar su forma DINAMAX!
+STRINGID_PKMNEAGERFORMORE	¡{B_SCR_NAME_WITH_PREFIX} quiere más!
+STRINGID_PKMNENTHRALLEDBYX	¡{B_OPPONENT_MON1_NAME} está fascinado por {B_BUFF1}!
+STRINGID_PKMNFLUNG	¡{B_EFF_NAME_WITH_PREFIX} ha lanzado {B_LAST_ITEM}!
+STRINGID_PKMNFROSTBITEHEALED	¡{B_SCR_NAME_WITH_PREFIX} se ha curado la congelación!
+STRINGID_PKMNFROSTBITEHEALEDBY	¡{B_CURRENT_MOVE} de {B_SCR_NAME_WITH_PREFIX} le ha curado la congelación!
+STRINGID_PKMNFROZENBY	¡{B_BUFF1} de {B_SCR_NAME_WITH_PREFIX} ha congelado a {B_EFF_NAME_WITH_PREFIX2}!
+STRINGID_PKMNGETTINGINTOPOSITION	¡{B_SCR_NAME_WITH_PREFIX} se está colocando en posición!
+STRINGID_PKMNGIGANTAMAXED	¡{B_ATK_NAME_WITH_PREFIX} ha crecido hasta alcanzar su forma GIGAMAX!
+STRINGID_PKMNGOTENCOREDMOVE	¡{B_SCR_NAME_WITH_PREFIX} solo puede usar {B_CURRENT_MOVE}!\p
+STRINGID_PKMNGOTFREE	¡{B_ATK_NAME_WITH_PREFIX} se ha librado de {B_BUFF1}!
+STRINGID_PKMNGOTFROSTBITE	¡{B_EFF_NAME_WITH_PREFIX} se ha congelado!
+STRINGID_PKMNGOTOVERITSINFATUATION	¡{B_SCR_NAME_WITH_PREFIX} se ha librado del enamoramiento!
+STRINGID_PKMNHASNOMOVESLEFT	¡{B_ATK_NAME_WITH_PREFIX} no tiene movimientos que pueda usar!\p
+STRINGID_PKMNHEALEDPOISON	¡{B_DEF_NAME_WITH_PREFIX} se ha curado del envenenamiento!
+STRINGID_PKMNHURTBYFROSTBITE	¡{B_ATK_NAME_WITH_PREFIX} se resiente de la congelación!
+STRINGID_PKMNHURTBYROCKSTHROWN	¡{B_ATK_NAME_WITH_PREFIX} ha sido herido por las rocas lanzadas por MAXIPEÑASCO!
+STRINGID_PKMNHURTBYVINES	¡{B_ATK_NAME_WITH_PREFIX} ha sido azotado ferozmente por MAXILIANA!
+STRINGID_PKMNHURTBYVORTEX	¡{B_ATK_NAME_WITH_PREFIX} ha sido herido por el torbellino de MAXICAÑONAZO!
+STRINGID_PKMNHURTSWITH	¡{B_BUFF1} de {B_DEF_NAME_WITH_PREFIX2} ha herido a {B_ATK_NAME_WITH_PREFIX}!
+STRINGID_PKMNIDENTIFIED	¡{B_DEF_NAME_WITH_PREFIX} ha sido identificado!
+STRINGID_PKMNIGNOREDX	¡{B_OPPONENT_MON1_NAME} ha ignorado por completo {B_BUFF1}!
+STRINGID_PKMNINCAPABLEOFPOWER	¡{B_ATK_NAME_WITH_PREFIX} parece incapaz de usar su poder!
+STRINGID_PKMNINSNAPTRAP	¡{B_EFF_NAME_WITH_PREFIX} ha quedado atrapado en una trampa!
+STRINGID_PKMNITEMMELTED	¡{B_ATK_NAME_WITH_PREFIX} ha corroído {B_LAST_ITEM} de {B_DEF_NAME_WITH_PREFIX2}!
+STRINGID_PKMNLEVITATEDONELECTROMAGNETISM	¡{B_ATK_NAME_WITH_PREFIX} levita por electromagnetismo!
+STRINGID_PKMNMADESHELLGLEAM	¡{B_DEF_NAME_WITH_PREFIX} ha hecho brillar su caparazón y distorsiona las relaciones de tipos!
+STRINGID_PKMNMADESLEEP	¡{B_BUFF1} de {B_SCR_NAME_WITH_PREFIX} ha dormido a {B_EFF_NAME_WITH_PREFIX2}!
+STRINGID_PKMNMOVEBOUNCEDABILITY	¡{B_CURRENT_MOVE} de {B_DEF_NAME_WITH_PREFIX} ha rebotado!
+STRINGID_PKMNMOVEISDISABLED	¡{B_CURRENT_MOVE} de {B_ATK_NAME_WITH_PREFIX} está anulado!\p
+STRINGID_PKMNPOISONEDBY	¡{B_BUFF1} de {B_SCR_NAME_WITH_PREFIX2} ha envenenado a {B_EFF_NAME_WITH_PREFIX}!
+STRINGID_PKMNPREVENTEDFROMHEALING	¡{B_DEF_NAME_WITH_PREFIX} no ha podido curarse!
+STRINGID_PKMNPREVENTSCONFUSIONWITH	¡{B_SCR_NAME_WITH_PREFIX} no puede confundirse!
+STRINGID_PKMNPREVENTSUSAGE	¡{B_DEF_ABILITY} de {B_DEF_NAME_WITH_PREFIX} impide que {B_ATK_NAME_WITH_PREFIX2} use {B_CURRENT_MOVE}!
+STRINGID_PKMNRAISEDFIREPOWERWITH	¡El poder de los movimientos de tipo FUEGO de {B_SCR_NAME_WITH_PREFIX} ha aumentado!
+STRINGID_PKMNRESTOREDHPUSING	¡{B_SCR_NAME_WITH_PREFIX} ha recuperado sus PS!
+STRINGID_PKMNREVERTEDTOPRIMAL	¡Regresión Primigenia de {B_SCR_NAME_WITH_PREFIX}! ¡Ha vuelto a su estado primigenio!
+STRINGID_PKMNREVIVEDREADYTOFIGHT	¡{B_BUFF1} ha revivido y está listo para volver a combatir!
+STRINGID_PKMNSABILITYPREVENTSABILITY	¡{B_SCR_ABILITY} de {B_SCR_NAME_WITH_PREFIX} impide que funcione {B_DEF_ABILITY} de {B_DEF_NAME_WITH_PREFIX2}!
+STRINGID_PKMNSABILITYSUPPRESSED	¡La habilidad de {B_DEF_NAME_WITH_PREFIX} ha sido anulada!
+STRINGID_PKMNSHOOKOFFTHETAUNT	¡{B_SCR_NAME_WITH_PREFIX} se ha librado de MOFA!
+STRINGID_PKMNSHROUDEDITSELF	¡{B_ATK_NAME_WITH_PREFIX} se ha cubierto con CAPA MÁGICA!
+STRINGID_PKMNSITEMHEALEDFROSTBITE	¡{B_LAST_ITEM} de {B_SCR_NAME_WITH_PREFIX} le ha curado la congelación!
+STRINGID_PKMNSTAYEDAWAKEUSING	¡{B_DEF_NAME_WITH_PREFIX} se ha mantenido despierto!
+STRINGID_PKMNSTOLEITEM	¡{B_ATK_NAME_WITH_PREFIX} ha robado {B_LAST_ITEM} de {B_BUFF2}!
+STRINGID_PKMNSURROUNDEDWITHVEILOFWATER	¡{B_ATK_NAME_WITH_PREFIX} se ha rodeado de un velo de agua!
+STRINGID_PKMNSWILLPERISHIN3TURNS	¡Los dos POKéMON se debilitarán en tres turnos!
+STRINGID_PKMNSWITCHEDATKANDDEF	¡{B_ATK_NAME_WITH_PREFIX} ha intercambiado su ATAQUE y su DEFENSA!
+STRINGID_PKMNSWITCHEDSTATCHANGES	¡{B_ATK_NAME_WITH_PREFIX} ha intercambiado los cambios de estadísticas con su objetivo!
+STRINGID_PKMNSXBLOCKSY	¡{B_SCR_ABILITY} de {B_SCR_NAME_WITH_PREFIX} bloquea {B_CURRENT_MOVE}!
+STRINGID_PKMNSXINFATUATEDY	¡{B_ATK_NAME_WITH_PREFIX} se ha enamorado!
+STRINGID_PKMNSXMADEITINEFFECTIVE	¡{B_SCR_NAME_WITH_PREFIX} lo ha anulado!
+STRINGID_PKMNSXMADEYINEFFECTIVE	¡No se puede quitar el objeto de {B_SCR_NAME_WITH_PREFIX}!
+STRINGID_PKMNSXMADEYUSELESS	¡{B_SCR_ABILITY} de {B_SCR_NAME_WITH_PREFIX} ha anulado {B_CURRENT_MOVE}!
+STRINGID_PKMNSXRESTOREDHPALITTLE2	¡{B_ATK_NAME_WITH_PREFIX} ha recuperado PS!
+STRINGID_PKMNSXTOOKATTACK	¡{B_DEF_NAME_WITH_PREFIX} ha recibido el ataque!
+STRINGID_PKMNTELLCHILLINGRECEPTIONJOKE	¡{B_ATK_NAME_WITH_PREFIX} se prepara para contar un chiste malísimo y gélido!
+STRINGID_PKMNTERASTALLIZEDINTO	¡{B_ATK_NAME_WITH_PREFIX} se ha teracristalizado al tipo {B_BUFF1}!
+STRINGID_PKMNTOOKFOE	¡{B_DEF_NAME_WITH_PREFIX} se ha llevado consigo a su atacante!
+STRINGID_PKMNTOOKTARGETHIGH	¡{B_ATK_NAME_WITH_PREFIX} se ha llevado a {B_DEF_NAME_WITH_PREFIX2} al cielo!
+STRINGID_PKMNTRACED	¡Ha copiado {B_BUFF2} de {B_BUFF1} con RASTRO!
+STRINGID_PKMNTWISTEDDIMENSIONS	¡{B_ATK_NAME_WITH_PREFIX} ha distorsionado las dimensiones!
+STRINGID_PKMNWASHURT	¡{B_ATK_NAME_WITH_PREFIX} ha resultado herido!
+STRINGID_PKMNWASMADEDROWSY	¡{B_DEF_NAME_WITH_PREFIX} tiene sueño!
+STRINGID_PKMNWASPARALYZEDBY	¡{B_BUFF1} de {B_SCR_NAME_WITH_PREFIX} ha paralizado a {B_EFF_NAME_WITH_PREFIX2}! ¡Quizás no se mueva!
+STRINGID_PKMNWENTBACK	¡{B_ATK_NAME_WITH_PREFIX} ha vuelto con {B_ATK_TRAINER_NAME}!
+STRINGID_PKNMABSORBINGPOWER	¡{B_ATK_NAME_WITH_PREFIX} está absorbiendo energía!
+STRINGID_PLAYERGOTMONEY	¡Has ganado ¥{B_BUFF1} por vencer!\p
+STRINGID_PLAYERPICKEDUPMONEY	¡Has recogido ¥{B_BUFF1}!\p
+STRINGID_PLAYERUSEDITEM	¡Has usado {B_LAST_ITEM}!
+STRINGID_PLAYERWHITEOUT	¡No te quedan POKéMON que puedan combatir!\p
+STRINGID_PLAYERWHITEOUT2_TRAINER	Has pagado ¥{B_BUFF1} al vencedor…
+STRINGID_PLAYERWHITEOUT2_WILD	El pánico te ha hecho soltar ¥{B_BUFF1}…
+STRINGID_PLAYERWHITEOUT3	¡La derrota te ha dejado abrumado!
+STRINGID_POISONHEALHPUP	¡El envenenamiento ha curado un poco a {B_ATK_NAME_WITH_PREFIX2}!
+STRINGID_POKEMONCANNOTUSEMOVE	¡{B_ATK_NAME_WITH_PREFIX} no puede usar {B_CURRENT_MOVE}!
+STRINGID_POWDEREXPLODES	¡Al tocar la llama el polvo que cubría al POKéMON, ha explotado!
+STRINGID_POWERCONSTRUCTPRESENCEOFMANY	¡Notas la presencia de muchos!
+STRINGID_POWERCONSTRUCTTRANSFORM	¡{B_ATK_NAME_WITH_PREFIX} se ha transformado en su Forma Completa!
+STRINGID_POWERHERB	¡{B_ATK_NAME_WITH_PREFIX} se ha cargado por completo gracias a {B_LAST_ITEM}!
+STRINGID_PREPARESHELLTRAP	¡{B_SCR_NAME_WITH_PREFIX} ha preparado una trampa de caparazón!
+STRINGID_PRESSUREENTERS	¡{B_SCR_NAME_WITH_PREFIX} está ejerciendo su PRESIÓN!
+STRINGID_PROTEANTYPECHANGE	¡{B_ATK_ABILITY} de {B_ATK_NAME_WITH_PREFIX} lo ha transformado al tipo {B_BUFF1}!
+STRINGID_PSYCHICTERRAINENDS	¡La extrañeza ha desaparecido del campo de batalla!
+STRINGID_PSYCHICTERRAINPREVENTS	¡{B_SCR_NAME_WITH_PREFIX} está protegido por el CAMPO PSÍQUICO!
+STRINGID_QUASHSUCCESS	¡El movimiento de {B_DEF_NAME_WITH_PREFIX} se ha aplazado!
+STRINGID_QUESTIONFORFEITBATTLE	¿Quieres abandonar este combate y salir ahora? Abandonar el combate equivale a perderlo.
+STRINGID_QUESTIONFORFEITMATCH	¿Quieres abandonar el combate y salir ahora?
+STRINGID_RECEIVERABILITYTAKEOVER	¡Se ha adquirido {B_SCR_ABILITY} de {B_SCR_NAME_WITH_PREFIX}!
+STRINGID_REDCARDACTIVATE	¡{B_SCR_NAME_WITH_PREFIX} ha mostrado su CARTA ROJA a {B_ATK_NAME_WITH_PREFIX2}!
+STRINGID_REFLECTTARGETSTYPE	¡{B_ATK_NAME_WITH_PREFIX} ha pasado a tener el mismo tipo que {B_DEF_NAME_WITH_PREFIX2}!
+STRINGID_RESETSTARGETSSTATLEVELS	¡Se han eliminado los cambios de estadísticas de {B_EFF_NAME_WITH_PREFIX}!
+STRINGID_SAFETYGOGGLESPROTECTED	¡{B_SCR_NAME_WITH_PREFIX} no se ve afectado gracias a {B_LAST_ITEM}!
+STRINGID_SCRCUREDBURN	¡{B_SCR_NAME_WITH_PREFIX} se ha curado la quemadura!
+STRINGID_SCRCUREDCONFUSION	¡{B_SCR_NAME_WITH_PREFIX} ya no está confuso!
+STRINGID_SCRCUREDPARALYSIS	¡{B_SCR_NAME_WITH_PREFIX} se ha curado de la parálisis!
+STRINGID_SCRCUREDPOISON	¡{B_SCR_NAME_WITH_PREFIX} se ha curado del envenenamiento!
+STRINGID_SCRCUREDSLEEP	¡{B_SCR_NAME_WITH_PREFIX} se ha despertado!
+STRINGID_SCREENCLEANERENTERS	¡Se han eliminado todas las pantallas del campo!
+STRINGID_SEEMSWEIRD	¡El campo de batalla se ha vuelto extraño!
+STRINGID_SENDCAUGHTMONPARTYORBOX	¿Quieres añadir a {B_DEF_NAME} a tu equipo?
+STRINGID_SHAREDITSGUARD	¡{B_ATK_NAME_WITH_PREFIX} ha compartido su defensa con el objetivo!
+STRINGID_SHAREDITSPOWER	¡{B_ATK_NAME_WITH_PREFIX} ha compartido su poder con el objetivo!
+STRINGID_SHARPSTEELDMG	¡El acero afilado ha herido a {B_DEF_NAME_WITH_PREFIX2}!
+STRINGID_SHEDITSTAIL	¡{B_ATK_NAME_WITH_PREFIX} ha soltado su cola para crear un señuelo!
+STRINGID_SHELLTRAPDIDNTWORK	¡La trampa de caparazón de {B_ATK_NAME_WITH_PREFIX} no ha funcionado!
+STRINGID_SLOWSTARTEND	¡{B_ATK_NAME_WITH_PREFIX} por fin se ha puesto a tono!
+STRINGID_SLOWSTARTENTERS	¡{B_SCR_NAME_WITH_PREFIX} tarda en arrancar!
+STRINGID_SNOWCONTINUES	Sigue nevando.
+STRINGID_SNOWSTOPPED	Ha dejado de nevar.
+STRINGID_SNOWWARNINGHAIL	¡Ha empezado a granizar!
+STRINGID_SNOWWARNINGSNOW	¡Ha empezado a nevar!
+STRINGID_SOLARPOWERHPDROP	¡{B_ATK_ABILITY} de {B_ATK_NAME_WITH_PREFIX} le pasa factura!
+STRINGID_SPECTRALTHIEFSTEAL	¡{B_ATK_NAME_WITH_PREFIX} ha robado las mejoras de estadísticas del objetivo!
+STRINGID_STARTEDSNOW	¡Ha empezado a nevar!
+STRINGID_STEALTHROCKDMG	¡Las piedras puntiagudas se han clavado en {B_SCR_NAME_WITH_PREFIX2}!
+STRINGID_STICKYBARBTRANSFER	¡{B_LAST_ITEM} se ha pegado a {B_ATK_NAME_WITH_PREFIX2}!
+STRINGID_STICKYWEBSWITCHIN	¡{B_EFF_NAME_WITH_PREFIX} ha quedado atrapado en la RED VISCOSA!
+STRINGID_STOCKPILEDEFFECTWOREOFF	¡El efecto de RESERVA de {B_ATK_NAME_WITH_PREFIX} ha desaparecido!
+STRINGID_STOPLEARNINGMOVE	{PAUSE 32}¿Quieres que {B_BUFF1} deje de aprender {B_BUFF2}?
+STRINGID_STRONGWINDSDISSIPATED	¡Los misteriosos vientos fuertes se han disipado!
+STRINGID_STUFFCHEEKSCANTSELECT	¡No puede usar el movimiento porque no tiene ninguna BAYA!\p
+STRINGID_SUNLIGHTACTIVATEDABILITY	¡El sol abrasador ha activado la PROTOSÍNTESIS de {B_SCR_NAME_WITH_PREFIX2}!
+STRINGID_SUNLIGHTISHARSH	¡El sol es abrasador!
+STRINGID_SUPEREFFECTIVEONDEF	¡Es muy eficaz contra {B_DEF_NAME_WITH_PREFIX2}!
+STRINGID_SUPEREFFECTIVETWOFOES	¡Es muy eficaz contra {B_DEF_NAME_WITH_PREFIX2} y {B_DEF_PARTNER_NAME}!
+STRINGID_SUPERSWEETAROMAWAFTS	¡Un aroma dulcísimo emana del jarabe que cubre a {B_EFF_NAME_WITH_PREFIX2}!
+STRINGID_SWAPPEDABILITIES	¡{B_DEF_NAME_WITH_PREFIX} ha intercambiado habilidades con su objetivo!
+STRINGID_SWAPSDEFANDSPDEFOFALLPOKEMON	¡Ha creado una zona extraña en la que se intercambian la DEFENSA y la DEF. ESP.!
+STRINGID_SYMBIOSISITEMPASS	¡{B_SCR_NAME_WITH_PREFIX} ha compartido {B_LAST_ITEM} con {B_EFF_NAME_WITH_PREFIX2}!
+STRINGID_TARGETCHANGEDTYPE	¡{B_DEF_NAME_WITH_PREFIX} se ha transformado al tipo {B_BUFF1}!
+STRINGID_TARGETCOVEREDINSTICKYCANDYSYRUP	¡{B_EFF_NAME_WITH_PREFIX} se ha cubierto de jarabe pegajoso!
+STRINGID_TARGETELECTRIFIED	¡Los movimientos de {B_DEF_NAME_WITH_PREFIX} se han electrizado!
+STRINGID_TARGETISBEINGSALTCURED	¡{B_EFF_NAME_WITH_PREFIX} está siendo curado en sal!
+STRINGID_TARGETISHURTBYSALTCURE	¡{B_ATK_NAME_WITH_PREFIX} ha sido herido por {B_BUFF1}!
+STRINGID_TARGETTOOHEAVY	¡{B_DEF_NAME_WITH_PREFIX} pesa demasiado para levantarlo!
+STRINGID_TARGETTOUGHEDITOUT	¡{B_DEF_NAME_WITH_PREFIX} ha aguantado para que no te entristezcas!
+STRINGID_TARGETWOKEUP	¡{B_EFF_NAME_WITH_PREFIX} se ha despertado!
+STRINGID_TEAMGAINEDEXP	¡El resto de tu equipo ha ganado puntos de EXP. gracias a REPARTIR EXP.!\p
+STRINGID_TELEKINESISENDS	¡{B_ATK_NAME_WITH_PREFIX} se ha liberado de TELEQUINESIA!
+STRINGID_TERAVOLTENTERS	¡{B_SCR_NAME_WITH_PREFIX} irradia un aura chispeante!
+STRINGID_TERRAINBECOMESELECTRIC	¡Una corriente eléctrica ha recorrido el campo de batalla!
+STRINGID_TERRAINBECOMESGRASSY	¡La hierba ha crecido y cubre el campo de batalla!
+STRINGID_TERRAINBECOMESMISTY	¡La niebla se ha arremolinado por el campo de batalla!
+STRINGID_TERRAINBECOMESPSYCHIC	¡El campo de batalla se ha vuelto extraño!
+STRINGID_THETWOMOVESBECOMEONE	¡Los dos movimientos se han fusionado! ¡Es un movimiento combinado!{PAUSE 16}
+STRINGID_THIRDTYPEADDED	¡Se ha añadido el tipo {B_BUFF1} a {B_DEF_NAME_WITH_PREFIX2}!
+STRINGID_THREWPOKEBLOCKATPKMN	¡{B_PLAYER_NAME} ha lanzado un {POKEBLOCK} a {B_OPPONENT_MON1_NAME}!
+STRINGID_THROATCHOPENDS	¡{B_ATK_NAME_WITH_PREFIX} ya puede usar movimientos de sonido otra vez!
+STRINGID_TIDYINGUPCOMPLETE	¡Ya está todo ordenado!
+STRINGID_TIEDOPPONENTBYREFEREE	¡{B_PLAYER_MON1_NAME} ha empatado con {B_OPPONENT_MON1_NAME} por decisión del ÁRBITRO!
+STRINGID_TIMETODYNAMAX	¡Es hora del DINAMAX!
+STRINGID_TIMETOGIGANTAMAX	¡Es hora del GIGAMAX!
+STRINGID_TOPSYTURVYSWITCHEDSTATS	¡Se han invertido todos los cambios de estadísticas de {B_DEF_NAME_WITH_PREFIX2}!
+STRINGID_TOXICSPIKESBADLYPOISONED	¡{B_SCR_NAME_WITH_PREFIX} ha sido gravemente envenenado!
+STRINGID_TOXICSPIKESPOISONED	¡{B_SCR_NAME_WITH_PREFIX} ha sido envenenado!
+STRINGID_TRAINER1USEDITEM	¡{B_ATK_TRAINER_NAME_WITH_CLASS} ha usado {B_LAST_ITEM}!
+STRINGID_TRAPPEDBYSWIRLINGMAGMA	¡{B_EFF_NAME_WITH_PREFIX} ha quedado atrapado en un remolino de magma!
+STRINGID_TRICKROOMENDS	¡Las dimensiones distorsionadas han vuelto a la normalidad!
+STRINGID_TURBOBLAZEENTERS	¡{B_SCR_NAME_WITH_PREFIX} irradia un aura ardiente!
+STRINGID_ULTRABURSTCOMPLETED	¡{B_ATK_NAME_WITH_PREFIX} ha recuperado su verdadero poder con el ULTRAESTALLIDO!
+STRINGID_ULTRABURSTREACTING	¡Una luz intensa está a punto de brotar de {B_ATK_NAME_WITH_PREFIX2}!
+STRINGID_USEDINSTRUCTEDMOVE	¡{B_DEF_NAME_WITH_PREFIX} ha seguido las instrucciones de {B_ATK_NAME_WITH_PREFIX2}!
+STRINGID_VANISHEDINSTANTLY	¡{B_ATK_NAME_WITH_PREFIX} ha desaparecido al instante!
+STRINGID_VICTORYCATCH	¡{B_DEF_NAME} está débil!\n¡Lanza una POKé BALL ya!
+STRINGID_WAGGLINGAFINGER	¡Agitando un dedo, ha usado {B_CURRENT_MOVE}!
+STRINGID_WAITINGFORPARTNERSMOVE	¡{B_ATK_NAME_WITH_PREFIX} está esperando el movimiento de {B_ATK_PARTNER_NAME}…{PAUSE 16}
+STRINGID_WATERSPORTENDS	Los efectos de JUEGO DE AGUA han desaparecido.
+STRINGID_WONDERROOMENDS	¡El efecto de SALA RARA ha terminado y la DEFENSA y la DEF. ESP. han vuelto a la normalidad!
+STRINGID_ZENMODEENDED	¡{B_SCR_ABILITY} ha terminado!
+STRINGID_ZENMODETRIGGERED	¡{B_SCR_ABILITY} se ha activado!
+STRINGID_ZEROTOHEROTRANSFORMATION	¡{B_SCR_NAME_WITH_PREFIX} ha sufrido una transformación heroica!
+STRINGID_ZMOVEALLSTATSUP	¡{B_SCR_NAME_WITH_PREFIX} ha aumentado todas sus estadísticas con el Poder Z!
+STRINGID_ZMOVEHPTRAP	¡El Poder Z ha restaurado los PS de {B_SCR_NAME_WITH_PREFIX}!
+STRINGID_ZMOVERESETSSTATS	¡{B_SCR_NAME_WITH_PREFIX} ha devuelto a la normalidad sus estadísticas reducidas con el Poder Z!
+STRINGID_ZMOVERESTOREHP	¡{B_SCR_NAME_WITH_PREFIX} ha restaurado sus PS con el Poder Z!
+STRINGID_ZMOVESTATUP	¡{B_SCR_NAME_WITH_PREFIX} ha aumentado sus estadísticas con el Poder Z!
+STRINGID_ZMOVEUNLEASHED	¡{B_ATK_NAME_WITH_PREFIX} desata su Movimiento Z a toda potencia!
+STRINGID_ZMOVEZBOOSTCRIT	¡{B_SCR_NAME_WITH_PREFIX} ha aumentado su probabilidad de golpe crítico con el Poder Z!
+STRINGID_ZPOWERSURROUNDS	¡{B_ATK_NAME_WITH_PREFIX} se ha rodeado de su Poder Z!
+STRINGID_BUFFERENDS	¡{B_BUFF1} de {B_SCR_NAME_WITH_PREFIX} ha perdido su efecto!
+STRINGID_ANTICIPATIONACTIVATES	¡{B_SCR_NAME_WITH_PREFIX} se ha estremecido!
+STRINGID_ATTACKERACQUIREDABILITY	¡{B_ATK_NAME_WITH_PREFIX} ha adquirido {B_ATK_ABILITY}!
+STRINGID_IMPOSTERTRANSFORM	¡{B_ATK_NAME_WITH_PREFIX} se ha transformado en {B_DEF_NAME_WITH_PREFIX2}!
+STRINGID_CELEBRATEMESSAGE	¡Felicidades, {B_PLAYER_NAME}!
+STRINGID_AIRBALLOONPOP	¡El GLOBO HELIO de {B_DEF_NAME_WITH_PREFIX} ha explotado!
+STRINGID_ILLUSIONWOREOFF	¡La ilusión de {B_SCR_NAME_WITH_PREFIX} se ha desvanecido!
+STRINGID_AURABREAKENTERS	¡{B_SCR_NAME_WITH_PREFIX} ha invertido las auras de todos los demás POKéMON!
+STRINGID_TORMENTEDNOMORE	¡{B_SCR_NAME_WITH_PREFIX} ya no sufre TORMENTO!
+STRINGID_BROKETHROUGHPROTECTION	¡Ha atravesado la protección de {B_EFF_NAME_WITH_PREFIX2}!
+STRINGID_BOTHCANNOLONGERESCAPE	¡Ninguno de los dos POKéMON puede huir!
+STRINGID_CANTESCAPEBECAUSEOFCURRENTMOVE	¡{B_DEF_NAME_WITH_PREFIX} ya no puede huir por culpa de OCTOLLAVE!
+STRINGID_THUNDERCAGETRAPPED	¡{B_SCR_NAME_WITH_PREFIX} ha atrapado a {B_EFF_NAME_WITH_PREFIX2}!
+STRINGID_ELECTROSHOTCHARGING	¡{B_ATK_NAME_WITH_PREFIX} ha absorbido electricidad!
+STRINGID_ITISHAILING	¡Está granizando!
+STRINGID_ITISSNOWING	¡Está nevando!
+STRINGID_BLOCKEDBYSLEEPCLAUSE	¡La CLÁUSULA SUEÑO ha mantenido despierto a {B_DEF_NAME_WITH_PREFIX2}!
+STRINGID_ELECTROMAGNETISM	electromagnetismo
+STRINGID_DONTLEAVEBIRCH	PROF. ABEDUL: ¡No me dejes así!\p
+#
+# ---- mensajes sueltos de battle_message.c (menús, entrenadores, equipos) ----
+sText_Trainer1WantsToBattle	¡{B_TRAINER1_NAME_WITH_CLASS} quiere luchar!\p
+sText_PlayerLostAgainstTrainer1	¡Has perdido contra {B_TRAINER1_NAME_WITH_CLASS}!
+sText_PlayerBattledToDrawTrainer1	¡Has empatado el combate contra {B_TRAINER1_NAME_WITH_CLASS}!
+sText_PlayerDefeatedLinkTrainerTrainer1	¡Has vencido a {B_TRAINER1_NAME_WITH_CLASS}!\p
+sText_TwoInGameTrainersDefeated	¡Has vencido a {B_TRAINER1_NAME_WITH_CLASS} y a {B_TRAINER2_NAME_WITH_CLASS}!\p
+sText_Trainer1SentOutPkmn	¡{B_TRAINER1_NAME_WITH_CLASS} ha sacado a {B_OPPONENT_MON1_NAME}!
+sText_Trainer1SentOutTwoPkmn	¡{B_TRAINER1_NAME_WITH_CLASS} ha sacado a {B_OPPONENT_MON1_NAME} y a {B_OPPONENT_MON2_NAME}!
+sText_Trainer1Fled	{PLAY_SE SE_FLEE}¡{B_TRAINER1_NAME_WITH_CLASS} ha huido!
+sText_OpponentMon1Appeared	¡{B_OPPONENT_MON1_NAME} ha aparecido!\p
+sText_LegendaryPkmnAppeared	¡Te has encontrado con un {B_OPPONENT_MON1_NAME} salvaje!\p
+sText_PkmnSwitchOut	¡{B_BUFF1}, vuelve! ¡Ven aquí!
+sText_JustALittleMorePkmn	¡Un poco más! ¡Aguanta, {B_BUFF1}!
+sText_BeCarefulPkmn	¡Ten cuidado, {B_PLAYER_MON1_NAME}!
+sText_InGamePartnerSentOutNGoZ	¡{B_PARTNER_NAME_WITH_CLASS} ha sacado a {B_PLAYER_MON1_NAME}! ¡Adelante, {B_PLAYER_MON2_NAME}!
+sText_InGamePartnerSentOutPkmn1	¡{B_PARTNER_NAME_WITH_CLASS} ha sacado a {B_PLAYER_MON1_NAME}!
+sText_InGamePartnerSentOutPkmn2	¡{B_PARTNER_NAME_WITH_CLASS} ha sacado a {B_PLAYER_MON2_NAME}!
+sText_InGamePartnerSentOutZGoN	¡{B_PARTNER_NAME_WITH_CLASS} ha sacado a {B_PLAYER_MON2_NAME}! ¡Adelante, {B_PLAYER_MON1_NAME}!
+sText_InGamePartnerWithdrewPkmn1	¡{B_PARTNER_NAME_WITH_CLASS} ha retirado a {B_PLAYER_MON1_NAME}!
+sText_InGamePartnerWithdrewPkmn2	¡{B_PARTNER_NAME_WITH_CLASS} ha retirado a {B_PLAYER_MON2_NAME}!
+sText_HoLPartnerSentOutZGoN	¡{B_PARTNER_NAME} ha sacado a {B_PLAYER_MON2_NAME}! ¡Adelante, {B_PLAYER_MON1_NAME}!
+sText_LinkPartnerSentOutPkmn1	¡{B_LINK_PARTNER_NAME} ha sacado a {B_BUFF1}!
+sText_LinkPartnerSentOutPkmn1GoPkmn	¡{B_LINK_PARTNER_NAME} ha sacado a {B_LINK_PLAYER_MON1_NAME}! ¡Adelante, {B_LINK_PLAYER_MON2_NAME}!
+sText_LinkPartnerSentOutPkmn2	¡{B_LINK_PARTNER_NAME} ha sacado a {B_BUFF1}!
+sText_LinkPartnerSentOutPkmn2GoPkmn	¡{B_LINK_PARTNER_NAME} ha sacado a {B_LINK_PLAYER_MON2_NAME}! ¡Adelante, {B_LINK_PLAYER_MON1_NAME}!
+sText_LinkPartnerWithdrewPkmn1	¡{B_LINK_PARTNER_NAME} ha retirado a {B_LINK_PLAYER_MON1_NAME}!
+sText_LinkPartnerWithdrewPkmn2	¡{B_LINK_PARTNER_NAME} ha retirado a {B_LINK_PLAYER_MON2_NAME}!
+sText_LinkTrainer2SentOutPkmn2	¡{B_LINK_OPPONENT2_NAME} ha sacado a {B_BUFF1}!
+sText_LinkTrainer2WithdrewPkmn	¡{B_LINK_OPPONENT2_NAME} ha retirado a {B_BUFF1}!
+sText_LinkTrainerIntroSendOutPkmn	¡{B_LINK_OPPONENT1_NAME} ha sacado a {B_LINK_OPPONENT_MON1_NAME}!
+sText_LinkTrainerSentOutPkmn	¡{B_LINK_OPPONENT1_NAME} ha sacado a {B_BUFF1}!
+sText_LinkTrainerSentOutPkmn2	¡{B_LINK_OPPONENT1_NAME} ha sacado a {B_LINK_OPPONENT_MON2_NAME}!
+sText_LinkTrainerWantsToBattlePause	¡{B_LINK_OPPONENT1_NAME} te desafía!\p
+sText_TwoLinkTrainersIntroSendOutPkmn	¡{B_LINK_OPPONENT1_NAME} ha sacado a {B_LINK_OPPONENT_MON1_NAME}! ¡{B_LINK_OPPONENT2_NAME} ha sacado a {B_LINK_OPPONENT_MON2_NAME}!
+sText_TwoLinkTrainersWantToBattlePause	¡{B_LINK_OPPONENT1_NAME} y {B_LINK_OPPONENT2_NAME} te desafían!\p
+sText_TerrainReturnedToNormal	¡El terreno ha vuelto a la normalidad!
+sText_BerrySuffix	 BAYA
+sText_Lanettes	de LANETTE
+sText_SpAttack	AT. ESP.
+sText_SpDefense	DEF. ESP.
+sText_HP	PS
+sText_Attack	ATAQUE
+sText_Speed	VELOCIDAD
+gText_AFormerChampion	¡Un excampeón!\p
+gText_TheGreatNewHope	¡La gran nueva esperanza!\p
+gText_ThePreviousChampion	¡El campeón anterior!\p
+gText_TheUnbeatenChampion	¡El campeón invicto!\p
+gText_WillChampionshipDreamComeTrue	¿Se cumplirá el sueño de ser campeón?\p
+gText_BattleRecordedOnPass	El resultado del combate de {B_PLAYER_NAME}\nse ha guardado en el PASE DE LA FRONTERA.
+gText_RecordBattleToPass	¿Quieres guardar tu combate\nen el PASE DE LA FRONTERA?
+gText_PkmnGettingPumped	¡{B_DEF_NAME_WITH_PREFIX} se está animando!
+gText_PkmnShroudedInMist	¡{B_ATK_NAME_WITH_PREFIX} se rodea de una niebla protectora!
+gText_WhatWillPkmnDo2	¿Qué hará\n{B_PLAYER_NAME}?
+gText_WhatWillWallyDo	¿Qué hará\nBLASCO?
+gText_BattleTourney	TORNEO DE COMBATES
+gText_Body	Cuerpo
+gText_Mind	Mente
+gText_Skill	Técnica
+gText_Are	están
+gText_Are2	están
+gText_BattleCatchOrNot	{PALETTE 5}{BACKGROUND DYNAMIC_COLOR5}{TEXT_COLORS DYNAMIC_COLOR4 DYNAMIC_COLOR6 DYNAMIC_COLOR5}Capturar\nNo capturar
+gText_BattleSwitchWhich	{PALETTE 5}{BACKGROUND DYNAMIC_COLOR5}{TEXT_COLORS DYNAMIC_COLOR4 DYNAMIC_COLOR6 DYNAMIC_COLOR5}¿A cuál\ncambiar?
+gText_BattleYesNoChoice	{PALETTE 5}{BACKGROUND DYNAMIC_COLOR5}{TEXT_COLORS DYNAMIC_COLOR4 DYNAMIC_COLOR6 DYNAMIC_COLOR5}Sí\nNo
+gText_Draw	{BACKGROUND TRANSPARENT}{ACCENT TRANSPARENT}Empate
+gText_Loss	{BACKGROUND TRANSPARENT}{ACCENT TRANSPARENT}Derrota
+gText_Win	{BACKGROUND TRANSPARENT}{ACCENT TRANSPARENT}Victoria
+gText_Judgment	{B_BUFF1}{CLEAR 13}Veredicto{CLEAR 13}{B_BUFF2}
+gText_MoveInterfacePPType	{PALETTE 5}{BACKGROUND DYNAMIC_COLOR5}{TEXT_COLORS DYNAMIC_COLOR4 DYNAMIC_COLOR6 DYNAMIC_COLOR5}PP\nTIPO/
+gText_WhichMoveToForget4	{PALETTE 5}{BACKGROUND DYNAMIC_COLOR5}{TEXT_COLORS DYNAMIC_COLOR4 DYNAMIC_COLOR6 DYNAMIC_COLOR5}¿Qué movimiento\nquieres olvidar?
+gText_SafariBallLeft	Quedan: $
+gText_SafariZoneMenu	Ball{CLEAR_TO 56}{POKEBLOCK}\nAcercarse{CLEAR_TO 56}Huir
+gText_SafariZoneMenuFrlg	{PALETTE 5}{COLOR_HIGHLIGHT_SHADOW 13 14 15}BALL{CLEAR_TO 56}CEBO\nPIEDRA{CLEAR_TO 56}HUIDA
+STRINGID_EMBARGOENDS	¡{B_ATK_NAME_WITH_PREFIX} puede usar objetos otra vez!

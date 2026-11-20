@@ -1,4 +1,4 @@
-// Writes the run settings into the Daily Máximo ROM before boot.
+// Writes the run settings into the Daily Steven ROM before boot.
 const MAGIC = new TextEncoder().encode('DAILYMAX-CONF-V1');
 
 export function findConfigOffset(rom) {
@@ -14,7 +14,7 @@ export function findConfigOffset(rom) {
 
 export function injectConfig(rom, { seed, wins = 0, battles = 0, daily = false }) {
   const offset = findConfigOffset(rom);
-  if (offset < 0) throw new Error('This ROM has no Daily Máximo config. Rebuild with scripts/build.sh.');
+  if (offset < 0) throw new Error('Esta ROM no tiene la configuración de Daily Steven. Vuelve a compilarla con scripts/build.sh.');
   const patched = rom.slice();
   const view = new DataView(patched.buffer);
   view.setUint32(offset, seed >>> 0, true);

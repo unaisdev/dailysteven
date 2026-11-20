@@ -16,7 +16,7 @@ node scripts/serve.mjs                                                    # http
 
 Sincroniza la carpeta con una copia en WSL, regenera la expansion si hace falta, compila y deja la ROM en
 `web/game/dailymaximo.gba.gz` más `web/game/BUILD-INFO.txt` (hora y huella de lo que hay compilado).
-Todos los textos de la escena y del final (y los nombres MÁXIMO/AURA/BLASCO/HORTE) están en
+Todos los textos de la escena y del final (y los nombres STEVEN/AURA/BLASCO/HORTE) están en
 `overlay/include/dailymax_texts.h`; los equipos provisionales de los rivales, en `overlay/data/dailymax_rivals.party`.
 
 ROM de pruebas (`-Debug`, no se publica): `build-wsl.ps1 -Debug` crea `web/game/dailymaximo-debug.gba.gz`. Se juega con
@@ -29,7 +29,7 @@ Al compilar se ejecutan `scripts/check-names.py` (nombres y textos en castellano
 ## Play locally
 
 ```sh
-scripts/get-expansion.sh   # pokeemerald-expansion + HoL + Daily Máximo overlay + castellano (locale/es)
+scripts/get-expansion.sh   # pokeemerald-expansion + HoL + Daily Steven overlay + castellano (locale/es)
 scripts/build.sh           # or on Windows: bash scripts/_docker_build.sh
 scripts/fetch-vendor.sh
 node scripts/serve.mjs

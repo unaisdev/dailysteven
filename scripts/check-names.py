@@ -37,6 +37,8 @@ ERRORS: list[str] = []
 INTENTIONAL = {
     "sText_TwoTrainersWantToBattle", "sText_TwoTrainersSentPkmn", "sText_Trainer2SentOutPkmn",
     "sText_Trainer2WithdrewPkmn", "sText_Trainer1SentOutPkmn2", "sText_Trainer1WithdrewPkmn",
+    # {PKMN} -> palabra POKéMON (como en el Rojo Fuego español); lo hace scripts/apply_spanish_overrides.py
+    "gText_DoWhatWithPokemon", "gText_CantSelectSamePkmn", "gText_PkmnForSwap", "gText_SamePkmnInPartyAlready",
 }
 
 

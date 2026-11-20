@@ -23,6 +23,7 @@
 #include "line_break.h"
 #include "text.h"
 #include "constants/flags.h"
+#include "constants/opponents.h"
 #include "constants/species.h"
 
 struct DailyMaxRomConfig const gDailyMaxRomConfig __attribute__((used, aligned(4))) =
@@ -199,13 +200,15 @@ u16 DailyMax_IsDailyActive(void)
 #define DAILYMAX_TEXT_WIDTH      208  // caja de mensajes normal
 #define DAILYMAX_TEXT_LINES      2
 
-// Mantener sincronizado con data/scripts/dailymax_bruno.inc
+// Mantener sincronizado con data/dailymax_bruno.inc
 enum
 {
     DAILYMAX_SPEECH_BOSS_1,
     DAILYMAX_SPEECH_BOSS_2,
+    DAILYMAX_SPEECH_BOSS_3,
     DAILYMAX_SPEECH_PARTNER_ENTER,
-    DAILYMAX_SPEECH_PARTNER_BESIDE,
+    DAILYMAX_SPEECH_AFTER_1,
+    DAILYMAX_SPEECH_AFTER_2,
 };
 
 static bool32 PartnerIsBlasco(void)
@@ -228,6 +231,36 @@ void DailyMax_SetupRoom(void)
         SetObjEventTemplateFlagId(LOCALID_HOL_MON_1 + i, FLAG_DAILYMAX_HIDE_TEAM);
 }
 
+// Clase de entrenador que se muestra en combate (solo para los tres rivales de Daily Steven; NULL para el resto).
+const u8 *DailyMax_GetClassName(u16 trainerId)
+{
+    static const u8 sClassBoss[] = _(DAILYMAX_TEXT_CLASS_BOSS);
+    static const u8 sClassPartner[] = _(DAILYMAX_TEXT_CLASS_PARTNER);
+
+    if (trainerId == TRAINER_HOL_STEVEN)
+        return sClassBoss;
+    if (trainerId == TRAINER_HOL_MAY || trainerId == TRAINER_HOL_WALLY)
+        return sClassPartner;
+    return NULL;
+}
+
+// «clase + nombre» tal como sale en los mensajes de combate. STEVEN: «STEVEN de la ELITE FOUR de CAMPEONES» (como GOLD);
+// AURA / BLASCO: «ASPIRANTE AURA» / «ASPIRANTE BLASCO». Devuelve un texto fijo (no cabría en el búfer de 32 de battle_message.c).
+const u8 *DailyMax_GetNameWithClass(u16 trainerId)
+{
+    static const u8 sBoss[] = _(DAILYMAX_TEXT_BOSS_WITH_CLASS);
+    static const u8 sAura[] = _(DAILYMAX_TEXT_CLASS_PARTNER " " DAILYMAX_NAME_AURA);
+    static const u8 sBlasco[] = _(DAILYMAX_TEXT_CLASS_PARTNER " " DAILYMAX_NAME_BLASCO);
+
+    switch (trainerId)
+    {
+    case TRAINER_HOL_STEVEN: return sBoss;
+    case TRAINER_HOL_MAY:    return sAura;
+    case TRAINER_HOL_WALLY:  return sBlasco;
+    default:                 return NULL;
+    }
+}
+
 // VAR_0x8004 = DAILYMAX_SPEECH_*. Deja el texto en gStringVar4 y el nombre del que habla en la caja.
 void DailyMax_BufferSpeech(void)
 {
@@ -235,36 +268,49 @@ void DailyMax_BufferSpeech(void)
     {
         COMPOUND_STRING(DAILYMAX_TEXT_BOSS_TALK_1),
         COMPOUND_STRING(DAILYMAX_TEXT_BOSS_TALK_2),
+        COMPOUND_STRING(DAILYMAX_TEXT_BOSS_TALK_3),
     };
     static const u8 *const sPartnerEnter[] =
     {
         COMPOUND_STRING(DAILYMAX_TEXT_AURA_ENTER),
         COMPOUND_STRING(DAILYMAX_TEXT_BLASCO_ENTER),
     };
-    static const u8 *const sPartnerBeside[] =
+    static const u8 *const sAfter1[] =
     {
-        COMPOUND_STRING(DAILYMAX_TEXT_AURA_BESIDE),
-        COMPOUND_STRING(DAILYMAX_TEXT_BLASCO_BESIDE),
+        COMPOUND_STRING(DAILYMAX_TEXT_AURA_AFTER_1),
+        COMPOUND_STRING(DAILYMAX_TEXT_BLASCO_AFTER_1),
+    };
+    static const u8 *const sAfter2[] =
+    {
+        COMPOUND_STRING(DAILYMAX_TEXT_AURA_AFTER_2),
+        COMPOUND_STRING(DAILYMAX_TEXT_BLASCO_AFTER_2),
     };
     u32 id = gSpecialVar_0x8004;
     u32 partner = PartnerIsBlasco();
     const u8 *text;
     const u8 *speaker;
+    const u8 *bossName = gHoLCharacters[HOL_CHAR_STEVEN].name;
+    const u8 *partnerName = gHoLCharacters[DailyMax_GetPartnerCharacter()].name;
 
     switch (id)
     {
     case DAILYMAX_SPEECH_BOSS_1:
     case DAILYMAX_SPEECH_BOSS_2:
+    case DAILYMAX_SPEECH_BOSS_3:
         text = sBossTalk[id - DAILYMAX_SPEECH_BOSS_1];
-        speaker = gHoLCharacters[HOL_CHAR_STEVEN].name;
+        speaker = bossName;
         break;
     case DAILYMAX_SPEECH_PARTNER_ENTER:
         text = sPartnerEnter[partner];
-        speaker = gHoLCharacters[DailyMax_GetPartnerCharacter()].name;
+        speaker = partnerName;
+        break;
+    case DAILYMAX_SPEECH_AFTER_1:
+        text = sAfter1[partner];
+        speaker = partner ? bossName : partnerName;   // AURA habla primero; con BLASCO habla STEVEN
         break;
     default:
-        text = sPartnerBeside[partner];
-        speaker = gHoLCharacters[DailyMax_GetPartnerCharacter()].name;
+        text = sAfter2[partner];
+        speaker = partner ? partnerName : bossName;   // AURA: contesta STEVEN; BLASCO: cierra BLASCO
         break;
     }
     StringExpandPlaceholders(gStringVar4, text);
@@ -316,6 +362,21 @@ void DailyMax_DebugOnOpponents(void)
         return;
     for (i = 0; i < PARTY_SIZE; i++)
     {
+        // El primer ataque de mi equipo pasa a ser PLACAJE (si no, un RUGIDO al azar atasca la victoria de prueba).
+        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) != SPECIES_NONE)
+        {
+            u16 tackle = MOVE_TACKLE;
+            u8 tacklePp = 35;
+            SetMonData(&gPlayerParty[i], MON_DATA_MOVE1, &tackle);
+            SetMonData(&gPlayerParty[i], MON_DATA_PP1, &tacklePp);
+        }
+        // Cada rival lleva UN solo Pokémon: la victoria de prueba dura dos ataques.
+        if (i >= 1)
+        {
+            ZeroMonData(&gParties[B_TRAINER_OPPONENT_A][i]);
+            ZeroMonData(&gParties[B_TRAINER_OPPONENT_B][i]);
+            continue;
+        }
         // 1 PS y dormidos (así no te atacan y no hay cambios forzados): victoria segura y fácil de automatizar.
         if (GetMonData(&gParties[B_TRAINER_OPPONENT_A][i], MON_DATA_SPECIES) != SPECIES_NONE)
         {

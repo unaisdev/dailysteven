@@ -312,7 +312,7 @@ def write_manifest() -> None:
         "language": "es-ES",
         "notes": (
             "Official Spanish (Spain) FireRed string tables. "
-            "Daily Máximo ships a single castellano ROM (no bilingual switch)."
+            "Daily Steven ships a single castellano ROM (no bilingual switch)."
         ),
     }
     write_out("SOURCE.json", json.dumps(meta, indent=2) + "\n")

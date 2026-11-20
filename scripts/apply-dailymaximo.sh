@@ -25,6 +25,10 @@ cp -f "$ROOT/overlay/src/dailymaximo.c" "$GAME/src/dailymaximo.c"
 cp -f "$ROOT/overlay/src/dailymaximo_team.c" "$GAME/src/dailymaximo_team.c"
 mkdir -p "$GAME/data/scripts"
 cp -f "$ROOT/overlay/data/dailymax_bruno.inc" "$GAME/data/scripts/dailymax_bruno.inc"
+# Gráficos en castellano (rótulos de la ficha y tipos): los genera tools/make_es_graphics.py
+if [ -d "$ROOT/overlay/graphics" ]; then
+  cp -rf "$ROOT/overlay/graphics/." "$GAME/graphics/"
+fi
 mkdir -p "$GAME/test/battle"
 cp -f "$ROOT/overlay/test/gen3_surf_earthquake.c" "$GAME/test/battle/gen3_surf_earthquake.c"
 
