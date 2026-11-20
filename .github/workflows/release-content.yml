@@ -124,6 +124,8 @@ jobs:
           set -euo pipefail
           # build.sh ya deja la ROM comprimida en web/game/dailymaximo.gba.gz y el sprite en web/game/maximo.png
           VERSION="${{ steps.ver.outputs.version }}" scripts/package-content.sh
+          cd dist/content
+          cmp SHA256SUMS <(sha256sum dailysteven-content.zip)
 
       - name: Verificar el pack contra el lanzador (adaptador + firmas)
         run: |

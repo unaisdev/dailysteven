@@ -3,8 +3,8 @@
 #
 # Salida (dist/content/):
 #   dailysteven-content.zip           <- nombre que espera el catalogo del lanzador
-#   dailysteven-content-vX.Y.Z.zip    <- copia versionada
-#   SHA256SUMS                        <- sumas de comprobacion
+#   dailysteven-content-vX.Y.Z.zip    <- copia local versionada
+#   SHA256SUMS                        <- suma del ZIP que se adjunta a la release
 #
 # Uso: [VERSION=0.1.0] scripts/package-content.sh
 #   VERSION (sin prefijo) sustituye contentVersion SOLO dentro del zip; no se toca content/game.manifest.json.
@@ -61,11 +61,9 @@ with zipfile.ZipFile(upload, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as z:
             zi.external_attr = 0o644 << 16
             z.writestr(zi, f.read_bytes())
 shutil.copyfile(upload, versioned)
-lines = []
-for p in (upload, versioned):
-    lines.append(f"{hashlib.sha256(p.read_bytes()).hexdigest()}  {p.name}")
-(out / "SHA256SUMS").write_text("\n".join(lines) + "\n", encoding="utf-8")
-(out / f"SHA256SUMS-{ident}.txt").write_text("\n".join(lines) + "\n", encoding="utf-8")
-print("\n".join(lines))
+checksum = f"{hashlib.sha256(upload.read_bytes()).hexdigest()}  {upload.name}"
+(out / "SHA256SUMS").write_text(checksum + "\n", encoding="utf-8")
+(out / f"SHA256SUMS-{ident}.txt").write_text(checksum + "\n", encoding="utf-8")
+print(checksum)
 PY
 echo "Pack listo en $OUT_DIR"
