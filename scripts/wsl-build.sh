@@ -24,7 +24,7 @@ echo "== [1/5] Sincronizando $SRC -> $DST"
 mkdir -p "$DST"
 rsync -a --delete \
   --exclude .git --exclude pokeemerald-expansion --exclude web/vendor \
-  --exclude 'web/game/*.gba.gz' --exclude 'web/game/BUILD-INFO*.txt' \
+  --exclude 'web/game/*.gba.gz' --exclude 'web/game/BUILD-INFO*.txt' --exclude web/game/archive \
   --exclude .cache --exclude .toolchain \
   "$SRC"/ "$DST"/
 cd "$DST"
@@ -82,6 +82,8 @@ if [ -n "$DEBUG" ]; then
 else
   OUTNAME=dailymaximo.gba.gz
   INFONAME=BUILD-INFO.txt
+  mkdir -p "$SRC/web/game/archive"
+  cp -f web/game/archive/symbols.json "$SRC/web/game/archive/symbols.json"
 fi
 cp -f web/game/dailymaximo.gba.gz "$SRC/web/game/$OUTNAME"
 if [ ! -f "$SRC/web/vendor/nostalgist.js" ]; then

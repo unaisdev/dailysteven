@@ -17,6 +17,7 @@ scripts/__pycache__/
 
 # scripts/build-wsl.ps1 (huella de la última ROM compilada)
 /web/game/BUILD-INFO*.txt
+/web/game/archive/
 
 # salidas de tests/web/cycle.mjs
 /tests/web/out/

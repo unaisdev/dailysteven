@@ -51,7 +51,7 @@ struct DailyMaxArchiveMon
     u16 species, ability, item, moves[4], stats[6];
     u8 nature, level, shiny, pp[4], ivs[6], evs[6];
     u8 names[7][ARCHIVE_NAME_BYTES]; // species, ability, item, four moves
-    u8 padding;
+    u8 padding[3];
 };
 
 struct DailyMaxArchive
@@ -61,7 +61,7 @@ struct DailyMaxArchive
 };
 
 _Static_assert(offsetof(struct DailyMaxArchiveMon, names) == 45, "Archive fields changed");
-_Static_assert(sizeof(struct DailyMaxArchiveMon) == 214, "Archive stride changed");
+_Static_assert(sizeof(struct DailyMaxArchiveMon) == 216, "Archive stride changed");
 _Static_assert(offsetof(struct DailyMaxArchive, party) == 4 && PARTY_SIZE == 6, "Archive party changed");
 _Static_assert(B_TRAINER_PLAYER == 0 && sizeof(struct Pokemon) == 100, "Player party symbols changed");
 EWRAM_DATA struct DailyMaxArchive gDailyMaxArchive = {0};

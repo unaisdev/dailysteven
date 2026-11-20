@@ -20,7 +20,7 @@ if raw != gzip.decompress((web / "dailymaximo.gba.gz").read_bytes()):
 nm = shutil.which("arm-none-eabi-nm") or root / ".toolchain/arm-none-eabi/bin/arm-none-eabi-nm"
 listing = subprocess.check_output([nm, "-S", game / "pokefirered.elf"], text=True)
 symbols = {}
-expected_sizes = {"gParties": 2400, "gPartiesCount": 4, "gDailyMaxArchive": 1288}
+expected_sizes = {"gParties": 2400, "gPartiesCount": 4, "gDailyMaxArchive": 1300}
 for line in listing.splitlines():
     fields = line.split()
     if len(fields) != 4 or fields[-1] not in expected_sizes:
@@ -37,7 +37,7 @@ if symbols.keys() != expected_sizes.keys():
 charmap = {}
 for line in (game / "charmap.txt").read_text(encoding="utf-8").splitlines():
     match = re.match(r"^('(?:[^'\\]|\\.)+')\s*=\s*([0-9A-F]{2})(?:\s|$)", line)
-    if match:
+    if match and int(match[2], 16) < 0xFA:
         charmap.setdefault(str(int(match[2], 16)), ast.literal_eval(match[1]))
 
 archive = {
