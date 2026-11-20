@@ -52,7 +52,7 @@ Open http://localhost:8080. Practice with `/?seed=1` (Aura) and `/?seed=2` (Blas
 
 1. The site hashes `dailysteven:YYYY-MM-DD` → seed and injects `DAILYMAX-CONF-V1` into the ROM.
 2. The game generates a level-100 team of six and warps onto the champion stage (no door walk-in). Bruno’s room and the door cinematic are the target scene; they are not in this build yet.
-3. The daily fight starts immediately: you alone vs Steven’s 3 + Aura or Blasco (`seed & 1`)’s 3. Each partner has one fixed team for now.
+3. The daily fight starts immediately: you alone vs Steven’s 3 + Aura or Blasco’s 3. The partner is selected independently for each date by mixing the daily seed. Each partner has one fixed team.
 4. Result is written to `DAILYMAX-STATUS1` in RAM for the site.
 
 See `docs/status-al-entrar.md` for optional status-on-entry notes.

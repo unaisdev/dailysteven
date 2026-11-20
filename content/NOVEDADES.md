@@ -1,7 +1,1 @@
-- Estrenamos Daily Steven: cada día te espera un combate doble contra STEVEN.
-- Una escena en la sala da paso al desafío diario.
-- Cada día juegas con el mismo equipo de seis Pokémon de nivel 100 que el resto de jugadores. Sus movimientos salen de los que aprenden por nivel y con MT y MO de Esmeralda.
-- Puedes jugar en castellano, desde los menús y la ficha del equipo hasta los mensajes de combate.
-- Los tipos, los golpes críticos, los estados y el clima siguen las reglas de la tercera generación.
-- En dobles, Terremoto, Magnitud, Explosión y Autodestrucción conservan toda su potencia cuando quedan dos objetivos, como en Esmeralda.
-- Tienes un intento al día. Al terminar podrás consultar tus victorias y tu racha.
+- El compañero de Steven se elige cada día y puede repetirse varios días seguidos.

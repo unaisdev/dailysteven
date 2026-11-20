@@ -18,6 +18,7 @@ if [ ! -d "$GAME" ]; then
 fi
 
 cp -f "$ROOT/overlay/include/dailymaximo.h" "$GAME/include/dailymaximo.h"
+cp -f "$ROOT/overlay/include/dailymaximo_partner.h" "$GAME/include/dailymaximo_partner.h"
 cp -f "$ROOT/overlay/include/dailymax_texts.h" "$GAME/include/dailymax_texts.h"
 cp -f "$ROOT/overlay/include/dailymax_emerald.h" "$GAME/include/dailymax_emerald.h"
 mkdir -p "$GAME/include/constants"

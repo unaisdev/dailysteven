@@ -82,6 +82,9 @@ jobs:
           sudo apt-get install -y --no-install-recommends build-essential git python3 python3-pip libpng-dev libelf1 zip xz-utils curl
           python3 -m pip --version
 
+      - name: Probar la elección diaria del compañero
+        run: python3 tests/partner_distribution.py
+
       - name: Compilador ARM exacto (GCC 14.2.1, el del PC de desarrollo)
         run: |
           set -euo pipefail
