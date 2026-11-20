@@ -1,1 +1,1 @@
-- El compañero de Steven se elige cada día y puede repetirse varios días seguidos.
+- Consulta los equipos de días anteriores y vuelve a jugar esos combates en práctica sin gastar el intento de hoy.

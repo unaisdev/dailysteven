@@ -10,7 +10,7 @@ PYTHON="${PYTHON:-python3}"
 command -v "$PYTHON" >/dev/null 2>&1 || PYTHON=python
 
 "$PYTHON" - "$ROOT" "$STAGING" <<'PY'
-import gzip, json, sys
+import gzip, hashlib, json, sys
 from pathlib import Path
 
 root = Path(sys.argv[1])
@@ -30,9 +30,8 @@ if m["protocolId"] != "dailymax-conf-v1+status-v1":
     raise SystemExit(f"unexpected protocolId {m['protocolId']!r}")
 if m["protocolId"] not in m["compat"].get("runnerAdapters", []):
     raise SystemExit("compat.runnerAdapters must list the protocolId")
-# Primer lanzamiento: sin «Equipos pasados» (el decodificador del lanzador es de FireRed). Sin symbols.json se oculta solo.
-if "archive" in m:
-    raise SystemExit('el manifest NO debe llevar "archive" en el primer lanzamiento (el lanzador no sabe leer el equipo de Steven)')
+if m.get("archive") != {"format": "steven-expansion-v1", "symbols": "archive/symbols.json"}:
+    raise SystemExit("Falta el archivo histórico de Daily Steven")
 if m["client"].get("statsKey") != "hortelano:dailysteven:stats":
     raise SystemExit("client.statsKey must be hortelano:dailysteven:stats (estadisticas aisladas por juego)")
 
@@ -46,6 +45,13 @@ raw = rom.read_bytes()
 if raw[:2] != b"\x1f\x8b":
     raise SystemExit(f"{rom.name} no esta comprimida con gzip")
 raw = gzip.decompress(raw)
+symbols_file = (staging if staging else root / "web" / "game") / m["archive"]["symbols"]
+symbols = json.loads(symbols_file.read_text(encoding="utf-8"))
+if symbols.get("format") != m["archive"]["format"] or symbols.get("romSha256") != hashlib.sha256(raw).hexdigest():
+    raise SystemExit("Los símbolos del archivo no corresponden a la ROM del pack")
+for symbol in ("gPlayerParty", "gPlayerPartyCount", "gDailyMaxArchive"):
+    if not 0x02000000 <= symbols.get(symbol, 0) < 0x02040000:
+        raise SystemExit(f"Símbolo fuera de EWRAM: {symbol}")
 if len(raw) < 16 * 1024 * 1024:
     raise SystemExit(f"la ROM descomprimida mide solo {len(raw)} bytes")
 if raw.count(magic) != 1:

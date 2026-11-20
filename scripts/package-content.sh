@@ -27,7 +27,9 @@ STAGING="$OUT_DIR/staging"
 
 rm -rf "$STAGING"
 mkdir -p "$STAGING/rom" "$STAGING/assets"
+mkdir -p "$STAGING/archive"
 cp "$ROM_SRC" "$STAGING/rom/dailymaximo.gba.gz"
+cp "$ROOT/web/game/archive/symbols.json" "$STAGING/archive/symbols.json"
 cp "$TITLE_SRC" "$STAGING/assets/maximo.png"
 cp "$ROOT/content/licenses.txt" "$STAGING/licenses.txt"
 "$PYTHON" - "$ROOT/content/game.manifest.json" "$STAGING/game.manifest.json" "${VERSION:-}" <<'PY'
