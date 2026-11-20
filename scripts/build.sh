@@ -27,6 +27,7 @@ fi
 "${PYTHON:-python3}" "$ROOT/scripts/check-names.py" "$GAME_DIR" || { echo "ERROR: check-names.py encontró problemas; no se compila."; exit 1; }
 "${PYTHON:-python3}" "$ROOT/scripts/check-gen3.py" "$GAME_DIR" || { echo "ERROR: check-gen3.py encontró contenido que no es de 3.ª gen; no se compila."; exit 1; }
 "${PYTHON:-python3}" "$ROOT/scripts/check-spanish.py" "$GAME_DIR" || { echo "ERROR: check-spanish.py encontró textos sin traducir o con códigos distintos; no se compila."; exit 1; }
+"${PYTHON:-python3}" "$ROOT/scripts/check-tmhm.py" "$GAME_DIR" || { echo "ERROR: check-tmhm.py: la tabla de MT/MO del generador no es la de Rojo Fuego; no se compila."; exit 1; }
 
 MAKE_ARGS=()
 if [ -x "$TC/arm-none-eabi/bin/arm-none-eabi-gcc" ] && [ -x "$TC/make/bin/make" ]; then
