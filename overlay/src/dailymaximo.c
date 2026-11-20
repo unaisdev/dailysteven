@@ -297,19 +297,36 @@ void DailyMax_BufferResult(void)
 #if DAILYMAX_DEBUG
 // ROM de pruebas: con la semilla DAILYMAX_DEBUG_SEED_WIN los rivales empiezan con 1 PS (victoria segura).
 // Se llama al final de HoL_CreateOpponentParties, antes de que empiece el combate.
+// Volcado (solo ROM de pruebas): especies de los equipos rivales A (STEVEN) y B (compañero) al empezar el combate.
+EWRAM_DATA u16 gDailyMaxFoeDump[12] = {0};
+
 void DailyMax_DebugOnOpponents(void)
 {
     u32 i;
     u16 hp = 1;
+    u32 sleep = 7;  // contador de sueño (7 turnos)
 
-    if (GetInjectedSeed() != DAILYMAX_DEBUG_SEED_WIN)
+    for (i = 0; i < PARTY_SIZE; i++)
+    {
+        gDailyMaxFoeDump[i] = GetMonData(&gParties[B_TRAINER_OPPONENT_A][i], MON_DATA_SPECIES);
+        gDailyMaxFoeDump[6 + i] = GetMonData(&gParties[B_TRAINER_OPPONENT_B][i], MON_DATA_SPECIES);
+    }
+
+    if (GetInjectedSeed() != DAILYMAX_DEBUG_SEED_WIN && GetInjectedSeed() != DAILYMAX_DEBUG_SEED_WIN2)
         return;
     for (i = 0; i < PARTY_SIZE; i++)
     {
+        // 1 PS y dormidos (así no te atacan y no hay cambios forzados): victoria segura y fácil de automatizar.
         if (GetMonData(&gParties[B_TRAINER_OPPONENT_A][i], MON_DATA_SPECIES) != SPECIES_NONE)
+        {
             SetMonData(&gParties[B_TRAINER_OPPONENT_A][i], MON_DATA_HP, &hp);
+            SetMonData(&gParties[B_TRAINER_OPPONENT_A][i], MON_DATA_STATUS, &sleep);
+        }
         if (GetMonData(&gParties[B_TRAINER_OPPONENT_B][i], MON_DATA_SPECIES) != SPECIES_NONE)
+        {
             SetMonData(&gParties[B_TRAINER_OPPONENT_B][i], MON_DATA_HP, &hp);
+            SetMonData(&gParties[B_TRAINER_OPPONENT_B][i], MON_DATA_STATUS, &sleep);
+        }
     }
 }
 #endif

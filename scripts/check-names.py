@@ -158,6 +158,20 @@ def main() -> int:
     import json
     ref_items = {x["itemId"]: x["english"].replace("\ufffd", "é")
                  for x in json.loads(rd(LOCALE / "src/data/items.json"))["items"]}
+    # Equipos rivales (tal como quedaron en el árbol; si aún no existe, el archivo del overlay).
+    import importlib.util
+    spec_g = importlib.util.spec_from_file_location("check_gen3", HERE / "check-gen3.py")
+    g3 = importlib.util.module_from_spec(spec_g)
+    spec_g.loader.exec_module(g3)
+    tree_party = GAME / "src/data/trainers_frlg.party"
+    party_text = rd(tree_party) if tree_party.exists() else rd(ROOT / "overlay/data/dailymax_rivals.party")
+    rivals = g3.parse_party(party_text)
+    rival_items = set()
+    for trainer in ("TRAINER_HOL_STEVEN", "TRAINER_HOL_MAY", "TRAINER_HOL_WALLY"):
+        for mon in rivals.get(trainer, []):
+            if mon["item"]:
+                rival_items.add(g3.name_to_const("ITEM_", mon["item"]))
+    pool |= rival_items
     pool_nums = {c_item[i] for i in pool if i in c_item}
     items = check_category(
         "OBJETO", c_item, lambda n: n in pool_nums,
@@ -165,6 +179,33 @@ def main() -> int:
     for i in sorted(pool):
         if i in c_item and i not in ref_items and not any(c_item.get(k) == c_item[i] for k in ref_items if k in c_item):
             fail(f"OBJETO {i}: no hay nombre de referencia en castellano (objeto fuera de 3.ª gen o sin traducir)")
+
+    # TODOS los Pokémon, movimientos, habilidades y objetos de los equipos rivales: existen, son de 3.ª gen
+    # y tienen nombre oficial en castellano (los de movimientos/habilidades/especies ya están en las tablas de arriba).
+    nriv = Counter()
+    for trainer in ("TRAINER_HOL_STEVEN", "TRAINER_HOL_MAY", "TRAINER_HOL_WALLY"):
+        for mon in rivals.get(trainer, []):
+            ids = [("ESPECIE", spec, c_spec, g3.name_to_const("SPECIES_", mon["species"]))]
+            if mon["ability"]:
+                ids.append(("HABILIDAD", abil, c_abil, g3.name_to_const("ABILITY_", mon["ability"])))
+            for mv in mon["moves"]:
+                ids.append(("MOVIMIENTO", moves, c_moves, g3.name_to_const("MOVE_", mv)))
+            if mon["item"]:
+                ids.append(("OBJETO", items, c_item, g3.name_to_const("ITEM_", mon["item"])))
+            for cat, table, consts_, sym in ids:
+                nriv[cat] += 1
+                num = consts_.get(sym)
+                if num is None or num not in table:
+                    fail(f"RIVALES {trainer} {mon['species']}: {cat} {sym} no es de 3.ª gen o no tiene nombre oficial en castellano")
+                elif not table[num][1].strip():
+                    fail(f"RIVALES {trainer} {mon['species']}: {cat} {sym} sin nombre")
+    if SAMPLE:
+        print(chr(10)+"RIVALES comprobados:", dict(nriv))
+        for trainer in ("TRAINER_HOL_STEVEN", "TRAINER_HOL_MAY", "TRAINER_HOL_WALLY"):
+            for mon in rivals.get(trainer, []):
+                if mon["item"]:
+                    n = c_item.get(g3.name_to_const("ITEM_", mon["item"]))
+                    print(f"  {trainer[11:]:<7} {mon['species']:<10} objeto {mon['item']:<14} -> {items.get(n, ('?','?'))[1]}")
 
     # naturalezas y tipos
     nat_tree = tree_names(GAME / "src/pokemon.c", "NATURE_", r"\.name")

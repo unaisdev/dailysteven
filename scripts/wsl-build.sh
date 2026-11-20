@@ -95,6 +95,7 @@ GZ_SHA="$(sha256sum "$SRC/web/game/$OUTNAME" | cut -c1-16)"
 GIT_INFO="$(git -c safe.directory='*' -C "$SRC" rev-parse --short HEAD 2>/dev/null || echo '?')"
 {
   echo "compilada:        $(date '+%Y-%m-%d %H:%M:%S')"
+  echo "origen:           $SRC"
   echo "commit base:      $GIT_INFO (+ cambios sin confirmar si los hay)"
   echo "huella fuentes:   $(source_hash)"
   echo "huella arbol:     $WANT"

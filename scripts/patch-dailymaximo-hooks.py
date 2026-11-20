@@ -546,6 +546,15 @@ def main() -> None:
         "steven matchup slots (after debug hook)",
     )
 
+    # La hoja de datos de Esmeralda resalta la naturaleza (y el nivel) en rojo; P_SUMMARY_SCREEN_NATURE_COLORS
+    # solo afecta a la página de estadísticas. Se iguala al color normal del texto.
+    replace_once(
+        GAME / "src/pokemon_summary_screen.c",
+        'static const u8 sMemoNatureTextColor[] = _("{COLOR LIGHT_RED}{SHADOW GREEN}");',
+        'static const u8 sMemoNatureTextColor[] = _("{COLOR WHITE}{SHADOW DARK_GRAY}"); // Daily Steven: sin resaltar la naturaleza',
+        "memo nature color",
+    )
+
     # ---- Mecánicas y ayudas: 3.ª generación estricta ----------------------------------------------------
     cfg = GAME / "include/config"
     for fname, name, value in (

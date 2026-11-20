@@ -505,14 +505,15 @@ static void DumpTeam(struct Pokemon *party)
     }
 }
 
-// Equipo de prueba para forzar una DERROTA rápida: seis Magikarp (solo en la ROM de pruebas).
+// Equipo de prueba para forzar una DERROTA rápida: un Magikarp (solo en la ROM de pruebas).
 static bool32 TryBuildLoseTeam(struct Pokemon *party, u32 seed)
 {
     u8 i;
 
     if (seed != DAILYMAX_DEBUG_SEED_LOSE)
         return FALSE;
-    for (i = 0; i < PARTY_SIZE; i++)
+    // Un solo Magikarp (sin cambios forzados al caer): la derrota llega en pocos turnos.
+    for (i = 0; i < 1; i++)
     {
         CreateMon(&party[i], SPECIES_MAGIKARP, MAX_LEVEL, 0, OTID_STRUCT_PLAYER_ID);
         SetMonMoveSlot(&party[i], MOVE_SPLASH, 0);

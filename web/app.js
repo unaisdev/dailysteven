@@ -41,7 +41,12 @@ const session = {
 
 // ?seed=123 starts a practice run with that team, for testing: results
 // aren't saved, there's no daily limit, and the game keeps dealing new teams.
-const practiceSeed = parseSeed(new URLSearchParams(location.search).get('seed'));
+// ?seed=123 -> práctica. Con la ROM de pruebas, ?debug=1&seed=900002&daily=1 juega ese equipo COMO partida del día
+// (se guarda el resultado y se bloquea el día, en un récord aparte) para probar el ciclo completo.
+const urlParams = new URLSearchParams(location.search);
+const urlSeed = parseSeed(urlParams.get('seed'));
+const debugDaily = urlParams.has('debug') && urlParams.has('daily') && urlSeed !== null;
+const practiceSeed = debugDaily ? null : urlSeed;
 
 let stats = settleAbandonedGame(loadStats());
 let emu = null;
@@ -156,7 +161,7 @@ async function startRun() {
       setState('title');
       return;
     }
-    const seed = practiceSeed ?? dailySeed(runDate);
+    const seed = practiceSeed ?? (debugDaily ? urlSeed : dailySeed(runDate));
     const rom = practiceSeed
       ? injectConfig(files.rom, { seed })
       : injectConfig(files.rom, { seed, wins: stats.wins, battles: stats.wins + stats.losses, daily: true });
@@ -212,7 +217,12 @@ function watchGame() {
   } catch {
     return;
   }
-  if (!status || practiceSeed) return;
+  if (status && practiceSeed) {
+    // Práctica: no se guarda nada, pero al terminar el juego se vuelve a la portada (como en la partida del día).
+    if (status.phase === PHASE.FINISHED) endDailyGame(1000);
+    return;
+  }
+  if (!status) return;
   if (status.phase >= PHASE.BATTLE) {
     battleSeen = true;
     markBattleStarted(stats, runDate);

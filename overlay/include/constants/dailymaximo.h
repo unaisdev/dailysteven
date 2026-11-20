@@ -24,9 +24,10 @@ enum {
 #endif
 
 // Semillas de prueba (solo ROM de pruebas, con ?seed=NNN):
-//   900001 = tu equipo son 6 Magikarp: pierdes enseguida (forzar DERROTA).
-//   900002 = los rivales empiezan con 1 PS: ganas con cualquier golpe (forzar VICTORIA).
+//   900001 = tu equipo es 1 Magikarp: pierdes enseguida (forzar DERROTA).
+//   900002 = los rivales empiezan con 1 PS y dormidos: ganas con cualquier golpe (forzar VICTORIA).
 #define DAILYMAX_DEBUG_SEED_LOSE 900001u
-#define DAILYMAX_DEBUG_SEED_WIN  900002u
+#define DAILYMAX_DEBUG_SEED_WIN  900002u   // par: compañero AURA
+#define DAILYMAX_DEBUG_SEED_WIN2 900003u   // impar: compañero BLASCO (misma victoria segura)
 
 #endif // GUARD_CONSTANTS_DAILYMAXIMO_H
