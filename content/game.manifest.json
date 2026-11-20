@@ -17,9 +17,6 @@
     "titleAsset": "assets/maximo.png",
     "mutedKey": "hortelano:dailysteven:muted"
   },
-  "archive": {
-    "symbols": "archive/symbols.json"
-  },
   "compat": {
     "minLauncherVersion": "0.1.0",
     "runnerAdapters": [

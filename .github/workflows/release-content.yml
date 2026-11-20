@@ -1,0 +1,151 @@
+# Publica el content pack de Daily Steven como BORRADOR de GitHub Release.
+#
+# NUNCA se dispara con un push a main. Solo:
+#   - a mano (workflow_dispatch, con la versión como entrada), o
+#   - con una etiqueta content-v* creada a propósito.
+#
+# El lanzador (Hortelano's Daily) lee:  GET /repos/unaisdev/dailysteven/releases/latest
+#   asset: dailysteven-content.zip (+ SHA256SUMS).  Un borrador NO cuenta como «latest»:
+#   hasta que alguien lo publique a mano, ningún jugador lo ve.
+#
+# No hay commits automáticos al repo: NOVEDADES.md se vacía después con una PR normal
+# (scripts/clear-novedades.sh).
+name: Release content pack
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Versión del pack, SemVer sin prefijo (ej. 0.1.0). Obligatoria.'
+        required: true
+        type: string
+  push:
+    tags:
+      - 'content-v*'
+
+concurrency:
+  group: release-content
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+env:
+  # Versiones fijas: las mismas que se usan en el PC de desarrollo.
+  EXPANSION_COMMIT: 8fb02c6f2b81271e795d3f6aca61733fec739016
+  ARM_GCC_VERSION: 14.2.rel1
+  LAUNCHER_REPO: unaisdev/hortelanos-daily
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - name: Checkout (Daily Steven)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolver versión
+        id: ver
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+            VER="${GITHUB_REF_NAME#content-v}"
+          else
+            VER="${INPUT_VERSION#v}"
+          fi
+          if ! echo "$VER" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "Versión no válida: '$VER' (se espera X.Y.Z)" >&2; exit 1
+          fi
+          if [ "${GITHUB_REF_TYPE}" != "tag" ] && git ls-remote --exit-code --tags origin "refs/tags/content-v${VER}" >/dev/null 2>&1; then
+            echo "Ya existe la etiqueta content-v${VER}" >&2; exit 1
+          fi
+          echo "version=$VER" >> "$GITHUB_OUTPUT"
+          echo "tag=content-v$VER" >> "$GITHUB_OUTPUT"
+          echo "Versión del pack: $VER"
+
+      - name: Novedades para el jugador (falla si no hay)
+        run: |
+          set -euo pipefail
+          chmod +x scripts/*.sh
+          mkdir -p dist/content
+          scripts/build-release-notes.sh "$PWD/dist/content/RELEASE_BODY.md" "${{ steps.ver.outputs.tag }}" "${{ steps.ver.outputs.version }}" workflow "$GITHUB_SHA"
+          cat dist/content/RELEASE_BODY.md
+
+      - name: Dependencias de compilación
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends build-essential git python3 python3-pip libpng-dev libelf1 zip xz-utils curl
+          python3 -m pip --version
+
+      - name: Compilador ARM exacto (GCC 14.2.1, el del PC de desarrollo)
+        run: |
+          set -euo pipefail
+          URL="https://developer.arm.com/-/media/Files/downloads/gnu/${ARM_GCC_VERSION}/binrel/arm-gnu-toolchain-${ARM_GCC_VERSION}-x86_64-arm-none-eabi.tar.xz"
+          curl -fsSL "$URL" -o /tmp/arm.tar.xz
+          sudo mkdir -p /opt/arm && sudo tar -xJf /tmp/arm.tar.xz -C /opt/arm --strip-components=1
+          echo "/opt/arm/bin" >> "$GITHUB_PATH"
+          /opt/arm/bin/arm-none-eabi-gcc --version | head -1
+
+      - name: Comprobar versión del compilador
+        run: |
+          set -euo pipefail
+          arm-none-eabi-gcc --version | head -1 | tee /tmp/gcc.txt
+          grep -q "14.2.1" /tmp/gcc.txt || { echo "El compilador no es GCC 14.2.1" >&2; exit 1; }
+
+      - name: Compilar la ROM desde cero (expansion + Hall of Legends + overlay)
+        run: |
+          set -euo pipefail
+          grep -q "$EXPANSION_COMMIT" scripts/get-expansion.sh || { echo "get-expansion.sh no fija el commit $EXPANSION_COMMIT" >&2; exit 1; }
+          rm -rf pokeemerald-expansion
+          HOL_PLAY=1 scripts/get-expansion.sh
+          # Validadores (los mismos que antes de compilar en local) y compilación.
+          HOL_PLAY=1 scripts/build.sh
+          ls -l pokeemerald-expansion/pokefirered.gba
+          sha256sum pokeemerald-expansion/pokefirered.gba | tee dist/content/ROM_SHA256.txt
+          stat -c '%s bytes' pokeemerald-expansion/pokefirered.gba | tee -a dist/content/ROM_SHA256.txt
+
+      - name: Pruebas de mecánicas de 3.ª generación (46)
+        run: |
+          set -euo pipefail
+          GAME_DIR="$PWD/pokeemerald-expansion" HOL_PLAY=1 bash scripts/run-gen3-tests.sh Gen3 2>&1 | tee /tmp/gen3.log | sed 's/\x1b\[[0-9;]*m//g' | tail -15
+          grep -a "Tests PASSED" /tmp/gen3.log | sed 's/\x1b\[[0-9;]*m//g' | tee /tmp/passed.txt
+          grep -aq "FAILED:" /tmp/gen3.log && { echo "Hay pruebas que fallan" >&2; exit 1; } || true
+
+      - name: Empaquetar el pack
+        run: |
+          set -euo pipefail
+          # build.sh ya deja la ROM comprimida en web/game/dailymaximo.gba.gz y el sprite en web/game/maximo.png
+          VERSION="${{ steps.ver.outputs.version }}" scripts/package-content.sh
+
+      - name: Verificar el pack contra el lanzador (adaptador + firmas)
+        run: |
+          set -euo pipefail
+          git clone --depth 1 "https://github.com/${LAUNCHER_REPO}.git" /tmp/launcher
+          test -f "/tmp/launcher/runner/protocols/dailymax-conf-v1+status-v1.js" || { echo "El último código del lanzador NO tiene el adaptador dailymax: publica antes el lanzador." >&2; exit 1; }
+          mkdir -p /tmp/launcher/games/dailysteven
+          cd /tmp/launcher/games/dailysteven && unzip -q -o "$GITHUB_WORKSPACE/dist/content/dailysteven-content.zip"
+          cd /tmp/launcher && chmod +x scripts/verify-protocol.sh && scripts/verify-protocol.sh games/dailysteven
+
+      - name: Crear la release como BORRADOR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.ver.outputs.tag }}
+          VER: ${{ steps.ver.outputs.version }}
+        run: |
+          set -euo pipefail
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "La release $TAG ya existe; no se toca." >&2; exit 1
+          fi
+          gh release create "$TAG" \
+            dist/content/dailysteven-content.zip \
+            dist/content/SHA256SUMS \
+            --draft \
+            --title "Daily Steven content ${VER}" \
+            --notes-file dist/content/RELEASE_BODY.md \
+            --target "$GITHUB_SHA"
+          echo "Borrador creado: https://github.com/${GITHUB_REPOSITORY}/releases (publícalo a mano cuando toque)"
