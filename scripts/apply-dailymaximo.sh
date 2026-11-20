@@ -19,6 +19,7 @@ fi
 
 cp -f "$ROOT/overlay/include/dailymaximo.h" "$GAME/include/dailymaximo.h"
 cp -f "$ROOT/overlay/include/dailymax_texts.h" "$GAME/include/dailymax_texts.h"
+cp -f "$ROOT/overlay/include/dailymax_emerald.h" "$GAME/include/dailymax_emerald.h"
 mkdir -p "$GAME/include/constants"
 cp -f "$ROOT/overlay/include/constants/dailymaximo.h" "$GAME/include/constants/dailymaximo.h"
 cp -f "$ROOT/overlay/src/dailymaximo.c" "$GAME/src/dailymaximo.c"
@@ -31,6 +32,7 @@ if [ -d "$ROOT/overlay/graphics" ]; then
 fi
 mkdir -p "$GAME/test/battle"
 cp -f "$ROOT/overlay/test/gen3_surf_earthquake.c" "$GAME/test/battle/gen3_surf_earthquake.c"
+cp -f "$ROOT/overlay/test/gen3_mechanics.c" "$GAME/test/battle/gen3_mechanics.c"
 
 if [ "${1:-}" = "--overlay-only" ]; then
   echo "Daily Steven overlay files copied (overlay-only)."

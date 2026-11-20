@@ -10,6 +10,7 @@
 #include "data.h"
 #include "move.h"
 #include "battle.h"
+#include "dailymax_emerald.h"
 
 // Generador del equipo del jugador de Daily Steven.
 //
@@ -25,8 +26,10 @@
 // Usa su propio RNG (ISO_RANDOMIZE1), separado del Random() del juego: el equipo solo depende de la semilla.
 //
 // Diferencias inevitables con Daily Red (vienen del motor, no de las reglas):
-//   - La compatibilidad con MT/MO la da la tabla de la expansion (CanLearnTeachableMove), no la del
-//     cartucho original. La lista de movimientos candidatos sí es la de 3.ª gen.
+//   - Los datos de aprendizaje son los de POKÉMON ESMERALDA (los rivales y el juego se basan en Esmeralda): la
+//     compatibilidad con MT/MO y los movimientos por nivel de pret/pokeemerald (include/dailymax_emerald.h, generado por
+//     tools/emerald_reference.py). Solo los usa este generador; el resto del juego sigue con las tablas de la expansion.
+//     scripts/check-tmhm.py vigila que no se desvíen de tests/reference/emerald_learnsets.json. Sin tutores ni huevo.
 //   - Las especies se numeran como en la expansion (1-386 seguidas), no como en FireRed (con hueco de Unown);
 //     el conjunto de especies posibles es el mismo, pero la misma semilla no da el mismo equipo que Red.
 
@@ -246,18 +249,28 @@ static void AddCandidateMove(u16 *moves, u8 *count, u16 move)
     moves[(*count)++] = move;
 }
 
-// Todo lo que la especie puede aprender por nivel (cualquier nivel) o por MT/MO de 3.ª gen.
+// ¿Puede la especie aprender la máquina i (0-49 = MT01-MT50, 50-57 = MO01-MO08) en Esmeralda?
+static bool32 CanLearnEmeraldMachine(u16 species, u32 i)
+{
+    if (species == SPECIES_NONE || species > SPECIES_GEN3_END)
+        return FALSE;
+    return (sEmeraldMachineMask[species][i / 32] >> (i % 32)) & 1;
+}
+
+// Todo lo que la especie puede aprender por nivel (cualquier nivel) o por MT/MO, según Esmeralda.
 static u8 GetLearnableMoves(u16 species, u16 *moves)
 {
-    const struct LevelUpMove *learnset = GetSpeciesLevelUpLearnset(species);
     u8 count = 0;
     u32 i;
 
-    for (i = 0; learnset[i].move != LEVEL_UP_MOVE_END; i++)
-        AddCandidateMove(moves, &count, learnset[i].move);
+    if (species != SPECIES_NONE && species <= SPECIES_GEN3_END)
+    {
+        for (i = sEmeraldLevelUpStart[species]; i < sEmeraldLevelUpStart[species + 1]; i++)
+            AddCandidateMove(moves, &count, sEmeraldLevelUpMoves[i]);
+    }
     for (i = 0; i < ARRAY_COUNT(sGen3Machines); i++)
     {
-        if (CanLearnTeachableMove(species, sGen3Machines[i]))
+        if (CanLearnEmeraldMachine(species, i))
             AddCandidateMove(moves, &count, sGen3Machines[i]);
     }
     return count;

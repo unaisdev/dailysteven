@@ -13,7 +13,7 @@ en el README de amoi-builds/dailyred:
   4. EV: 252 / 252 / 6 (suma 510) en las dos mejores estadísticas ÚTILES (Ataque/At. Esp. solo cuentan si algún
      movimiento los usa, y en 3.ª gen lo decide el TIPO del movimiento) y los 6 restantes en PS (o en la
      tercera mejor si PS ya es una de las dos).
-  5. Movimientos: hasta 4 DISTINTOS, todos de la lista "por nivel (cualquier nivel) o MT/MO de 3.ª gen" de su
+  5. Movimientos: hasta 4 DISTINTOS, todos de la lista "por nivel (cualquier nivel) o MT/MO de Esmeralda" de su
      especie, y al menos uno de daño si la especie tiene alguno de daño.
   6. Objeto: uno de la lista de 16, o el potenciador del tipo de uno de sus ataques (potencia > 1).
 """
@@ -38,7 +38,30 @@ STATS = ["PS", "Ataque", "Defensa", "Velocidad", "At. Esp.", "Def. Esp."]
 PRIORITY = [1, 4, 3, 0, 2, 5]  # Atq, AtEsp, Vel, PS, Def, DefEsp (empates)
 
 c_spec = locale_guard.consts(GAME / "include/constants/species.h", "SPECIES_")
-c_move = locale_guard.consts(GAME / "include/constants/moves.h", "MOVE_")
+
+
+def enum_values(path: Path, prefix: str) -> dict[str, int]:
+    """Valores de un enum de C con miembros implícitos (MOVES_COUNT_GEN2 sin «= n») y alias (MOVE_A = MOVE_B)."""
+    vals: dict[str, int] = {}
+    cur = -1
+    for line in rd(path).splitlines():
+        m = re.match(r"\s*(\w+)\s*(?:=\s*([^,/]+?))?\s*,", line)
+        if not m:
+            continue
+        name, expr = m.group(1), m.group(2)
+        if expr is None:
+            cur += 1
+        elif re.fullmatch(r"\d+", expr):
+            cur = int(expr)
+        elif expr in vals:
+            cur = vals[expr]
+        else:
+            continue
+        vals[name] = cur
+    return {k: v for k, v in vals.items() if k.startswith(prefix)}
+
+
+c_move = enum_values(GAME / "include/constants/moves.h", "MOVE_")
 c_item = locale_guard.consts(GAME / "include/constants/items.h", "ITEM_")
 c_type = locale_guard.consts(GAME / "include/constants/pokemon.h", "TYPE_")
 spec_name = {}
@@ -88,11 +111,16 @@ for f in sorted((GAME / "src/data/pokemon/species_info").glob("gen_[123]_familie
             SPEC_SYMS.setdefault(c_spec[parts[i]], (lv.group(1), tc.group(1)))
 
 
+# Datos de aprendizaje de POKÉMON ESMERALDA (referencia independiente del generador: tests/reference/emerald_learnsets.json,
+# extraída de pret/pokeemerald con tools/emerald_reference.py): movimientos por nivel (cualquier nivel) + MT/MO.
+import json  # noqa: E402
+_REF = json.loads((ROOT / "tests/reference/emerald_learnsets.json").read_text(encoding="utf-8"))
+EMERALD = {c_spec[s]: ({c_move[m] for _, m in _REF["nivel"][s]} | {c_move[m] for m in _REF["mt"][s]})
+           for s in _REF["mt"] if s in c_spec}
+
+
 def candidates(species: int) -> set[int]:
-    lv, tc = SPEC_SYMS[species]
-    moves = {c_move[m] for m in LVL.get(lv, set()) if m in c_move}
-    moves |= {c_move[m] for m in TEACH.get(tc, set()) if m in c_move and c_move[m] in MACHINES}
-    return {m for m in moves if 1 <= m <= 354}
+    return {m for m in EMERALD.get(species, set()) if 1 <= m <= 354}
 
 
 def expected_evs(base: list[int], move_types: list[str], powers: list[int]) -> list[int]:
