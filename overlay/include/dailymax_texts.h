@@ -67,15 +67,15 @@
     "al siguiente entrenador que te espera\p" \
     "solo han conseguido derrotarlo el excampeón y el vigente campeón."
 #define DAILYMAX_TEXT_BOSS_TALK_3 \
-    "Pero bueno, no seré yo quien se pierda un buen combate.\p" \
+    "Pero bueno, no seré yo quien le diga que no a un buen combate.\p" \
     "Así que basta de cháchara…\p" \
     "¡Enséñame lo que vales!"
 
 // Primera frase del compañero (ya colocado al lado de STEVEN; entra caminando sin decir nada)
 #define DAILYMAX_TEXT_AURA_ENTER \
-    "Vaya… Nada, que no hay manera.\pHe vuelto a perder."
+    "Nada, que no hay manera.\pHe vuelto a perder."
 #define DAILYMAX_TEXT_BLASCO_ENTER \
-    "No lo voy a conseguir nunca…"
+    "Otra vez he perdido…\pEmpiezo a pensar que nunca conseguiré vencerla."
 
 // Después de ENTER.  AFTER_1 y AFTER_2 son dos cajas seguidas; quién habla en cada una:
 //   AURA:   AFTER_1 = AURA     AFTER_2 = STEVEN
@@ -85,7 +85,7 @@
 #define DAILYMAX_TEXT_AURA_AFTER_2 \
     "… No veo por qué no."
 #define DAILYMAX_TEXT_BLASCO_AFTER_1 \
-    "No digas tonterías.\pAlgún día alguno de nosotros la derrotará.\p" \
+    "No digas eso, BLASCO.\pAlgún día alguno de nosotros la derrotará.\p" \
     "¿Por qué no te unes al combate, BLASCO?"
 #define DAILYMAX_TEXT_BLASCO_AFTER_2 \
     "Bueno, si no os importa…"
