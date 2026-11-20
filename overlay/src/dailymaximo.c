@@ -1,5 +1,6 @@
 #include "global.h"
 #include "dailymaximo.h"
+#include "dailymaximo_partner.h"
 #include "constants/dailymaximo.h"
 #include "hall_of_legends.h"
 #include "constants/hall_of_legends.h"
@@ -86,7 +87,7 @@ u8 DailyMax_GetPartnerCharacter(void)
     u32 seed = GetInjectedSeed();
     if (seed == 0)
         seed = sTeamSeed;
-    return (seed & 1) == 0 ? HOL_CHAR_MAY : HOL_CHAR_WALLY;
+    return DailyMax_SeedSelectsBlasco(seed) ? HOL_CHAR_WALLY : HOL_CHAR_MAY;
 }
 
 const u8 *DailyMax_GetStevenIconicSlots(void)
