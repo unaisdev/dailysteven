@@ -19,6 +19,8 @@
 #include "event_data.h"
 #include "party_menu.h"
 #include "battle.h"
+#include "item.h"
+#include "move.h"
 #include "dailymax_texts.h"
 #include "field_name_box.h"
 #include "line_break.h"
@@ -40,6 +42,80 @@ struct DailyMaxStatus
     u8 result;
     u8 padding[2];
 };
+
+// Stable archive records built through the expansion's own Pokémon accessors.
+// The normal Gen 3 decoder cannot read the expansion's bit-packed moves/ability.
+#define ARCHIVE_NAME_BYTES 24
+struct DailyMaxArchiveMon
+{
+    u16 species, ability, item, moves[4], stats[6];
+    u8 nature, level, shiny, pp[4], ivs[6], evs[6];
+    u8 names[7][ARCHIVE_NAME_BYTES]; // species, ability, item, four moves
+    u8 padding[3];
+};
+
+struct DailyMaxArchive
+{
+    u32 seed;
+    struct DailyMaxArchiveMon party[PARTY_SIZE];
+};
+
+_Static_assert(offsetof(struct DailyMaxArchiveMon, names) == 45, "Archive fields changed");
+_Static_assert(sizeof(struct DailyMaxArchiveMon) == 216, "Archive stride changed");
+_Static_assert(offsetof(struct DailyMaxArchive, party) == 4 && PARTY_SIZE == 6, "Archive party changed");
+_Static_assert(B_TRAINER_PLAYER == 0 && sizeof(struct Pokemon) == 100, "Player party symbols changed");
+EWRAM_DATA struct DailyMaxArchive gDailyMaxArchive = {0};
+
+static void ArchiveName(u8 *out, const u8 *name)
+{
+    u8 i;
+    for (i = 0; i < ARCHIVE_NAME_BYTES - 1 && name[i] != EOS; i++)
+        out[i] = name[i];
+    out[i] = EOS;
+}
+
+static void CaptureArchiveParty(struct Pokemon *party, u32 seed)
+{
+    u8 i, j;
+    u8 itemName[64];
+
+    gDailyMaxArchive.seed = 0;
+    for (i = 0; i < PARTY_SIZE; i++)
+    {
+        struct Pokemon *mon = &party[i];
+        struct DailyMaxArchiveMon *out = &gDailyMaxArchive.party[i];
+        out->species = GetMonData(mon, MON_DATA_SPECIES);
+        if (out->species == SPECIES_NONE)
+            return;
+        out->ability = GetMonAbility(mon);
+        out->item = GetMonData(mon, MON_DATA_HELD_ITEM);
+        out->nature = GetNature(mon);
+        out->level = mon->level;
+        out->shiny = GetMonData(mon, MON_DATA_IS_SHINY);
+        out->stats[0] = mon->maxHP;
+        out->stats[1] = mon->attack;
+        out->stats[2] = mon->defense;
+        out->stats[3] = mon->speed;
+        out->stats[4] = mon->spAttack;
+        out->stats[5] = mon->spDefense;
+        ArchiveName(out->names[0], GetSpeciesName(out->species));
+        ArchiveName(out->names[1], gAbilitiesInfo[out->ability].name);
+        CopyItemName(out->item, itemName);
+        ArchiveName(out->names[2], itemName);
+        for (j = 0; j < MAX_MON_MOVES; j++)
+        {
+            out->moves[j] = GetMonData(mon, MON_DATA_MOVE1 + j);
+            out->pp[j] = GetMonData(mon, MON_DATA_PP1 + j);
+            ArchiveName(out->names[3 + j], GetMoveName(out->moves[j]));
+        }
+        for (j = 0; j < NUM_STATS; j++)
+        {
+            out->ivs[j] = GetMonData(mon, MON_DATA_HP_IV + j);
+            out->evs[j] = GetMonData(mon, MON_DATA_HP_EV + j);
+        }
+    }
+    gDailyMaxArchive.seed = seed;
+}
 
 static const u8 sStatusMagic[16] = {'D', 'A', 'I', 'L', 'Y', 'M', 'A', 'X', '-', 'S', 'T', 'A', 'T', 'U', 'S', '1'};
 static EWRAM_DATA struct DailyMaxStatus sStatus = {0};
@@ -122,6 +198,7 @@ void DailyMax_RebuildPlayerParty(void)
     DailyMax_GenerateTeam(gParties[B_TRAINER_PLAYER], &rng);
     DailyMax_MaybeApplyStatus(gParties[B_TRAINER_PLAYER], sTeamSeed);
     CalculatePlayerPartyCount();
+    CaptureArchiveParty(gParties[B_TRAINER_PLAYER], GetInjectedSeed());
 }
 
 static void PreparePartyAndStart(void)

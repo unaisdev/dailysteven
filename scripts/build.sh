@@ -57,6 +57,7 @@ if [ "$#" -eq 0 ] && [ "$GAME" = firered ]; then
   # rest of the cartridge is padding) and unpacks it in the browser.
   mkdir -p "$ROOT/web/game" "$ROOT/content/assets"
   gzip -9 -n -c "$GAME_DIR/pokefirered.gba" > "$ROOT/web/game/dailymaximo.gba.gz"
+  "${PYTHON:-python3}" "$ROOT/scripts/gen-archive-assets.py"
   # Launcher title asset: Steven front pic from the expansion tree.
   STEVEN_PIC="$GAME_DIR/graphics/trainers/front_pics/steven.png"
   if [ -f "$STEVEN_PIC" ]; then

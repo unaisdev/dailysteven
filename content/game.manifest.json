@@ -1,7 +1,7 @@
 {
   "id": "dailysteven",
   "name": "Daily Steven",
-  "contentVersion": "0.1.1",
+  "contentVersion": "0.1.2",
   "protocolId": "dailymax-conf-v1+status-v1",
   "rom": {
     "path": "rom/dailymaximo.gba.gz",
@@ -17,8 +17,12 @@
     "titleAsset": "assets/maximo.png",
     "mutedKey": "hortelano:dailysteven:muted"
   },
+  "archive": {
+    "format": "steven-expansion-v1",
+    "symbols": "archive/symbols.json"
+  },
   "compat": {
-    "minLauncherVersion": "2.2.0",
+    "minLauncherVersion": "2.2.2",
     "runnerAdapters": [
       "dailymax-conf-v1+status-v1"
     ]
