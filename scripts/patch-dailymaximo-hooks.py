@@ -378,6 +378,19 @@ def main() -> None:
     # by type, Protect 50%, immediate faint switch, and spread damage (Surf 50% on
     # both foes; Earthquake hits the ally with no spread reduction).
     force_define(GAME / "include/config/general.h", "GEN_LATEST", "GEN_3", "gen3 mechanics")
+    stat_change_start = """static enum MoveResult StatChangeTryChange(struct BattleCalcValues *cv)
+{
+"""
+    replace_once(
+        GAME / "src/battle_move_resolution.c",
+        stat_change_start,
+        stat_change_start + """    // Before Gen 5, Charge sets the electric boost but has no stat change to apply.
+    if (B_UPDATED_MOVE_DATA < GEN_5 && cv->moveEffect == EFFECT_CHARGE)
+        return MOVE_RESULT_DONE;
+
+""",
+        "finish gen3 Charge after applying its electric boost",
+    )
     target_damage_start = """static inline uq4_12_t GetTargetDamageModifier(struct DamageContext *ctx)
 {
     if (IsDoubleBattle())
