@@ -10,7 +10,7 @@
  *  El parche elige iconic {0,1,2} o {3,4,5} según el compañero del día.
  *  AURA y BLASCO: exactamente 3 cada uno.
  *
- *  Ajustes Gen3 (check-gen3.py): Focus Sash → Focus Band; Telepathy → Trace.
+ *  Ajuste Gen3 (check-gen3.py): Telepathy → Trace.
  *  Blaziken sin EVs/naturaleza en el paste → Adamant 4 HP / 252 Atk / 252 Spe.
  *
  *  Nombres en INGLÉS. Pantalla: overlay/include/dailymax_texts.h.
@@ -103,7 +103,7 @@ Double Battle: No
 AI: Basic Trainer / Omniscient / Smart Switching / Smart Mon Choices / PP Stall Prevention / Randomize Switchin / Prediction
 Mugshot: Pink
 
-Blaziken @ Focus Band
+Blaziken @ White Herb
 Ability: Blaze
 Adamant Nature
 Level: 100
@@ -168,13 +168,13 @@ EVs: 4 HP / 252 SpA / 252 Spe
 - Protect
 - Thunderbolt
 
-Milotic @ Leftovers
-Ability: Marvel Scale
+Dusclops @ Leftovers
+Ability: Pressure
 Calm Nature
 Level: 100
-IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-EVs: 252 HP / 128 Def / 72 SpA / 44 SpD / 12 Spe
-- Waterfall
-- Hypnosis
-- Ice Beam
-- Recover
+IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 136 Def / 120 SpD
+- Curse
+- Pain Split
+- Will-O-Wisp
+- Protect

@@ -105,7 +105,7 @@ El mínimo de 2700 permite que una especie débil aparezca acompañada de otras 
 | Pareja | Trío de Steven | Trío del compañero | BST del equipo conjunto |
 | --- | --- | --- | ---: |
 | Steven y Aura | Skarmory, Cradily y Metagross | Blaziken, Swellow y Salamence | 3120 |
-| Steven y Blasco | Skarmory, Metagross y Aggron | Altaria, Gardevoir y Milotic | 3143 |
+| Steven y Blasco | Skarmory, Metagross y Aggron | Altaria, Gardevoir y Dusclops | 3058 |
 
 | Pokémon | PS | Ataque | Defensa | Velocidad | At. Esp. | Def. Esp. | Total |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -118,9 +118,14 @@ El mínimo de 2700 permite que una especie débil aparezca acompañada de otras 
 | Aggron | 70 | 110 | 180 | 50 | 60 | 60 | 530 |
 | Altaria | 75 | 70 | 90 | 80 | 70 | 105 | 490 |
 | Gardevoir | 68 | 65 | 65 | 80 | 125 | 115 | 518 |
-| Milotic | 95 | 60 | 79 | 81 | 100 | 125 | 540 |
+| Dusclops | 40 | 70 | 130 | 25 | 60 | 130 | 455 |
 
-Son las estadísticas base usadas por la ROM. Cada rival lleva Pokémon de nivel 100 con movimientos, objetos, naturalezas, habilidades, EV e IV definidos en el archivo de equipos. Los IV son 31 salvo el Ataque de Skarmory cuando acompaña a Aura y el de Gardevoir, que se fijan en 0. Los nombres internos de Aura y Blasco son May y Wally. [Definiciones completas de los tres entrenadores](overlay/data/dailymax_rivals.party)
+Son las estadísticas base usadas por la ROM. Cada rival lleva Pokémon de nivel 100 con movimientos, objetos, naturalezas, habilidades, EV e IV definidos en el archivo de equipos. Los IV son 31 salvo los de Ataque de Skarmory en el equipo con Aura, Gardevoir y Dusclops, que son 0. Los nombres internos de Aura y Blasco son May y Wally. [Definiciones completas de los tres entrenadores](overlay/data/dailymax_rivals.party)
+
+- **Blaziken de Aura** lleva Hierba Blanca.
+- **Dusclops de Blasco** lleva Restos y tiene Presión y naturaleza Serena. Sus EV son 252 en PS, 136 en Defensa y 120 en Defensa Especial. Usa Maldición, Divide Dolor, Fuego Fatuo y Protección.
+
+Los equipos de estas tablas corresponden a `main`. El pack público `content-v0.1.3` contiene los equipos anteriores.
 
 La IA usa la configuración original de Daily Steven. Incluye `Basic Trainer`, `Omniscient`, `Smart Switching`, `Smart Mon Choices`, `PP Stall Prevention`, `Randomize Switchin` y `Prediction`. `HP Aware` está desactivada.
 
