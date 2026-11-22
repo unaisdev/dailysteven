@@ -1,1 +1,2 @@
 - Consulta los equipos de días anteriores y vuelve a jugar esos combates en práctica sin gastar el intento de hoy.
+- Carga ya no bloquea el combate y sigue potenciando el siguiente ataque eléctrico.
