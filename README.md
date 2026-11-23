@@ -123,6 +123,7 @@ El mínimo de 2700 permite que una especie débil aparezca acompañada de otras 
 Son las estadísticas base usadas por la ROM. Cada rival lleva Pokémon de nivel 100 con movimientos, objetos, naturalezas, habilidades, EV e IV definidos en el archivo de equipos. Los IV son 31 salvo los de Ataque de Skarmory en el equipo con Aura, Gardevoir y Dusclops, que son 0. Los nombres internos de Aura y Blasco son May y Wally. [Definiciones completas de los tres entrenadores](overlay/data/dailymax_rivals.party)
 
 - **Blaziken de Aura** lleva Hierba Blanca.
+- **Metagross de Steven** es variocolor los días con Blasco.
 - **Dusclops de Blasco** lleva Restos y tiene Presión y naturaleza Serena. Sus EV son 252 en PS, 136 en Defensa y 120 en Defensa Especial. Usa Maldición, Divide Dolor, Fuego Fatuo y Protección.
 
 Los equipos de estas tablas corresponden a `main`. El pack público `content-v0.1.3` contiene los equipos anteriores.
