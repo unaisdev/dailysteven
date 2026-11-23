@@ -1,2 +1,3 @@
 - Blasco sustituye a Milotic por Dusclops, que usa Maldición, Divide Dolor, Fuego Fatuo y Protección.
 - El Blaziken de Aura lleva ahora Hierba Blanca.
+- El Metagross de Steven es variocolor los días con Blasco.
