@@ -31,7 +31,7 @@ Skarmory @ Sitrus Berry
 Ability: Keen Eye
 Adamant Nature
 Level: 100
-IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 EVs: 252 HP / 56 Atk / 24 Def / 176 SpD
 - Toxic
 - Spikes
@@ -162,7 +162,7 @@ Gardevoir @ Twisted Spoon
 Ability: Trace
 Mild Nature
 Level: 100
-IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 EVs: 4 HP / 252 SpA / 252 Spe
 - Calm Mind
 - Psychic
@@ -173,7 +173,7 @@ Dusclops @ Leftovers
 Ability: Pressure
 Calm Nature
 Level: 100
-IVs: 31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 EVs: 252 HP / 136 Def / 120 SpD
 - Curse
 - Pain Split
