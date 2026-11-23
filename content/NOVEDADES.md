@@ -1,1 +1,1 @@
-- El Salamence de Aura usa Terremoto en lugar de Avalancha.
+- Todos los Pokémon de Máximo, Aura y Blasco tienen ahora 31 IV en las seis estadísticas.
