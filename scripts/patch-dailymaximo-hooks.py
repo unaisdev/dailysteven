@@ -583,6 +583,27 @@ def main() -> None:
         'static const u8 sMemoNatureTextColor[] = _("{COLOR WHITE}{SHADOW DARK_GRAY}"); // Daily Steven: sin resaltar la naturaleza',
         "memo nature color",
     )
+    replace_once(
+        GAME / "src/pokemon_summary_screen.c",
+        "            PrintMovePowerAndAccuracy(move);\n"
+        "            PrintTextOnWindowToFit(windowId, GetMoveDescription(move), 6, 1, 0, 0);",
+        """            const u8 *description = GetMoveDescription(move);
+            const u8 *cursor;
+            u32 lines = 1;
+            const u8 x = 6;
+            u32 fontId;
+
+            for (cursor = description; *cursor != EOS; cursor++)
+                if (*cursor == CHAR_NEWLINE)
+                    lines++;
+
+            // The move window is 32 pixels high. Four 8-pixel lines fit at y = 0.
+            fontId = GetFontIdToFit(description, lines > 2 ? FONT_SMALL_NARROW : FONT_NORMAL,
+                                    0, WindowWidthPx(windowId) - x);
+            PrintMovePowerAndAccuracy(move);
+            PrintTextOnWindowWithFont(windowId, description, x, 0, lines == 3 ? 2 : 0, 0, fontId);""",
+        "fit all move description lines",
+    )
 
     # La ventana de habilidad ("SALAMENCE's / INTIMIDACIÓN") añade el posesivo inglés "'s" desde el código C.
     # En castellano se muestra solo el nombre del Pokémon.
