@@ -133,6 +133,28 @@ def git_original(game: Path, relpath: str) -> str | None:
 _STR = re.compile(r'(?:static )?const u8 (\w+)\[[^\]]*\]\s*=\s*_\(((?:\s*"(?:\\.|[^"\\])*")+)\s*\)\s*;', re.S)
 _ENTRY = re.compile(r'\[(STRINGID_\w+)\]\s*=\s*COMPOUND_STRING\(((?:\s*"(?:\\.|[^"\\])*")+)\s*\)', re.S)
 _PIECE = re.compile(r'"((?:\\.|[^"\\])*)"')
+MOVE_INFO_ENTRY = re.compile(r"^    \[(MOVE_\w+)\]\s*=\s*\{(.*?)^    \},", re.M | re.S)
+MOVE_DESCRIPTION_START = re.compile(r"^ +\.description[ \t]*=[ \t]*", re.M)
+MOVE_DESCRIPTION_BOUNDARY = re.compile(r"(?m)^[ \t]*#(if|ifdef|ifndef|endif)\b.*$|\),[ \t]*$")
+
+
+def move_description_spans(block: str):
+    """Yield the value range of each description, including its terminating comma."""
+    for start in MOVE_DESCRIPTION_START.finditer(block):
+        depth = 0
+        closed = False
+        # Directives outside the value belong to the surrounding initializer branch.
+        for token in MOVE_DESCRIPTION_BOUNDARY.finditer(block, start.end()):
+            directive = token.group(1)
+            if not directive:
+                closed = True
+            elif directive == "endif":
+                depth -= 1
+            else:
+                depth += 1
+            if closed and depth == 0:
+                yield start.end(), token.end()
+                break
 
 
 def join_pieces(raw: str) -> str:
@@ -188,6 +210,14 @@ def consts(path: Path, prefix: str) -> dict[str, int]:
     for k in list(raw):
         val(k)
     return out
+
+
+def gen3_move_ids(path: Path) -> dict[str, int]:
+    ids = consts(path, "MOVE_")
+    # The implicit enum counters used by these aliases follow the last move of each generation.
+    ids["MOVE_SKETCH"] = ids["MOVE_STRUGGLE"] + 1
+    ids["MOVE_FAKE_OUT"] = ids["MOVE_BEAT_UP"] + 1
+    return {key: value for key, value in ids.items() if 0 < value <= ids["MOVE_PSYCHO_BOOST"]}
 
 
 def canonical_keys(mapping: dict, const_path: Path, prefix: str, target_text: str) -> dict:

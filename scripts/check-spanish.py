@@ -15,6 +15,7 @@ Qué comprueba:
   4. Escena y final (overlay/include/dailymax_texts.h): sin «MÁXIMO», sin PROVISIONAL, sin palabras inglesas,
      frases de combate dentro del búfer (máx. 200 caracteres) y los 4 nombres definitivos.
   5. Ficha de datos: sin página de concursos (lo vigila también check-gen3.py).
+  5a. Descripciones de los 354 movimientos de tercera generación.
   5b. Glifos y clases: «PS» (no HP) en barras y menús, «Nv.» (no Lv), POKéMON (no el símbolo PKMN) y las clases de
       entrenador (STEVEN: «ELITE FOUR de CAMPEONES» como GOLD; AURA y BLASCO: «ASPIRANTE»; nunca «CAMPEÓN»).
   6. En todo el repositorio no queda «MÁXIMO».
@@ -111,6 +112,36 @@ def load_tsv(name: str) -> dict[str, str]:
                 k, t = line.split("\t", 1)
                 out[k.strip()] = t
     return out
+
+
+def check_move_descriptions() -> int:
+    rel = "src/data/moves_info.h"
+    current = (GAME / rel).read_text(encoding="utf-8")
+    original = lg.git_original(GAME, rel) or ""
+    ids = lg.gen3_move_ids(GAME / "include/constants/moves.h")
+    last = ids["MOVE_PSYCHO_BOOST"]
+
+    def fields(text: str) -> dict[str, list[str]]:
+        return {
+            key: [block[start:end].strip() for start, end in lg.move_description_spans(block)]
+            for key, block in lg.MOVE_INFO_ENTRY.findall(text)
+            if key in ids
+        }
+
+    expected = fields(original)
+    actual = fields(current)
+    for label, entries in (("original", expected), ("generado", actual)):
+        if {ids[key] for key in entries} != set(range(1, last + 1)):
+            fail(f"{rel}: tabla de movimientos de tercera generación incompleta ({label})")
+    for key, variants in actual.items():
+        if not variants or len(variants) != len(expected.get(key, [])):
+            fail(f"{rel}: {key} tiene variantes de descripción ausentes")
+        for field in variants:
+            if not re.fullmatch(r'COMPOUND_STRING\(\s*(?:"(?:\\.|[^"\\])*"\s*)+\),', field):
+                fail(f"{rel}: {key} conserva una variante condicional sin traducir")
+            elif field in expected.get(key, []) or ENGLISH_WORDS.search(plain(lg.join_pieces(field))):
+                fail(f"{rel}: {key} tiene una descripción sin traducir")
+    return len(actual)
 
 
 # ----------------------------------------------------------------------------------------------------------------
@@ -364,6 +395,7 @@ def main() -> None:
 
     # 4. Escena y final, literales del código C y gráficos
     defs = check_dailymax_texts()
+    move_descriptions = check_move_descriptions()
     check_c_literals()
     check_graphics()
     check_glyphs_and_classes(cur_s, only | set(strings_tsv))
@@ -415,7 +447,8 @@ def main() -> None:
         if len(errors) > 80:
             print(f"  … y {len(errors) - 80} más", file=sys.stderr)
         raise SystemExit(1)
-    print(f"check-spanish OK: {len(cur_b)} textos de combate, {len(only)} de menús, {len(defs)} de escena/final; "
+    print(f"check-spanish OK: {len(cur_b)} textos de combate, {len(only)} de menús, {len(defs)} de escena/final, "
+          f"{move_descriptions} descripciones de movimientos; "
           f"traducciones propias: {len(battle_tsv) + len(strings_tsv)}; sin ningún «MÁXIMO».")
 
 

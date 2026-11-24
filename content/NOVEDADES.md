@@ -1,1 +1,1 @@
-- Todos los Pokémon de Máximo, Aura y Blasco tienen ahora 31 IV en las seis estadísticas.
+- Las descripciones de los movimientos que quedaban en inglés ya aparecen en castellano.

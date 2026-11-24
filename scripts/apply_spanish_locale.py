@@ -492,16 +492,6 @@ def patch_party_menu_actions(path: Path) -> int:
     return replaced
 
 
-def camel_to_move_key(camel: str) -> str:
-    """Pound -> MOVE_POUND, KarateChop -> MOVE_KARATE_CHOP, DoubleSlap -> MOVE_DOUBLE_SLAP."""
-    out: list[str] = []
-    for i, ch in enumerate(camel):
-        if ch.isupper() and i > 0 and (camel[i - 1].islower() or (i + 1 < len(camel) and camel[i + 1].islower())):
-            out.append("_")
-        out.append(ch.upper())
-    return "MOVE_" + "".join(out)
-
-
 def read_text_auto(path: Path) -> str:
     raw = path.read_bytes()
     for enc in ("utf-8", "utf-8-sig", "cp1252", "latin-1"):
@@ -514,15 +504,15 @@ def read_text_auto(path: Path) -> str:
 
 def load_move_descriptions(path: Path) -> dict[str, str]:
     text = read_text_auto(path)
-    out: dict[str, str] = {}
-    for m in STR_LIT.finditer(text):
-        name = m.group(2)
-        if not name.startswith("gMoveDescription_"):
-            continue
-        camel = name[len("gMoveDescription_") :]
-        key = camel_to_move_key(camel)
-        out[key] = literal_inner(m.group(4).rstrip().rstrip(";"))
-    return out
+    descriptions = {
+        m.group(2): literal_inner(m.group(4)) for m in STR_LIT.finditer(text)
+    }
+    return {
+        key: descriptions[symbol]
+        for key, symbol in re.findall(
+            r"\[(MOVE_\w+)\s*-\s*1\]\s*=\s*(gMoveDescription_\w+)", text
+        )
+    }
 
 
 def load_ability_descriptions(path: Path) -> dict[str, str]:
@@ -579,12 +569,19 @@ def compound_string_body(text: str) -> str:
     return f"COMPOUND_STRING(\n            {joined})"
 
 
-def patch_info_descriptions(path: Path, mapping: dict[str, str], key_prefix: str, label: str) -> int:
-    """Replace .description = COMPOUND_STRING(...) inside each [KEY] block only."""
+def patch_info_descriptions(
+    path: Path, mapping: dict[str, str], key_prefix: str, label: str, gen3_moves: set[str] | None = None,
+) -> int:
+    """Translate descriptions, using the Gen 3 text across conditional variants of Gen 3 moves."""
     text = path.read_text(encoding="utf-8")
     replaced = 0
     desc_pat = re.compile(
         r"(\.description\s*=\s*)COMPOUND_STRING\(\s*(?:\"(?:\\.|[^\"\\])*\"\s*)+\)",
+    )
+    low_kick_desc = re.compile(
+        r"^ +\.description = COMPOUND_STRING\(\n"
+        r"    #if B_UPDATED_MOVE_DATA >= GEN_3\n.*?^    #else\n.*?\),\n",
+        re.M | re.S,
     )
     for key, es in mapping.items():
         if not key.startswith(key_prefix):
@@ -604,7 +601,21 @@ def patch_info_descriptions(path: Path, mapping: dict[str, str], key_prefix: str
         def repl(m: re.Match[str], b: str = body) -> str:
             return f"{m.group(1)}{b}"
 
-        new_block, n = desc_pat.subn(repl, block, count=1)
+        if gen3_moves is not None and key in gen3_moves:
+            if key == "MOVE_LOW_KICK":
+                # The older description shares its #else branch with the flinch effect.
+                # Keep that effect under the equivalent inverse condition.
+                block = low_kick_desc.sub(
+                    lambda _: f"        .description = {body},\n    #if B_UPDATED_MOVE_DATA < GEN_3\n",
+                    block, count=1,
+                )
+            spans = list(locale_guard.move_description_spans(block))
+            new_block = block
+            for start_value, end_value in reversed(spans):
+                new_block = new_block[:start_value] + f"{body}," + new_block[end_value:]
+            n = len(spans)
+        else:
+            new_block, n = desc_pat.subn(repl, block, count=1)
         if n:
             text = text[:start] + new_block + text[end:]
             replaced += n
@@ -675,7 +686,7 @@ EXTRA_MOVE_NAMES_ES = {
 }
 
 
-def load_full_move_es() -> tuple[dict[str, str], dict[str, str]]:
+def load_full_move_es(constants: Path, target_text: str) -> tuple[dict[str, str], dict[str, str]]:
     """Merge FireRed locale names/descs with PokeAPI full Gen1–9 table."""
     names: dict[str, str] = {}
     descs: dict[str, str] = {}
@@ -691,11 +702,29 @@ def load_full_move_es() -> tuple[dict[str, str], dict[str, str]]:
     fr_names = load_table_map(LOCALE / "src/data/text/move_names.h", "MOVE_")
     fr_names.pop("MOVE_NONE", None)
     names.update(fr_names)
+    descs = locale_guard.canonical_keys(descs, constants, "MOVE_", target_text)
     fr_descs = load_move_descriptions(LOCALE / "src/move_descriptions.c")
-    descs.update(fr_descs)
+    descs.update(locale_guard.canonical_keys(fr_descs, constants, "MOVE_", target_text))
     for key, name in EXTRA_MOVE_NAMES_ES.items():
         names[key] = c_str_lit(name)
     return names, descs
+
+
+def patch_move_info() -> None:
+    move_info = GAME / "src/data/moves_info.h"
+    move_constants = GAME / "include/constants/moves.h"
+    move_text = move_info.read_text(encoding="utf-8")
+    moves, move_descs = load_full_move_es(move_constants, move_text)
+    moves.pop("MOVE_NONE", None)
+    # Prefer the official Spanish names, matching legacy aliases by move ID.
+    official = load_table_map(LOCALE / "src/data/text/move_names.h", "MOVE_")
+    official.pop("MOVE_NONE", None)
+    moves.update(locale_guard.canonical_keys(official, move_constants, "MOVE_", move_text))
+    patch_indexed_names(move_info, moves, wrap='COMPOUND_STRING("{}")', label="moves_info.h")
+    patch_info_descriptions(
+        move_info, move_descs, key_prefix="MOVE_", label="moves_info.h descs",
+        gen3_moves=set(locale_guard.gen3_move_ids(move_constants)),
+    )
 
 
 def main() -> None:
@@ -745,27 +774,7 @@ def main() -> None:
     )
     patch_eu_nick_order(GAME / "src/battle_message.c")
 
-    moves, move_descs = load_full_move_es()
-    moves.pop("MOVE_NONE", None)
-    # Los nombres oficiales de España (FireRed) mandan sobre los de PokeAPI, casados por NÚMERO de movimiento
-    # (FireRed MOVE_HI_JUMP_KICK == expansion MOVE_HIGH_JUMP_KICK).
-    fr_official = load_table_map(LOCALE / "src/data/text/move_names.h", "MOVE_")
-    fr_official.pop("MOVE_NONE", None)
-    fr_official = locale_guard.canonical_keys(
-        fr_official, GAME / "include/constants/moves.h", "MOVE_", (GAME / "src/data/moves_info.h").read_text(encoding="utf-8"))
-    moves.update(fr_official)
-    patch_indexed_names(
-        GAME / "src/data/moves_info.h",
-        moves,
-        wrap='COMPOUND_STRING("{}")',
-        label="moves_info.h",
-    )
-    patch_info_descriptions(
-        GAME / "src/data/moves_info.h",
-        move_descs,
-        key_prefix="MOVE_",
-        label="moves_info.h descs",
-    )
+    patch_move_info()
 
     abilities = load_table_map(LOCALE / "src/data/text/abilities.h", "ABILITY_")
     # Name table uses _("..."); drop description-pointer rows if any slipped in.
