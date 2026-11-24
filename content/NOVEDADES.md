@@ -1,1 +1,2 @@
-- Las descripciones de los movimientos que quedaban en inglés ya aparecen en castellano.
+- Las descripciones largas de los movimientos ya se leen completas en la ficha.
+- Estímulo muestra la descripción de su efecto en combate.

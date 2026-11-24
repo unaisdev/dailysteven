@@ -704,6 +704,7 @@ def load_full_move_es(constants: Path, target_text: str) -> tuple[dict[str, str]
     names.update(fr_names)
     descs = locale_guard.canonical_keys(descs, constants, "MOVE_", target_text)
     fr_descs = load_move_descriptions(LOCALE / "src/move_descriptions.c")
+    fr_descs["MOVE_SMELLING_SALTS"] = fr_descs.pop("MOVE_SMELLING_SALT")
     descs.update(locale_guard.canonical_keys(fr_descs, constants, "MOVE_", target_text))
     for key, name in EXTRA_MOVE_NAMES_ES.items():
         names[key] = c_str_lit(name)

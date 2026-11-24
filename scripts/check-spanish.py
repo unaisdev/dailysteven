@@ -137,10 +137,13 @@ def check_move_descriptions() -> int:
         if not variants or len(variants) != len(expected.get(key, [])):
             fail(f"{rel}: {key} tiene variantes de descripción ausentes")
         for field in variants:
+            description = lg.join_pieces(field)
             if not re.fullmatch(r'COMPOUND_STRING\(\s*(?:"(?:\\.|[^"\\])*"\s*)+\),', field):
                 fail(f"{rel}: {key} conserva una variante condicional sin traducir")
-            elif field in expected.get(key, []) or ENGLISH_WORDS.search(plain(lg.join_pieces(field))):
+            elif field in expected.get(key, []) or ENGLISH_WORDS.search(plain(description)):
                 fail(f"{rel}: {key} tiene una descripción sin traducir")
+            elif description.count("\\n") > 3:
+                fail(f"{rel}: {key} tiene más de cuatro líneas en la ficha de movimientos")
     return len(actual)
 
 
